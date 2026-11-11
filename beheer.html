@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Docentendashboard · Content Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--paper:#120B26;--card:#1C1338;--ink:#F5F0FF;--muted:#B4A8D9;--line:#3A2C66;--pink:#FF5FDC;--orange:#FFA14A;--gold:#FFB547;--good:#3CF0A0;--bad:#FF6B81;--cyan:#3CE6E0;--blue:#8C9BFF;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 10% -10%,#3B1670 0,transparent 45%),radial-gradient(ellipse at 95% 10%,#0E3A5C 0,transparent 40%),var(--paper);background-attachment:fixed;color:var(--ink);font:15px/1.55 "Manrope","Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Unbounded","Trebuchet MS",sans-serif;margin:0;line-height:1.2}
+a{color:var(--cyan)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:5;background:rgba(18,11,38,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding-block:12px}
+.logo{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo b{font-family:"Unbounded",sans-serif;font-weight:800;font-size:17px;color:#FFE3F7;text-shadow:0 0 6px var(--pink),0 0 18px var(--pink);border:2px solid var(--pink);border-radius:10px;padding:3px 11px;box-shadow:0 0 14px rgba(255,95,220,.45),inset 0 0 12px rgba(255,95,220,.35)}
+.logo span{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.topr{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.who{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+main.wrap{padding:24px 16px 64px;display:flex;flex-direction:column;gap:22px}
+.panel{background:var(--card);border:1px solid #5A2B7A;border-radius:20px;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.35);min-width:0}
+@media (max-width:560px){.panel{padding:16px}}
+.panel h2{font-size:20px;color:#FFF4E8;text-shadow:0 0 10px rgba(255,161,74,.6);margin-bottom:6px}
+.lead{color:var(--muted);margin:0 0 14px;max-width:75ch}
+.btn{border:0;cursor:pointer;padding:9px 18px;border-radius:999px;font-weight:800;background:linear-gradient(90deg,var(--pink),#FF8A4C);color:#1A0B2E;box-shadow:0 0 18px rgba(255,95,220,.3);text-decoration:none;display:inline-block;white-space:nowrap}
+a.btn,a.btn:visited{color:#1A0B2E}
+.btn.ghost{background:none;border:1.5px solid var(--pink);color:#FF9BEB;box-shadow:none}
+a.btn.ghost,a.btn.ghost:visited{color:#FF9BEB}
+.btn.small{padding:5px 11px;font-size:13px}
+.btn.danger{background:var(--bad);box-shadow:none}
+.btn:disabled{opacity:.55;cursor:wait}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+textarea,input[type=search],select{background:#140D2B;border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
+textarea{min-height:130px;resize:vertical;font-family:"JetBrains Mono",monospace;font-size:13px}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,95,220,.18)}
+.rol{display:flex;gap:16px;flex-wrap:wrap}
+.rol label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.rol input{accent-color:var(--pink)}
+.small{font-size:13px;color:var(--muted)}
+.msg{font-weight:600;font-size:14px;margin:0}
+.msg.bad{color:#FF8FA1}.msg.ok{color:var(--good)}
+.prog{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:4px;font-size:13px;max-height:220px;overflow:auto}
+.prog li{display:flex;gap:8px}
+.prog .s{min-width:110px;font-weight:700}
+.prog .ok{color:var(--good)}.prog .bad{color:#FF8FA1}.prog .wait{color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+@media (max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.02)}
+.stat b{display:block;font-family:"JetBrains Mono",monospace;font-size:24px}
+.stat span{font-size:13px;color:var(--muted)}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;margin-bottom:12px;align-items:center}
+@media (max-width:760px){.filters{grid-template-columns:1fr 1fr}}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:980px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:#170F31;position:sticky;top:0}
+th button{background:none;border:0;padding:0;cursor:pointer;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums}
+td .em{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.p-ok{background:#12352A;color:var(--good)}.p-wait{background:#3A2812;color:var(--gold)}.p-no{background:#3E1724;color:#FF8FA1}.p-doc{background:#252D4F;color:var(--blue)}
+.lv{display:flex;gap:3px}
+.lv span{font-family:"JetBrains Mono",monospace;font-size:11px;min-width:30px;text-align:center;padding:2px 3px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
+.lv span.klaar{background:#12352A;border-color:#1f6b4d;color:var(--good)}
+.lv span.bezig{border-color:var(--gold);color:var(--gold)}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.cq{font-size:13px;color:#FFD0D8}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+.gate{max-width:480px;margin:60px auto;text-align:left}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--pink);color:#1A0B2E;padding:10px 16px;border-radius:10px;font-weight:700;z-index:20;max-width:calc(100vw - 32px)}
+details summary{cursor:pointer;color:#FF9BEB;font-weight:700}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="logo"><b>Content Challenge</b><span>Docentendashboard</span></div>
+  <div class="topr"><span class="who" id="who"></span><a class="btn small ghost" href="./">Naar de game</a><button class="btn small ghost" id="logout" type="button">Uitloggen</button></div>
+</div></header>
+<main class="wrap" id="app"><p class="small">Laden…</p></main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="vendor/supabase.js"></script>
+<script src="config.js"></script>
+<script src="cloud.js"></script>
+<script>
+(function(){
+"use strict";
+const CC=window.CC;
+const $=s=>document.querySelector(s);
+function h(tag,attrs,...kids){const e=document.createElement(tag);if(attrs)for(const k in attrs){const v=attrs[k];if(v==null||v===false)continue;if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v===true?"":v);}kids.flat().forEach(c=>{if(c==null||c===false)return;e.append(c.nodeType?c:document.createTextNode(String(c)));});return e;}
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3000);}
+const dt=d=>d?new Date(d).toLocaleDateString("nl-NL",{day:"numeric",month:"short"})+" "+new Date(d).toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}):"-";
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function confirmBtn(label,yesLabel,fn,msg){const w=h("span",{class:"acts"});const base=h("button",{class:"btn small ghost",type:"button"},label);
+ const reset=()=>{w.innerHTML="";w.append(base);};
+ base.addEventListener("click",()=>{w.innerHTML="";const y=h("button",{class:"btn small danger",type:"button",onclick:async()=>{y.disabled=true;try{await fn();}catch(e){toast(e.message);reset();}}},yesLabel);
+  w.append(h("span",{class:"cq"},msg||"Zeker weten?"),y,h("button",{class:"btn small ghost",type:"button",onclick:reset},"Annuleer"));y.focus();});
+ reset();return w;}
+
+let ME=null,PROF=null,DATA=[],F={q:"",studio:"",status:"",sort:"naam",dir:1};
+
+/* ---------- gegevens ---------- */
+async function load(){
+ const [inv,prof,klas]=await Promise.all([CC.invites(),CC.profielen(),CC.klas()]);
+ const by={};
+ inv.forEach(i=>{by[i.email]={email:i.email,rol:i.rol,inv:i};});
+ prof.forEach(p=>{const r=by[p.email]||(by[p.email]={email:p.email,rol:p.rol});r.prof=p;r.rol=r.inv?r.inv.rol:p.rol;});
+ klas.forEach(k=>{if(!k.email)return;const r=by[k.email];if(r)r.klas=k;});
+ DATA=Object.values(by).map(r=>{const s=(r.klas&&r.klas.samenvatting)||{};const lv=s.lv||{};let xp=0;
+  for(let n=1;n<=6;n++){const l=lv[n];if(l&&l.x)xp+=l.x.reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);}
+  return Object.assign(r,{naam:(s.naam||"").trim(),studio:s.studio||"",bedrijf:s.bedrijf||"",lvl:s.lvl||0,lv,xp,actief:r.klas&&r.klas.bijgewerkt,
+   status:r.prof?"actief":r.inv&&r.inv.laatst_verstuurd?"uitgenodigd":"niet verstuurd"});});
+}
+
+/* ---------- uitnodigen ---------- */
+function parseEmails(t){const m=String(t||"").toLowerCase().match(/[^\s,;:<>"'()\[\]]+@[^\s,;:<>"'()\[\]]+\.[a-z]{2,}/g)||[];return[...new Set(m)];}
+function viewInvite(){
+ const ta=h("textarea",{id:"emails",placeholder:"student1@student.avans.nl\nstudent2@student.avans.nl\n…","aria-describedby":"emhint"});
+ const hint=h("p",{class:"small",id:"emhint"},"Eén e-mailadres per regel. Plakken uit Excel, Outlook of Brightspace mag ook: de adressen worden er zelf uitgehaald.");
+ const rolS=h("input",{type:"radio",name:"rol",value:"student",id:"rs",checked:true}),rolD=h("input",{type:"radio",name:"rol",value:"docent",id:"rd"});
+ const msg=h("p",{class:"msg"});const prog=h("ul",{class:"prog"});
+ const upd=()=>{const n=parseEmails(ta.value).length;hint.textContent=n?n+" e-mailadres"+(n>1?"sen":"")+" gevonden.":"Eén e-mailadres per regel. Plakken uit Excel, Outlook of Brightspace mag ook: de adressen worden er zelf uitgehaald.";};
+ ta.addEventListener("input",upd);
+ const go=h("button",{class:"btn",type:"button",onclick:async()=>{
+  const list=parseEmails(ta.value);const rol=rolD.checked?"docent":"student";msg.textContent="";msg.className="msg";prog.innerHTML="";
+  if(!list.length){msg.textContent="Vul minimaal één e-mailadres in.";msg.className="msg bad";return;}
+  if(rol==="docent"){const nDoc=DATA.filter(r=>r.rol==="docent").length;const nieuw=list.filter(e=>!DATA.some(r=>r.email===e&&r.rol==="docent")).length;if(nDoc+nieuw>10){msg.textContent="Er kunnen maximaal 10 docenten in. Er zijn er nu "+nDoc+".";msg.className="msg bad";return;}}
+  go.disabled=true;ta.disabled=true;let ok=0,fout=0,skip=0;
+  for(let i=0;i<list.length;i++){const e=list[i];const li=h("li",null,h("span",{class:"s wait"},"Bezig…"),h("span",null,e));prog.prepend(li);const st=li.firstChild;
+   const bestaat=DATA.find(r=>r.email===e);
+   if(bestaat&&bestaat.prof&&bestaat.rol===rol){st.textContent="Heeft al account";st.className="s";skip++;continue;}
+   try{await CC.addInvite(e,rol);
+    for(let poging=1;;poging++){try{await CC.sendInvite(e);break;}
+     catch(err){if(poging<4&&/te veel|wacht|rate|seconden/i.test(err.message)){for(let s=60;s>0;s--){st.textContent="Wacht "+s+" s";await sleep(1000);}continue;}throw err;}}
+    st.textContent="Verstuurd";st.className="s ok";ok++;}
+   catch(err){st.textContent="Mislukt";st.className="s bad";li.append(h("span",{class:"small"}," "+err.message));fout++;}
+   msg.textContent=(i+1)+" van "+list.length+" verwerkt…";
+   if(i<list.length-1)await sleep(CC.mode==="demo"?50:1200);}
+  msg.textContent=ok+" uitnodiging"+(ok===1?"":"en")+" verstuurd"+(skip?", "+skip+" had"+(skip===1?"":"den")+" al een account":"")+(fout?", "+fout+" mislukt (zie de lijst)":"")+".";msg.className="msg "+(fout?"bad":"ok");
+  if(!fout)ta.value="";go.disabled=false;ta.disabled=false;upd();await refresh(false);}},"Nodig uit en verstuur de mail");
+ return h("section",{class:"panel",id:"uitnodigen"},h("h2",null,"Uitnodigen"),
+  h("p",{class:"lead"},"Iedereen die je hier toevoegt krijgt een mail met een link. Daarmee activeren ze hun account en kiezen ze een wachtwoord. Alleen uitgenodigde e-mailadressen komen binnen."),
+  h("label",{for:"emails",style:"font-weight:700"},"E-mailadressen"),ta,hint,
+  h("div",{class:"rol",role:"radiogroup","aria-label":"Rol"},h("label",{for:"rs"},rolS,"Student"),h("label",{for:"rd"},rolD,"Docent (kan beheren en alles inzien, max. 10)")),
+  h("div",{class:"row",style:"margin-top:12px"},go),msg,prog);
+}
+
+/* ---------- overzicht ---------- */
+function lvCells(r){return h("div",{class:"lv"},[1,2,3,4,5,6].map(n=>{const l=r.lv[n];if(!l||l.open===false)return h("span",{title:"Level "+n+": nog niet open"},"·");
+ const xp=(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);return h("span",{class:l.klaar?"klaar":"bezig",title:"Level "+n+": "+(l.st||"")+" · "+xp+" XP"},l.klaar?"✓"+xp:String(xp));}));}
+function statusPill(r){return r.status==="actief"?h("span",{class:"pill p-ok"},"Actief"):r.status==="uitgenodigd"?h("span",{class:"pill p-wait",title:"Laatst verstuurd: "+dt(r.inv.laatst_verstuurd)},"Uitgenodigd"):h("span",{class:"pill p-no"},"Mail niet verstuurd");}
+function actions(r){const own=r.email===(ME&&ME.email);
+ return h("div",{class:"acts"},
+  r.prof&&r.rol==="student"?h("a",{class:"btn small",href:"./?bekijk="+encodeURIComponent(r.prof.id),target:"_blank",rel:"noopener"},"Bekijk werk"):null,
+  !own&&r.inv?h("button",{class:"btn small ghost",type:"button",onclick:async e=>{e.target.disabled=true;try{await CC.sendInvite(r.email);toast("Mail opnieuw verstuurd naar "+r.email);await refresh(false);}catch(err){toast(err.message);e.target.disabled=false;}}},r.prof?"Stuur inloglink":"Stuur opnieuw"):null,
+  own?h("span",{class:"small"},"Jij"):confirmBtn("Verwijder","Ja, verwijder",async()=>{await CC.verwijder(r.email,r.prof&&r.prof.id);toast(r.email+" is verwijderd");await refresh(false);},r.prof&&r.rol==="student"?"Account en al het werk wissen?":"Verwijderen?"));}
+function filtered(){const q=F.q.trim().toLowerCase();
+ let L=DATA.filter(r=>r.rol==="student").filter(r=>(!q||(r.naam+" "+r.email+" "+r.bedrijf).toLowerCase().includes(q))&&(!F.studio||String(r.studio)===F.studio)&&(!F.status||r.status===F.status));
+ const k={naam:r=>(r.naam||"~"+r.email).toLowerCase(),studio:r=>Number(r.studio)||99,xp:r=>r.xp,actief:r=>r.actief||"",status:r=>r.status}[F.sort];
+ L.sort((a,b)=>{const x=k(a),y=k(b);return(x<y?-1:x>y?1:0)*F.dir;});return L;}
+function viewStudents(){
+ const st=DATA.filter(r=>r.rol==="student");const actief=st.filter(r=>r.prof).length;
+ const klaar=st.filter(r=>r.lv[6]&&r.lv[6].klaar).length;const gem=actief?Math.round(st.filter(r=>r.prof).reduce((a,r)=>a+r.xp,0)/actief):0;
+ const studios=[...new Set(st.map(r=>String(r.studio)).filter(Boolean))].sort((a,b)=>a-b);
+ const q=h("input",{type:"search",placeholder:"Zoek op naam, e-mail of bedrijf","aria-label":"Zoeken",value:F.q});
+ const fs=h("select",{"aria-label":"Studio"},h("option",{value:""},"Alle studio's"),studios.map(s=>h("option",{value:s,selected:F.studio===s},"Studio "+s)));
+ const fst=h("select",{"aria-label":"Status"},h("option",{value:""},"Elke status"),[["actief","Actief"],["uitgenodigd","Uitgenodigd"],["niet verstuurd","Mail niet verstuurd"]].map(([v,t])=>h("option",{value:v,selected:F.status===v},t)));
+ const body=h("tbody");const count=h("p",{class:"small"});
+ const fill=()=>{const L=filtered();body.innerHTML="";count.textContent=L.length+" van "+st.length+" studenten";
+  if(!L.length){body.append(h("tr",null,h("td",{colspan:"8",class:"empty"},st.length?"Geen studenten gevonden met dit filter.":"Nog geen studenten. Nodig ze hierboven uit.")));return;}
+  L.forEach(r=>body.append(h("tr",null,
+   h("td",null,h("strong",null,r.naam||"(nog geen naam)"),h("div",{class:"em"},r.email),r.bedrijf?h("div",{class:"em"},r.bedrijf):null),
+   h("td",null,r.studio?"Studio "+r.studio:"-"),h("td",null,statusPill(r)),
+   h("td",null,lvCells(r)),h("td",{class:"num"},r.prof?r.xp:"-"),h("td",null,r.prof?(r.actief?dt(r.actief):"Nog niets ingevuld"):"-"),h("td",null,actions(r)))));};
+ q.addEventListener("input",()=>{F.q=q.value;fill();});fs.addEventListener("change",()=>{F.studio=fs.value;fill();});fst.addEventListener("change",()=>{F.status=fst.value;fill();});
+ const sortTh=(key,label,cls)=>h("th",{class:cls||null,"aria-sort":F.sort===key?(F.dir>0?"ascending":"descending"):null},h("button",{type:"button",onclick:()=>{if(F.sort===key)F.dir*=-1;else{F.sort=key;F.dir=key==="xp"||key==="actief"?-1:1;}render();}},label+(F.sort===key?(F.dir>0?" ▲":" ▼"):"")));
+ fill();
+ return h("section",{class:"panel",id:"studenten"},h("h2",null,"Studenten"),
+  h("p",{class:"lead"},"Klik op 'Bekijk werk' om de game van een student te openen, alleen om te lezen. De XP per level staat in de vakjes: groen met een vinkje is opgeleverd."),
+  h("div",{class:"stats"},h("div",{class:"stat"},h("b",null,st.length),h("span",null,"uitgenodigd")),h("div",{class:"stat"},h("b",null,actief),h("span",null,"actief (ingelogd)")),h("div",{class:"stat"},h("b",null,gem),h("span",null,"gem. XP (actief)")),h("div",{class:"stat"},h("b",null,klaar),h("span",null,"challenge voltooid"))),
+  h("div",{class:"filters"},q,fs,fst,h("button",{class:"btn small ghost",type:"button",onclick:csv},"Download als CSV")),count,
+  h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,sortTh("naam","Student"),sortTh("studio","Studio"),sortTh("status","Status"),h("th",null,"XP per level (1 t/m 6)"),sortTh("xp","Totaal","num"),sortTh("actief","Laatst opgeslagen"),h("th",null,""))),body)));
+}
+function viewDocenten(){const D=DATA.filter(r=>r.rol==="docent").sort((a,b)=>a.email.localeCompare(b.email));
+ return h("section",{class:"panel",id:"docenten"},h("h2",null,"Docenten ("+D.length+" van 10)"),h("p",{class:"lead"},"Docenten kunnen studenten uitnodigen, al het werk inzien en accounts verwijderen. Een docent nodig je hierboven uit met de rol Docent."),
+  h("div",{class:"tablewrap"},h("table",{style:"min-width:640px"},h("thead",null,h("tr",null,h("th",null,"E-mailadres"),h("th",null,"Status"),h("th",null,"Uitgenodigd"),h("th",null,""))),
+   h("tbody",null,D.map(r=>h("tr",null,h("td",null,r.email),h("td",null,r.prof?h("span",{class:"pill p-doc"},"Actief"):statusPill(r)),h("td",null,r.inv?dt(r.inv.uitgenodigd_op):"-"),h("td",null,actions(r))))))));}
+function csv(){const L=filtered();const esc=v=>{v=String(v==null?"":v);return/[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+ const head=["Naam","E-mail","Bedrijf","Studio","Status",...[1,2,3,4,5,6].flatMap(n=>["L"+n+" XP","L"+n+" status"]),"Totaal XP","Laatst opgeslagen"];
+ const rows=L.map(r=>[r.naam,r.email,r.bedrijf,r.studio,r.status,...[1,2,3,4,5,6].flatMap(n=>{const l=r.lv[n];return l?[(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0),l.st||""]:["",""];}),r.xp,r.actief?new Date(r.actief).toLocaleString("nl-NL"):""]);
+ const txt="﻿"+[head,...rows].map(r=>r.map(esc).join(";")).join("\r\n");
+ const a=h("a",{href:URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"})),download:"content-challenge-studenten-"+new Date().toISOString().slice(0,10)+".csv"});document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);}
+
+let INV=null;
+function render(){const app=$("#app");const y=window.scrollY;app.innerHTML="";INV=INV||viewInvite();app.append(INV,viewStudents(),viewDocenten(),
+ CC.mode==="demo"?h("section",{class:"panel"},h("h2",null,"Demo-postvak"),h("p",{class:"lead"},"Demomodus: er gaan geen echte mails de deur uit. Open een link om in te loggen als die persoon. Je wordt dan in deze browser uitgelogd als docent."),h("ul",null,CC.mails().slice(0,15).map(m=>h("li",null,h("strong",null,m.soort+" voor "+m.to+": "),h("a",{href:m.link,target:"_blank"},"link"))))):null);window.scrollTo(0,y);}
+async function refresh(full){try{await load();render();}catch(e){if(full)throw e;toast(e.message);}}
+
+(async function(){
+ $("#logout").addEventListener("click",async()=>{await CC.logout();location.href="./";});
+ try{ME=await CC.user();if(!ME){location.href="./";return;}
+  PROF=await CC.mijnProfiel();$("#who").textContent=ME.email;
+  if(!PROF||PROF.rol!=="docent"){$("#app").innerHTML="";$("#app").append(h("section",{class:"panel gate"},h("h2",null,"Alleen voor docenten"),h("p",null,"Dit dashboard is alleen voor docentaccounts."),h("a",{class:"btn",href:"./"},"Naar de game")));return;}
+  await refresh(true);
+  setInterval(()=>{const a=document.activeElement;if(document.visibilityState==="visible"&&!document.querySelector("#uitnodigen .btn:disabled")&&!(a&&a.matches&&a.matches("input,select,textarea,button")))refresh(false);},60000);
+ }catch(e){$("#app").innerHTML="";$("#app").append(h("section",{class:"panel gate"},h("h2",null,"Er ging iets mis"),h("p",null,e.message),h("button",{class:"btn",onclick:()=>location.reload()},"Probeer opnieuw")));}
+})();
+})();
+</script>
+</body>
+</html>

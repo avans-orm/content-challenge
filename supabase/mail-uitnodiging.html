@@ -1,0 +1,10 @@
+<!-- Supabase > Authentication > Emails > "Confirm signup"
+     Onderwerp: Je uitnodiging voor Content Challenge -->
+<div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;color:#1A0B2E">
+  <h2 style="color:#C2187F">Welkom bij Content Challenge</h2>
+  <p>Je docent heeft je uitgenodigd voor <strong>Content Challenge</strong>, de game waarin je in zes levels een contentstrategie, huisstijlhandboek, contentkalender, content en testplan maakt.</p>
+  <p>Klik op de knop om je account te activeren. Daarna kies je een wachtwoord.</p>
+  <p><a href="{{ .RedirectTo }}?th={{ .TokenHash }}&tt=signup" style="display:inline-block;background:#FF5FDC;color:#1A0B2E;font-weight:bold;padding:12px 22px;border-radius:999px;text-decoration:none">Activeer mijn account</a></p>
+  <p>Werkt de knop niet? Open de game, kies "Ik heb een code uit de mail" en vul je e-mailadres en deze code in: <strong style="font-size:18px;letter-spacing:2px">{{ .Token }}</strong></p>
+  <p style="color:#666;font-size:13px">Deze link werkt 24 uur. Verwacht je deze mail niet? Dan kun je hem negeren.</p>
+</div>

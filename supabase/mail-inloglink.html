@@ -1,0 +1,9 @@
+<!-- Supabase > Authentication > Emails > "Magic Link"
+     Onderwerp: Je inloglink voor Content Challenge -->
+<div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;color:#1A0B2E">
+  <h2 style="color:#C2187F">Inloggen bij Content Challenge</h2>
+  <p>Klik op de knop om in te loggen. Daarna kun je een (nieuw) wachtwoord kiezen.</p>
+  <p><a href="{{ .RedirectTo }}?th={{ .TokenHash }}&tt=magiclink" style="display:inline-block;background:#FF5FDC;color:#1A0B2E;font-weight:bold;padding:12px 22px;border-radius:999px;text-decoration:none">Log in</a></p>
+  <p>Of vul deze code in op het inlogscherm: <strong style="font-size:18px;letter-spacing:2px">{{ .Token }}</strong></p>
+  <p style="color:#666;font-size:13px">Heb je dit niet aangevraagd? Dan kun je deze mail negeren.</p>
+</div>

@@ -1,0 +1,58 @@
+/* Content Challenge live: inlogschermen, opslagstatus en accountmenu. Zelfde Neon Live-stijl als de game. */
+body.cc-wait .top, body.cc-wait .main { visibility: hidden; }
+.ccgate { position: fixed; inset: 0; z-index: 100; overflow: auto; display: flex; align-items: flex-start; justify-content: center; padding: 48px 16px;
+  background: radial-gradient(ellipse at 10% -10%, #3B1670 0, transparent 45%), radial-gradient(ellipse at 95% 10%, #0E3A5C 0, transparent 40%), #120B26;
+  color: #F5F0FF; font-family: "Manrope", "Segoe UI", sans-serif; font-size: 15px; line-height: 1.55; }
+.ccgate[hidden] { display: none !important; }
+.ccbox { width: 100%; max-width: 460px; background: #1C1338; border: 1px solid #5A2B7A; border-radius: 20px; padding: 28px; box-shadow: 0 24px 60px rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 12px; }
+@media (max-width: 520px) { .ccbox { padding: 20px; } .ccgate { padding: 24px 12px; } }
+.cclogo { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.cclogo b { font-family: "Unbounded", "Trebuchet MS", sans-serif; font-weight: 800; font-size: 18px; color: #FFE3F7; text-shadow: 0 0 6px #FF5FDC, 0 0 18px #FF5FDC; border: 2px solid #FF5FDC; border-radius: 10px; padding: 4px 12px; box-shadow: 0 0 14px rgba(255,95,220,.45), inset 0 0 12px rgba(255,95,220,.35); }
+.cclogo span { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #B4A8D9; }
+.cclogo span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #FF3B5C; margin-right: 7px; box-shadow: 0 0 10px #FF3B5C; }
+.ccbox h1 { font-family: "Unbounded", "Trebuchet MS", sans-serif; font-size: 24px; margin: 0; color: #FFF4E8; text-shadow: 0 0 10px rgba(255,161,74,.6); }
+.ccbox h3 { font-size: 15px; margin: 0; }
+.ccbox p { margin: 0; }
+.ccbox a { color: #3CE6E0; }
+.ccform, .cccode { display: flex; flex-direction: column; gap: 6px; }
+.ccform label, .cccode label { font-weight: 700; font-size: 14px; margin-top: 6px; }
+.ccbox input { width: 100%; background: #140D2B; border: 1px solid #3A2C66; border-radius: 8px; padding: 10px 12px; color: #F5F0FF; font: inherit; }
+.ccbox input:focus { outline: none; border-color: #FF5FDC; box-shadow: 0 0 0 3px rgba(255,95,220,.18); }
+.ccbox .btn { margin-top: 10px; align-self: flex-start; border: 0; cursor: pointer; padding: 10px 20px; border-radius: 999px; font: inherit; font-weight: 800; background: linear-gradient(90deg,#FF5FDC,#FF8A4C); color: #1A0B2E; box-shadow: 0 0 22px rgba(255,95,220,.35); text-decoration: none; }
+.ccbox .btn.ghost { background: none; border: 1.5px solid #FF5FDC; color: #FF9BEB; box-shadow: none; }
+.ccbox .btn:disabled { opacity: .6; cursor: wait; }
+.ccsep { border-top: 1px solid #3A2C66; padding-top: 14px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.ccsmall { font-size: 13px; color: #B4A8D9; }
+.ccfoot { margin-top: 8px !important; }
+.ccnote { background: rgba(255,181,71,.1); border-left: 4px solid #FFB547; padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 14px; }
+.ccmsg { color: #FF8FA1; font-weight: 600; font-size: 14px; margin-top: 6px !important; }
+.ccmsg.ok { color: #3CF0A0; }
+.ccload { color: #B4A8D9; }
+.ccrow { display: flex; flex-wrap: wrap; gap: 10px; }
+.ccpost { border: 1px dashed #8C9BFF; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.ccpost ul { margin: 0; padding-left: 18px; }
+
+/* opslagstatus en accountmenu in de kop */
+.hside { position: relative; }
+.ccsave { font-size: 12px; font-weight: 700; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; color: #B4A8D9; }
+.ccsave::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.ccsave.ok { color: #3CF0A0; }
+.ccsave.busy { color: #FFB547; }
+.ccsave.bad { color: #FF6B81; }
+.ccsave.ro { color: #8C9BFF; }
+.ccacct { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ccmenu { position: relative; }
+.ccmenu summary { list-style: none; cursor: pointer; display: inline-flex; }
+.ccmenu summary::-webkit-details-marker { display: none; }
+.ccav { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; background: linear-gradient(135deg,#FF5FDC,#FFA14A); color: #1A0B2E; }
+.ccmenu .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.ccpop { position: absolute; right: 0; top: 40px; z-index: 30; width: 240px; background: #1C1338; border: 1px solid #5A2B7A; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+.ccpop .btn { text-align: center; text-decoration: none; }
+.ccpop .ccsmall { overflow-wrap: anywhere; }
+@media (max-width: 900px) { .ccpop { top: 38px; } }
+.ccbar { position: sticky; top: 0; z-index: 40; display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: center; padding: 8px 16px; font-size: 14px; text-align: center; }
+.ccbar.ro { background: #252D4F; color: #E9ECF5; border-bottom: 1px solid #8C9BFF; }
+.ccbar.bad { background: #3E1724; color: #FFE3E8; border-bottom: 1px solid #FF6B81; }
+.ccbar .btn { text-decoration: none; }
+@media (max-width: 900px) { .top .hside { flex-wrap: wrap; } }
+@media (max-width: 600px) { .ccsave { font-size: 11px; } .ccav { width: 28px; height: 28px; } }
