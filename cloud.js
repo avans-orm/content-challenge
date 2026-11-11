@@ -56,7 +56,7 @@
         if (error) throw nl(error);
       },
       async sendLoginLink(email) {
-        const { error } = await sb.auth.signInWithOtp({ email: email.trim().toLowerCase(), options: { shouldCreateUser: false, emailRedirectTo: BASE } });
+        const { error } = await sb.auth.signInWithOtp({ email: email.trim().toLowerCase(), options: { shouldCreateUser: true, emailRedirectTo: BASE } });
         if (error) throw nl(error);
       },
       async verifyCode(email, code) {
