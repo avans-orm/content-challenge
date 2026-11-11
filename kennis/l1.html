@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Content Challenge Kenniskaarten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Neon Live, dezelfde stijl als de game: altijd donker, magenta naar oranje, ON AIR-logo. */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"],:root[data-theme="light"]{
+ --paper:#120B26;--card:#1C1338;--ink:#F5F0FF;--muted:#B4A8D9;--line:#3A2C66;
+ --pink:#FF5FDC;--orange:#FFA14A;--gold:#FFB547;--cyan:#3CE6E0;--violet:#8C9BFF;--green:#3CF0A0;
+ --f-display:"Unbounded","Trebuchet MS",sans-serif;--f-body:"Manrope","Segoe UI",sans-serif;--f-mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--f-body);color:var(--ink);line-height:1.6;font-size:16px;
+ background:radial-gradient(ellipse at 10% -10%,#3B1670 0,transparent 45%),radial-gradient(ellipse at 95% 10%,#0E3A5C 0,transparent 40%),var(--paper);background-attachment:fixed;min-height:100vh}
+.top{position:sticky;top:0;z-index:5;background:rgba(18,11,38,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo b{display:inline-block;font-family:var(--f-display);font-weight:800;font-size:18px;color:#FFE3F7;text-shadow:0 0 6px var(--pink),0 0 18px var(--pink);border:2px solid var(--pink);border-radius:10px;padding:3px 11px;box-shadow:0 0 14px rgba(255,95,220,.45),inset 0 0 12px rgba(255,95,220,.35)}
+.logo span{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.logo span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF3B5C;margin-right:7px;box-shadow:0 0 10px #FF3B5C;vertical-align:1px}
+@media (prefers-reduced-motion:no-preference){.logo span::before{animation:rec 1.6s ease-in-out infinite}@keyframes rec{50%{opacity:.25}}}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+nav a{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--pink);box-shadow:0 0 12px rgba(255,95,220,.3);outline:none}
+main{max-width:1080px;margin:0 auto;padding:32px 16px 80px}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 12px;color:#FFF4E8;text-shadow:0 0 10px rgba(255,161,74,.6),0 0 28px rgba(255,95,220,.4)}
+.hero p{color:var(--muted);max-width:640px;margin:0 0 28px;font-size:17px}
+.card{position:relative;background:var(--card);border:1px solid #5A2B7A;border-radius:20px;padding:28px;margin:0 0 24px;box-shadow:0 0 0 1px rgba(255,95,220,.06),0 24px 60px rgba(0,0,0,.4);scroll-margin-top:110px}
+.card::before{content:"";position:absolute;left:28px;right:28px;top:-1px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--c,var(--pink)),var(--orange))}
+.eyebrow{font-family:var(--f-mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c,var(--gold))}
+.card h2{font-family:var(--f-display);font-weight:700;font-size:clamp(20px,3vw,26px);line-height:1.2;margin:6px 0 14px}
+.card p{margin:0 0 14px;max-width:760px}
+.card b{color:#FFE3F7}
+ol,ul{margin:0 0 16px;padding-left:22px}
+li{margin:4px 0}
+li::marker{color:var(--c,var(--pink));font-weight:700}
+.tbl{overflow-x:auto;margin:0 0 16px;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--c,var(--gold));background:rgba(255,255,255,.03);padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{font-weight:700;white-space:nowrap}
+.cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.cycle>div{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
+.cycle .L{font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1;color:var(--pink);text-shadow:0 0 14px rgba(255,95,220,.6)}
+.cycle .t{font-weight:800;margin:8px 0 2px}
+.cycle .d{font-size:14px;color:var(--muted)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+.duo div{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.duo .bad{border-color:#6A2A44;background:rgba(255,107,129,.06)}
+.duo .good{border-color:#1F5A47;background:rgba(60,240,160,.06)}
+.duo h3{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.duo .bad h3{color:#FF8FA1}.duo .good h3{color:var(--green)}
+.tip{border-left:3px solid var(--gold);background:rgba(255,181,71,.08);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 14px;max-width:760px}
+.check{list-style:none;padding:0}
+.check label{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin:0 0 8px;cursor:pointer}
+.check input{appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--pink);border-radius:7px;margin-top:2px;display:grid;place-content:center;cursor:pointer}
+.check input:checked{background:linear-gradient(135deg,var(--pink),var(--orange));box-shadow:0 0 12px rgba(255,95,220,.5)}
+.check input:checked::after{content:"✓";color:#1A0B2E;font-weight:800;font-size:14px}
+.check input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.score{font-family:var(--f-mono);font-weight:700;color:var(--gold)}
+footer{color:var(--muted);font-size:13px;text-align:center;padding-bottom:24px}
+@media (max-width:520px){.cycle{grid-template-columns:1fr!important}}
+@media (max-width:700px){.card{scroll-margin-top:190px}.cycle{grid-template-columns:repeat(2,minmax(0,1fr))}.duo{grid-template-columns:1fr}.card{padding:22px 18px}.card::before{left:18px;right:18px}nav{margin-left:0}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+ <div class="logo"><b>Content Challenge</b><span>Kenniskaarten · Level 1</span></div>
+ <nav aria-label="Kaarten">
+  <a href="#k1">1</a><a href="#k2">2</a><a href="#k3">3</a><a href="#k4">4</a><a href="#k5">5</a><a href="#k6">6</a><a href="#k7">7</a><a href="#k8">8</a><a href="#toets">Zelftoets</a>
+ </nav>
+</div></header>
+<main>
+<section class="hero">
+ <h1>Het fundament</h1>
+ <p>Lees deze kaarten vóór de les. In de les wordt gespeeld; hier staat de theorie die je daarvoor nodig hebt, en je kunt ze later gebruiken als naslag.</p>
+</section>
+
+<article class="card" id="k1" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 1</div>
+ <h2>Wat is een contentstrategie?</h2>
+ <p>Een contentstrategie legt vast welke content je maakt, voor wie, met welk doel en via welke kanalen. Zonder strategie post je ad hoc en weet je niet waarom iets wel of niet werkt.</p>
+ <p>In organisaties volgt content creatie vaak de <b>ROEM-cyclus</b>:</p>
+ <div class="cycle">
+  <div><div class="L">R</div><div class="t">Randvoorwaarden</div><div class="d">Binnen het bedrijf met stakeholders, contentdoelen en doelgroepen</div></div>
+  <div><div class="L">O</div><div class="t">Organiseren</div><div class="d">Contentstrategie en tactiek, contentplanning</div></div>
+  <div><div class="L">E</div><div class="t">Engageren en activeren</div><div class="d">Contentcreatie en ontwerp, content en concepten testen, contentpromotie</div></div>
+  <div><div class="L">M</div><div class="t">Meten</div><div class="d">Conversie, analyse en optimalisatie</div></div>
+ </div>
+ <p>In deze game doorloop je die cyclus in zes levels. Level 1 gaat over de eerste stappen: kernwaarden, doelen, doelgroep en strategie.</p>
+</article>
+
+<article class="card" id="k2" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 2</div>
+ <h2>Contentdoelen, KPI's en de funnel</h2>
+ <p>Goede content is waardevol, relevant en consistent. Begin bij het doel: wat moet de content opleveren?</p>
+ <ul>
+  <li><b>Langetermijndoelen:</b> reputatie verbeteren, autoriteit vergroten, deskundigheid tonen.</li>
+  <li><b>Kortetermijndoelen:</b> naamsbekendheid vergroten, omzet vergroten, leads genereren, leads omzetten in sales.</li>
+ </ul>
+ <p>Elk doel krijgt een <b>KPI</b> (wat meet je) en een <b>norm</b> (wanneer ben je tevreden). Een veelgemaakte fout: een doel als naamsbekendheid meten met herhaalaankopen. Doel en KPI moeten bij dezelfde fase van de klantreis horen.</p>
+ <p>Funnelmodellen helpen je content per fase te kiezen:</p>
+ <div class="tbl"><table>
+  <tr><th>Model</th><th>Fasen</th><th>Voorbeeld-KPI's</th></tr>
+  <tr><td>See-Think-Do-Care (Google)</td><td>See, Think, Do, Care</td><td>Bereik; websiteverkeer; conversies; herhaalaankopen</td></tr>
+  <tr><td>AIDA</td><td>Attention, Interest, Desire, Action</td><td>Views; time on site; leadformulieren; sales</td></tr>
+  <tr><td>TOFU-MOFU-BOFU</td><td>Top, middle, bottom of funnel</td><td>Organisch bereik; downloads; deals</td></tr>
+  <tr><td>Meta-funnel</td><td>Awareness, Consideration, Conversion</td><td>Bereik en CPM; clicks en leads; sales en ROAS</td></tr>
+  <tr><td>Hero-Hub-Hygiene</td><td>Hero, Hub, Hygiene</td><td>Views en shares; abonnees; zoekverkeer</td></tr>
+ </table></div>
+ <p>Kies één model en gebruik dat consequent in je strategie en later in je contentkalender. In de game staat See-Think-Do-Care al in de briefing. Kies je een ander model, pas dan de Taak in je briefing aan.</p>
+</article>
+
+<article class="card" id="k3" style="--c:var(--cyan)">
+ <div class="eyebrow">Kaart 3</div>
+ <h2>Doelgroep en kanalen</h2>
+ <p>Het doel van content is de juiste content aan de juiste mensen aanbieden. Bepaal daarom per fase van de klantreis op wie je je richt:</p>
+ <div class="tbl"><table>
+  <tr><th>Groep</th><th>Kenmerk</th><th>Wat doe je als bedrijf</th></tr>
+  <tr><td>Suspects</td><td>Mogelijk doelgroep, nog geen interactie</td><td>Bereik vergroten, branding</td></tr>
+  <tr><td>Leads</td><td>Tonen interesse, lieten gegevens achter</td><td>Contact leggen, nurturen met e-mail en content</td></tr>
+  <tr><td>Prospects</td><td>Gekwalificeerde leads met grote kans op aankoop</td><td>Persoonlijk contact, demo's, offertes</td></tr>
+  <tr><td>Klanten</td><td>Hebben gekocht</td><td>Goede service, aftersales</td></tr>
+  <tr><td>Terugkerende klanten</td><td>Kopen opnieuw, hogere klantwaarde</td><td>Loyaliteit, cross- en upsell</td></tr>
+ </table></div>
+ <p>Kies daarna je kanalen. Ze verschillen in hoeveel controle en bereik je hebt:</p>
+ <div class="tbl"><table>
+  <tr><th>Soort</th><th>Wat het is</th><th>Voorbeelden</th><th>Rol</th></tr>
+  <tr><td>Owned</td><td>Volledig in eigen beheer</td><td>Website, e-mail, magazine</td><td>Relaties opbouwen</td></tr>
+  <tr><td>Paid</td><td>Je betaalt voor bereik</td><td>Advertenties, SEA, sponsoring</td><td>Owned media voeden</td></tr>
+  <tr><td>Rented</td><td>Platform van een ander, via je eigen account</td><td>Instagram, TikTok, LinkedIn</td><td>Dialoog en interactie</td></tr>
+  <tr><td>Earned</td><td>Het publiek is het kanaal</td><td>Mond-tot-mond, shares, PR</td><td>Luisteren en reageren</td></tr>
+ </table></div>
+</article>
+
+<article class="card" id="k4" style="--c:var(--green)">
+ <div class="eyebrow">Kaart 4 · Kiezen</div>
+ <h2>Kernwaarden ontdekken en een moodboard maken</h2>
+ <p>Kernwaarden zijn de drie dingen waar je merk echt voor staat. Ze sturen je keuzes: wat je zegt, hoe je het zegt en wat je nooit doet. Ze komen steeds terug: in je strategie, je huisstijl en je tone of voice.</p>
+ <div class="duo">
+  <div class="bad"><h3>Generiek</h3>Kwaliteit, service, klantgericht, innovatief. Elk bedrijf kan dit zeggen, dus het zegt niets over jou.</div>
+  <div class="good"><h3>Specifiek</h3>Eerlijk: we laten ook zien wat mislukt. Speels: kweken voelt als een spel, niet als huiswerk.</div>
+ </div>
+ <p><b>Zo ontdek je ze.</b> Beantwoord eerst vier vragen over je bedrijf:</p>
+ <ol>
+  <li>Waarom bestaat je bedrijf, behalve om geld te verdienen?</li>
+  <li>Waar ben je trots op, of waar wil je om bekendstaan?</li>
+  <li>Wat zou je merk nooit doen, ook niet als het geld oplevert?</li>
+  <li>Welke woorden gebruiken klanten of je doelgroep als ze over je praten, of over een concurrent die ze goed vinden?</li>
+ </ol>
+ <p>Laat AI met die antwoorden 6 tot 8 kandidaat-kernwaarden voorstellen. Daarna kies jij er precies drie. Werk elke kernwaarde zo uit:</p>
+ <div class="tbl"><table>
+  <tr><th>Onderdeel</th><th>Wat je opschrijft</th><th>Voorbeeld: Groenbak, eerlijk</th></tr>
+  <tr><td>Definitie</td><td>Wat de waarde betekent voor jouw merk, in je eigen woorden</td><td>We laten ook zien wat mislukt en maken een oogst nooit mooier dan hij was.</td></tr>
+  <tr><td>Gedrag</td><td>Dit doen we, en dit doen we nooit</td><td>Dit doen we: elke maand een mislukte oogst delen. Dit doen we nooit: gestylede nepfoto's.</td></tr>
+  <tr><td>Bewijs</td><td>Iets wat je bedrijf nu al doet waaruit de waarde blijkt</td><td>In de handleiding staat per groente of hij op een balkon op het noorden lukt.</td></tr>
+ </table></div>
+ <p><b>De concurrent-test.</b> Vraag je bij elke kernwaarde af: zou een concurrent dit net zo goed kunnen claimen? Zo ja, maak hem specifieker. "Duurzaam" wordt bijvoorbeeld: "we nemen lege bakken terug en geven ze een tweede leven".</p>
+ <p><b>Het moodboard.</b> Een moodboard is een collage van beelden, kleuren en texturen die laat zien hoe je merk moet voelen. Laat AI er een maken, of maak het in Canva, Pinterest of Milanote. In de game plak je het als afbeelding: kopieer het beeld of maak een screenshot en druk op Ctrl+V (Mac: Cmd+V). Kies er drie sfeerwoorden bij, zoals zonnig, eerlijk en handgemaakt.</p>
+ <p>Koppel je moodboard aan je kernwaarden: wijs per kernwaarde een beeld of sfeer aan die de waarde laat zien. Een beeld dat bij geen enkele kernwaarde past, haal je weg.</p>
+ <p class="tip">Tip: je moodboard en sfeerwoorden gaan mee naar level 2. Daar vertaal je ze naar kleuren, lettertypes en een beeldstijl. Hoe beter ze bij je kernwaarden passen, hoe makkelijker dat wordt.</p>
+</article>
+
+<article class="card" id="k5" style="--c:var(--gold)">
+ <div class="eyebrow">Kaart 5</div>
+ <h2>Het strategiemodel</h2>
+ <p>In level 1 vul je het strategiemodel in. AI doet het eerste voorstel; jij schrijft de eindversie.</p>
+ <div class="tbl"><table>
+  <tr><th>Vak</th><th>Vragen die je beantwoordt</th></tr>
+  <tr><td>1. Domein en content-missie</td><td>In welk domein positioneer je je merk? Waarom maak je content, voor wie, en wat beloof je? Wat zijn je kernwaarden en propositie?</td></tr>
+  <tr><td>2. Primaire contentdoelen</td><td>Wat moet de content opleveren? Koppel elk doel aan een KPI.</td></tr>
+  <tr><td>3. Doelgroep: omschrijving en inzichten</td><td>Wie is je persona? Welke behoeften, pijnpunten en drijfveren? Welke kanalen gebruikt die?</td></tr>
+  <tr><td>4. Centraal thema</td><td>Wat is de rode draad? Waarover kun je geloofwaardig en onderscheidend communiceren?</td></tr>
+  <tr><td>5. Storyline, format en tone of voice</td><td>Welk verhaal vertel je steeds, in welke vormen, met welke stem?</td></tr>
+  <tr><td>6. Contentstructuur</td><td>Welke pijlers of rubrieken? Hoe verdeel je over de funnel? Welke frequentie en kanalen?</td></tr>
+ </table></div>
+ <p>De vakken hangen samen: je doelen bepalen je KPI's, je doelgroep bepaalt je kanalen en je tone of voice past bij je kernwaarden.</p>
+</article>
+
+<article class="card" id="k6" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 6 · Briefen</div>
+ <h2>AI briefen</h2>
+ <p>AI vult gaten zelf in. Hoe minder je meegeeft, hoe algemener en vaker verzonnen de output. Een goede briefing heeft zeven onderdelen:</p>
+ <div class="tbl"><table>
+  <tr><th>Veld</th><th>Wat je meegeeft</th><th>Voorbeeld</th></tr>
+  <tr><td>Rol</td><td>Wie de AI is</td><td>Je bent een contentstrateeg voor kleine, duurzame merken.</td></tr>
+  <tr><td>Context</td><td>Bedrijf, product, kernwaarden, doelgroep, jouw doel</td><td>Groenbak verkoopt moestuinbakken voor balkons in Utrecht.</td></tr>
+  <tr><td>Taak</td><td>Wat de AI precies moet doen</td><td>Vul het strategiemodel in met zes vakken.</td></tr>
+  <tr><td>Materiaal</td><td>Wat je erbij levert</td><td>Zes klantreviews en de bio's van drie concurrenten.</td></tr>
+  <tr><td>Format</td><td>Hoe je de output wilt</td><td>Per vak een kop en maximaal 100 woorden.</td></tr>
+  <tr><td>Eisen en verboden</td><td>Waar het aan moet voldoen</td><td>Nederlands, geen verzonnen cijfers, geen marketingtaal.</td></tr>
+  <tr><td>Aannames en bronnen</td><td>Wat de AI apart moet benoemen</td><td>Zet aannames apart en noem bij elk cijfer de bron.</td></tr>
+ </table></div>
+ <p>Vergelijk het effect zelf:</p>
+ <div class="duo">
+  <div class="bad"><h3>Kale prompt</h3>"Maak een contentstrategie voor Groenbak." Je krijgt algemene pijlers en een persona die bij elk merk past.</div>
+  <div class="good"><h3>Met briefing</h3>Een concrete persona, KPI's die bij je doel passen, en aannames die je kunt controleren.</div>
+ </div>
+ <p class="tip">Tip: vraag de AI om af te sluiten met drie vragen aan jou. Dan zie je meteen welke informatie nog ontbrak. Elke AI-tool is toegestaan; noteer in je logboek welke je gebruikte.</p>
+</article>
+
+<article class="card" id="k7" style="--c:var(--cyan)">
+ <div class="eyebrow">Kaart 7 · Checken</div>
+ <h2>AI-output checken</h2>
+ <p>Jij bent de eindredacteur. Elk vak van je strategiemodel heeft eigen checkvragen: de kern die je bij dat vak moet controleren. Je antwoordt met ja, deels of nee:</p>
+ <div class="tbl"><table>
+  <tr><th>Vak</th><th>Checkvragen</th></tr>
+  <tr><td>1. Domein en content-missie</td><td>Staan er jouw kernwaarden, en niet algemene woorden die bij elk merk passen?<br>Is de propositie onderscheidend ten opzichte van je concurrenten?<br>Klopt wat de AI over je markt of bedrijf beweert?</td></tr>
+  <tr><td>2. Primaire contentdoelen</td><td>Heeft elk doel een KPI en een norm (wanneer ben je tevreden)?<br>Meet de KPI echt het doel, in dezelfde fase van de funnel?<br>Zijn cijfers en normen onderbouwd, en niet door de AI verzonnen?</td></tr>
+  <tr><td>3. Doelgroep</td><td>Is de persona specifiek (leeftijd, situatie, gedrag) in plaats van 'iedereen'?<br>Herken je dit uit wat je zelf weet of hoort van je doelgroep?<br>Staan aannames als aanname benoemd, zodat je ze kunt toetsen?</td></tr>
+  <tr><td>4. Centraal thema</td><td>Volgt het thema uit je missie en kernwaarden (vak 1)?<br>Kun je hier geloofwaardig over vertellen, met eigen kennis of ervaring?</td></tr>
+  <tr><td>5. Storyline, format en tone of voice</td><td>Past de tone of voice bij je kernwaarden en je doelgroep?<br>Kun je de formats zelf maken met je tijd en middelen?</td></tr>
+  <tr><td>6. Contentstructuur</td><td>Hoort bij elke pijler een doel uit vak 2?<br>Zijn het de kanalen die je doelgroep gebruikt (vak 3)?</td></tr>
+ </table></div>
+ <p>Waar je op let:</p>
+ <ul>
+  <li><b>Verzonnen feiten en bronnen.</b> Een precies percentage of een rapport met een officieel klinkende naam is geen bewijs. Zoek het op.</li>
+  <li><b>Generieke taal.</b> "Waardevolle, relevante en consistente content" past bij elk merk en zegt dus niets over het jouwe.</li>
+  <li><b>Losse eindjes.</b> Een doel dat niet past bij de KPI, of een tone of voice die botst met je kernwaarden.</li>
+ </ul>
+ <p>Sluit af met de eindcheck: de 13 succesfactoren voor contentmarketing (Gerretsen, 2017). Is je content waardevol, emotie-opwekkend, deelbaar, verhalend, duidelijk, navolgbaar, aandacht gevend, visueel, onderscheidend, crossmediaal, actiegericht, doelgericht en overtuigend? In de game beantwoord je per factor een korte checkvraag met ja, deels of nee.</p>
+</article>
+
+<article class="card" id="k8" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 8 · Bronnen</div>
+ <h2>Claims toetsen met bronnen</h2>
+ <p>AI voorspelt welke tekst waarschijnlijk klinkt; het weet niet of iets waar is. Daarom toets je de belangrijkste claims aan de praktijk, vooral die over je doelgroep.</p>
+ <div class="tbl"><table>
+  <tr><th>Soort bron</th><th>Voorbeelden</th><th>Waarom</th></tr>
+  <tr><td>Primair: zelf verzameld</td><td>Interview met 3 tot 5 klanten, korte enquête, eigen data of observatie</td><td>Laat zien wat jouw doelgroep echt vindt</td></tr>
+  <tr><td>Secundair: van anderen</td><td>Reviews, socials van 3 concurrenten, Google Trends of zoekvolume, benchmarks, vakbronnen zoals Frankwatching</td><td>Snel, maar check wie het schreef en wanneer</td></tr>
+ </table></div>
+ <p>Hoe je het vastlegt in je bronnenlogboek:</p>
+ <ol>
+  <li>Noteer de AI-claim, bijvoorbeeld "mijn doelgroep zit vooral op TikTok".</li>
+  <li>Geef de uitkomst: bevestigd, weerlegd of onbekend.</li>
+  <li>Vermeld de bron in APA, bijvoorbeeld: Groenbak. (2026, 3 oktober). Interviews met vier klanten over kweken op het balkon [Ongepubliceerde interviews].</li>
+  <li>Schrijf op wat je ervan leert voor je strategie.</li>
+ </ol>
+ <p class="tip">De eis voor level 1: minimaal drie bronnen, waarvan minstens één primaire bron. 'Omdat AI het zegt' telt niet als bron. Een weerlegde claim is geen mislukking: het laat zien dat je AI niet blind volgt.</p>
+</article>
+
+<article class="card" id="toets" style="--c:var(--orange)">
+ <div class="eyebrow">Zelftoets · <span class="score" id="score">0 / 6</span></div>
+ <h2>Klaar voor de les?</h2>
+ <p>Kun je deze vragen beantwoorden? Vink ze af; dan ben je klaar voor de les.</p>
+ <ul class="check" id="checks">
+  <li><label><input type="checkbox">Wat is het verschil tussen een KPI en een norm?</label></li>
+  <li><label><input type="checkbox">Je doel is naamsbekendheid. Welke KPI past daarbij, en welke niet?</label></li>
+  <li><label><input type="checkbox">Is Instagram owned, paid, rented of earned media?</label></li>
+  <li><label><input type="checkbox">Welke zeven velden heeft de briefingkaart, en welk veld helpt het meest bij het checken?</label></li>
+  <li><label><input type="checkbox">Noem een primaire en een secundaire bron die je voor je eigen bedrijf kunt gebruiken.</label></li>
+  <li><label><input type="checkbox">Wat is de concurrent-test voor een kernwaarde, en hoe koppel je je moodboard aan je kernwaarden?</label></li>
+ </ul>
+</article>
+<footer>Content Challenge · Level 1 · Het fundament</footer>
+</main>
+<script>
+(function(){
+ var KEY='cc-kaarten-l1', boxes=[].slice.call(document.querySelectorAll('#checks input')), st=[];
+ try{st=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){}
+ function upd(){var n=boxes.filter(function(b){return b.checked}).length;document.getElementById('score').textContent=n+' / '+boxes.length;
+  try{localStorage.setItem(KEY,JSON.stringify(boxes.map(function(b){return b.checked})))}catch(e){}}
+ boxes.forEach(function(b,i){b.checked=!!st[i];b.addEventListener('change',upd)});upd();
+})();
+</script>
+</body>
+</html>

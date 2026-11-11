@@ -683,7 +683,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
         <button id="roleDocent" aria-pressed="false">Docent</button>
       </div>
       <a class="kbtn" id="deckBtn" href="https://claude.ai/artifact/PeqWKwmgCz3Q4rXuqSqpNr" target="_blank" rel="noopener" title="Open het lesdeck van dit level"><span class="kw">Lesdeck</span><span class="ks">Deck</span></a>
-      <a class="kbtn" id="kaartenBtn" href="https://claude.ai/artifact/4KaNAPnvqaFUtwBovYstZw" target="_blank" rel="noopener" title="Open de kenniskaarten van dit level"><span class="kw">Kenniskaarten</span><span class="ks">Kaarten</span></a>
+      <a class="kbtn" id="kaartenBtn" href="kennis/l1.html" target="_blank" rel="noopener" title="Open de kenniskaarten van dit level"><span class="kw">Kenniskaarten</span><span class="ks">Kaarten</span></a>
     </div>
   </div>
 </header>
@@ -702,7 +702,7 @@ const DOCENTCODE="contentdocent"; /* pas hier de docentcode aan */
 const DOCKEY="cq-docent";
 /* Gepubliceerde kenniskaarten per level. Linken naar een kaart: URL + "#k1" ... "#k8". */
 const LESDECK_URL={1:"https://claude.ai/artifact/PeqWKwmgCz3Q4rXuqSqpNr",2:"https://claude.ai/artifact/BDgSAvtSSyQvZauSPDFhPL",3:"https://claude.ai/artifact/88CUMApW6dNHAC6EFyTbGj",4:"https://claude.ai/artifact/Mx9BWSFEfzqqXvdwkc7tmk",5:"https://claude.ai/artifact/Ek4eUf6sGkcKvRPRdkLQfx",6:"https://claude.ai/artifact/4eG54EDAMrtT2eTiWaQDzA"};
-const KAART_URL={1:"https://claude.ai/artifact/4KaNAPnvqaFUtwBovYstZw",2:"https://claude.ai/artifact/Y9BGjMVNLpfTHG1h58WF1f",3:"https://claude.ai/artifact/WE8iM4AmqWt8F8UZu2UaeP",4:"https://claude.ai/artifact/JFiMjJfkawV6Q9sXB1CH5e",5:"https://claude.ai/artifact/MNryRw1RSXhLrR78hB6FK4",6:"https://claude.ai/artifact/LtPdSEXAwzQa1HCrufb8vH"};
+const KAART_URL={1:"kennis/l1.html",2:"kennis/l2.html",3:"kennis/l3.html",4:"kennis/l4.html",5:"kennis/l5.html",6:"kennis/l6.html"};
 /* Kennischeck per level: 6 meerkeuzevragen {q:"vraag",o:["optie 1","optie 2","optie 3","optie 4"],a:0 (index goede optie),k:"k3" (kaart)}.
    Minimaal 75% goed om het level te spelen. Een lege lijst betekent: geen kennischeck voor dat level. */
 /* Kennischeck level 1 (kenniskaarten level 1: k1 strategie, k2 doelen, k3 doelgroep, k4 kernwaarden en moodboard, k5 strategiemodel, k6 briefen, k7 checken, k8 bronnen). */

@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kenniskaarten Level 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Neon Live, dezelfde stijl als de game: altijd donker, magenta naar oranje, ON AIR-logo. */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"],:root[data-theme="light"]{
+ --paper:#120B26;--card:#1C1338;--ink:#F5F0FF;--muted:#B4A8D9;--line:#3A2C66;
+ --pink:#FF5FDC;--orange:#FFA14A;--gold:#FFB547;--cyan:#3CE6E0;--violet:#8C9BFF;--green:#3CF0A0;
+ --f-display:"Unbounded","Trebuchet MS",sans-serif;--f-body:"Manrope","Segoe UI",sans-serif;--f-mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--f-body);color:var(--ink);line-height:1.6;font-size:16px;
+ background:radial-gradient(ellipse at 10% -10%,#3B1670 0,transparent 45%),radial-gradient(ellipse at 95% 10%,#0E3A5C 0,transparent 40%),var(--paper);background-attachment:fixed;min-height:100vh}
+.top{position:sticky;top:0;z-index:5;background:rgba(18,11,38,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo b{display:inline-block;font-family:var(--f-display);font-weight:800;font-size:18px;color:#FFE3F7;text-shadow:0 0 6px var(--pink),0 0 18px var(--pink);border:2px solid var(--pink);border-radius:10px;padding:3px 11px;box-shadow:0 0 14px rgba(255,95,220,.45),inset 0 0 12px rgba(255,95,220,.35)}
+.logo span{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.logo span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF3B5C;margin-right:7px;box-shadow:0 0 10px #FF3B5C;vertical-align:1px}
+@media (prefers-reduced-motion:no-preference){.logo span::before{animation:rec 1.6s ease-in-out infinite}@keyframes rec{50%{opacity:.25}}}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+nav a{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--pink);box-shadow:0 0 12px rgba(255,95,220,.3);outline:none}
+main{max-width:1080px;margin:0 auto;padding:32px 16px 80px}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 12px;color:#FFF4E8;text-shadow:0 0 10px rgba(255,161,74,.6),0 0 28px rgba(255,95,220,.4)}
+.hero p{color:var(--muted);max-width:640px;margin:0 0 28px;font-size:17px}
+.card{position:relative;background:var(--card);border:1px solid #5A2B7A;border-radius:20px;padding:28px;margin:0 0 24px;box-shadow:0 0 0 1px rgba(255,95,220,.06),0 24px 60px rgba(0,0,0,.4);scroll-margin-top:110px}
+.card::before{content:"";position:absolute;left:28px;right:28px;top:-1px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--c,var(--pink)),var(--orange))}
+.eyebrow{font-family:var(--f-mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c,var(--gold))}
+.card h2{font-family:var(--f-display);font-weight:700;font-size:clamp(20px,3vw,26px);line-height:1.2;margin:6px 0 14px}
+.card p{margin:0 0 14px;max-width:760px}
+.card b{color:#FFE3F7}
+ol,ul{margin:0 0 16px;padding-left:22px}
+li{margin:4px 0}
+li::marker{color:var(--c,var(--pink));font-weight:700}
+.tbl{overflow-x:auto;margin:0 0 16px;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--c,var(--gold));background:rgba(255,255,255,.03);padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{font-weight:700;white-space:nowrap}
+.cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.cycle>div{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
+.cycle .L{font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1;color:var(--pink);text-shadow:0 0 14px rgba(255,95,220,.6)}
+.cycle .t{font-weight:800;margin:8px 0 2px}
+.cycle .d{font-size:14px;color:var(--muted)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+.duo div{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.duo .bad{border-color:#6A2A44;background:rgba(255,107,129,.06)}
+.duo .good{border-color:#1F5A47;background:rgba(60,240,160,.06)}
+.duo h3{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.duo .bad h3{color:#FF8FA1}.duo .good h3{color:var(--green)}
+.tip{border-left:3px solid var(--gold);background:rgba(255,181,71,.08);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 14px;max-width:760px}
+.check{list-style:none;padding:0}
+.check label{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin:0 0 8px;cursor:pointer}
+.check input{appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--pink);border-radius:7px;margin-top:2px;display:grid;place-content:center;cursor:pointer}
+.check input:checked{background:linear-gradient(135deg,var(--pink),var(--orange));box-shadow:0 0 12px rgba(255,95,220,.5)}
+.check input:checked::after{content:"✓";color:#1A0B2E;font-weight:800;font-size:14px}
+.check input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.score{font-family:var(--f-mono);font-weight:700;color:var(--gold)}
+footer{color:var(--muted);font-size:13px;text-align:center;padding-bottom:24px}
+@media (max-width:520px){.cycle{grid-template-columns:1fr!important}}
+@media (max-width:700px){.cycle{grid-template-columns:repeat(2,minmax(0,1fr))}.duo{grid-template-columns:1fr}.card{padding:22px 18px}.card::before{left:18px;right:18px}nav{margin-left:0}}
+.sw{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.sw div{border-radius:12px;padding:44px 10px 10px;font-size:13px;font-weight:700;border:1px solid var(--line)}
+.ct{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.ct div{border-radius:12px;padding:14px;font-weight:700;border:1px solid var(--line)}
+.ct small{display:block;font-family:var(--f-mono);font-size:12px;font-weight:700;margin-top:6px}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:1px}
+.chip.ok{background:rgba(60,240,160,.14);color:var(--green)}.chip.no{background:rgba(255,107,129,.14);color:#FF8FA1}.chip.mid{background:rgba(255,181,71,.14);color:var(--gold)}
+@media (max-width:520px){table{min-width:0;font-size:14px}td:first-child{white-space:normal}th,td{padding:9px 10px}}
+@media (max-width:700px){.sw{grid-template-columns:repeat(2,minmax(0,1fr))}.ct{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+ <div class="logo"><b>Content Challenge</b><span>Kenniskaarten · Level 3</span></div>
+ <nav aria-label="Kaarten">
+  <a href="#k1">1</a><a href="#k2">2</a><a href="#k3">3</a><a href="#k4">4</a><a href="#k5">5</a><a href="#k6">6</a><a href="#k7">7</a><a href="#k8">8</a><a href="#toets">Zelftoets</a>
+ </nav>
+</div></header>
+<main>
+<section class="hero">
+ <h1>Het bouwplan</h1>
+ <p>Lees deze kaarten vóór de les. In de les reken je je funnel terug, laat je AI een eerste kalender maken en check je of hij in je uren past. Hier staat de theorie die je daarvoor nodig hebt.</p>
+</section>
+
+<article class="card" id="k1" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 1</div>
+ <h2>Waarom een contentkalender?</h2>
+ <p>Je strategie zegt <b>wat</b> je wilt bereiken en je huisstijl <b>hoe</b> het eruitziet. De contentkalender zegt <b>wanneer</b> je wat plaatst, op welk kanaal en hoe je meet of het werkt. Zonder planning post je wanneer je tijd hebt, en dat is meestal te weinig of te laat.</p>
+ <p>Een kalender helpt je om:</p>
+ <ul>
+  <li>consistent te posten, zodat je doelgroep je blijft zien;</li>
+  <li>je contentpijlers en de fasen van je funnel in balans te houden;</li>
+  <li>vooruit te werken, zodat je niet elke dag iets hoeft te verzinnen;</li>
+  <li>te meten wat werkt en bij te sturen.</li>
+ </ul>
+ <p><b>De minimale eisen van de opdracht:</b></p>
+ <div class="tbl"><table>
+  <tr><th>Eis</th><th>Wat betekent het</th></tr>
+  <tr><td>Looptijd</td><td>Minimaal 3 maanden (13 weken) vanaf je startdatum</td></tr>
+  <tr><td>Ritme</td><td>Elke week minimaal één uiting</td></tr>
+  <tr><td>Omvang</td><td>Minimaal 13 uitingen in totaal (één per week), waarvan minimaal 12 helemaal compleet</td></tr>
+  <tr><td>Per uiting</td><td>Aanmaakdatum, publicatiedatum, tijdstip, fase, thema, soort content, format, kanaal, KPI en norm</td></tr>
+ </table></div>
+ <p class="tip">De <b>aanmaakdatum</b> is wanneer je de uiting maakt, de <b>publicatiedatum</b> wanneer hij online gaat. De game telt je uren in de week van de aanmaakdatum, want dan zit je er echt tijd in. Maak je een uiting al vóór je startdatum, dan telt hij mee in week 1.</p>
+</article>
+
+<article class="card" id="k2" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 2</div>
+ <h2>Funnelmodellen en KPI per fase</h2>
+ <p>Een funnel beschrijft de weg van iemand die je merk nog niet kent tot een trouwe klant. Er zijn meerdere modellen, maar de fasen lopen gelijk op. In de game gebruiken we <b>See, Think, Do, Care</b>.</p>
+ <div class="tbl"><table>
+  <tr><th>See · Think · Do · Care</th><th>AIDA</th><th>TOFU · MOFU · BOFU</th></tr>
+  <tr><td>See: mensen leren je kennen</td><td>Attention</td><td>Top of funnel</td></tr>
+  <tr><td>Think: mensen overwegen</td><td>Interest, Desire</td><td>Middle of funnel</td></tr>
+  <tr><td>Do: mensen kopen of melden zich aan</td><td>Action</td><td>Bottom of funnel</td></tr>
+  <tr><td>Care: klanten blijven en praten erover</td><td>(geen aparte fase)</td><td>Retentie of loyaliteit</td></tr>
+ </table></div>
+ <p>Elke fase heeft zijn eigen doel, dus ook zijn eigen <b>KPI</b> (wat je meet):</p>
+ <div class="tbl"><table>
+  <tr><th>Fase</th><th>Passende KPI's</th><th>Past niet</th></tr>
+  <tr><td>See</td><td>Bereik, weergaven, nieuwe volgers</td><td>Bestellingen</td></tr>
+  <tr><td>Think</td><td>Opslaan, delen, reacties, klikken, websitebezoek</td><td>Alleen bereik</td></tr>
+  <tr><td>Do</td><td>Aanmeldingen, bestellingen, klikratio (CTR)</td><td>Likes</td></tr>
+  <tr><td>Care</td><td>Reacties, opens van je nieuwsbrief, herhaalaankopen</td><td>Bereik bij nieuwe mensen</td></tr>
+ </table></div>
+ <p class="tip">Een veelgemaakte fout: bij een See-uiting meten hoeveel mensen iets kopen. Wie je net leert kennen, koopt nog niet. Meet dan bereik.</p>
+</article>
+
+<article class="card" id="k3" style="--c:var(--cyan)">
+ <div class="eyebrow">Kaart 3</div>
+ <h2>Funnel terugrekenen</h2>
+ <p>Hoeveel uitingen heb je eigenlijk nodig? Begin bij je doel onderaan de funnel en reken terug naar boven. Je hebt drie getallen nodig:</p>
+ <ul>
+  <li><b>Van interesse naar actie:</b> welk deel van de geïnteresseerden doet echt iets (bijvoorbeeld 4%)? Vul in de game een heel getal in: 4, niet 0,04.</li>
+  <li><b>Van bereik naar interesse:</b> welk deel van de mensen die je bereikt, raakt geïnteresseerd (bijvoorbeeld 5%)?</li>
+  <li><b>Bereik per uiting:</b> hoeveel mensen ziet één uiting gemiddeld (bijvoorbeeld 1.500)?</li>
+ </ul>
+ <p><b>Rekenvoorbeeld Groenbak</b> (doel: 20 nieuwe abonnees in 3 maanden):</p>
+ <div class="tbl"><table>
+  <tr><th>Stap</th><th>Som</th><th>Uitkomst</th></tr>
+  <tr><td>Geïnteresseerden nodig</td><td>20 ÷ 4%</td><td>500</td></tr>
+  <tr><td>Bereik nodig</td><td>500 ÷ 5%</td><td>10.000</td></tr>
+  <tr><td>Uitingen nodig</td><td>10.000 ÷ 1.500</td><td>7 (naar boven afgerond)</td></tr>
+  <tr><td>Per week</td><td>7 ÷ 13 weken</td><td>ongeveer 0,5</td></tr>
+ </table></div>
+ <p>Groenbak plant 14 uitingen: ruim genoeg voor het doel en het haalt de minimale eis van 13 (één per week). Komt er bij jou een enorm aantal uit, bijvoorbeeld 80 uitingen? Dan is je doel te groot of je bereik per uiting te klein. Stel bij: een kleiner doel, een kanaal met meer bereik of een samenwerking.</p>
+ <p class="tip">De percentages zijn aannames. Zoek er thuis een bron bij, bijvoorbeeld een benchmarkrapport of de cijfers van een vergelijkbaar account (kaart 6).</p>
+</article>
+
+<article class="card" id="k4" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 4</div>
+ <h2>Soorten content en kanaalkeuze</h2>
+ <p>Wissel af tussen vier soorten content. Alleen maar promotie werkt averechts; alleen maar inspiratie levert niets op.</p>
+ <div class="tbl"><table>
+  <tr><th>Soort</th><th>Doel</th><th>Voorbeeld</th></tr>
+  <tr><td>Educatief</td><td>Je doelgroep iets leren</td><td>Zo kweek je tomaten op een balkon</td></tr>
+  <tr><td>Inspirerend</td><td>Een gevoel of idee meegeven</td><td>Van zaadje tot plantje in 30 seconden</td></tr>
+  <tr><td>Community</td><td>Contact en interactie</td><td>Poll: wat wil jij dit jaar kweken?</td></tr>
+  <tr><td>Promotioneel</td><td>Aanzetten tot actie</td><td>Eerste box met korting</td></tr>
+ </table></div>
+ <p><b>Kanaalkeuze.</b> Kies kanalen waar je doelgroep echt zit, en liever twee goed dan vijf half. Kijk terug naar je doelgroeponderzoek van level 1.</p>
+ <div class="tbl"><table>
+  <tr><th>Kanaal</th><th>Sterk in</th></tr>
+  <tr><td>Instagram</td><td>Beeld, reels, stories; breed bereik onder 18 tot 35</td></tr>
+  <tr><td>TikTok</td><td>Korte video en bereik bij nieuwe mensen (See)</td></tr>
+  <tr><td>LinkedIn</td><td>Zakelijke doelgroep, kennis en netwerk</td></tr>
+  <tr><td>Nieuwsbrief</td><td>Binding met mensen die je al kennen (Care)</td></tr>
+  <tr><td>Blog of website</td><td>Vindbaarheid en uitgebreide uitleg (Think)</td></tr>
+ </table></div>
+</article>
+
+<article class="card" id="k5" style="--c:var(--gold)">
+ <div class="eyebrow">Kaart 5</div>
+ <h2>Tijdbudget en formats</h2>
+ <p>Een kalender die je niet kunt maken, is een wensenlijst. Reken daarom per week uit hoeveel uur je uitingen kosten, inclusief bedenken, maken en plaatsen. De game gebruikt deze standaardtijden; pas ze aan naar je eigen tempo.</p>
+ <div class="tbl"><table>
+  <tr><th>Format</th><th>Uur</th><th>Format</th><th>Uur</th></tr>
+  <tr><td>Story</td><td>0,5</td><td>Reel</td><td>3</td></tr>
+  <tr><td>Post</td><td>1</td><td>Nieuwsbrief</td><td>3</td></tr>
+  <tr><td>Carrousel</td><td>2</td><td>Blog</td><td>4</td></tr>
+  <tr><td>Advertentie</td><td>2</td><td>Podcast</td><td>5</td></tr>
+  <tr><td>Live</td><td>2</td><td>Video</td><td>6</td></tr>
+ </table></div>
+ <p><b>Te vol? Drie manieren om bij te sturen:</b></p>
+ <ul>
+  <li><b>Lichter format:</b> een carrousel in plaats van een reel.</li>
+  <li><b>Verschuiven:</b> een uiting naar een rustigere week, of eerder maken.</li>
+  <li><b>Hergebruiken:</b> maak één video en knip er drie korte clips uit.</li>
+ </ul>
+ <p class="tip">AI plant bijna altijd te veel, vaak meerdere reels per week. Schrijf op wat je schrapt en waarom: dat komt in je AI-logboek. Noteer in de game bij elke stap van je promptketen ook kort wat AI antwoordde.</p>
+</article>
+
+<article class="card" id="k6" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 6</div>
+ <h2>KPI, norm en bron</h2>
+ <p>Een <b>KPI</b> is wat je meet, bijvoorbeeld weergaven. De <b>norm</b> is het getal dat je wilt halen, bijvoorbeeld 1.500. Een norm moet een getal zijn: "veel" of "goed" kun je niet meten.</p>
+ <p>Maar waarom 1.500 en niet 500 of 10.000? Een norm zonder bron is een gok. Goede bronnen:</p>
+ <div class="tbl"><table>
+  <tr><th>Soort bron</th><th>Voorbeeld</th></tr>
+  <tr><td>Benchmark</td><td>Een rapport met gemiddelde engagement per branche of kanaal</td></tr>
+  <tr><td>Eigen data</td><td>De statistieken van je eerdere posts</td></tr>
+  <tr><td>Concurrent</td><td>Wat een vergelijkbaar account haalt met hetzelfde soort uiting</td></tr>
+  <tr><td>Primair</td><td>Een poll of gesprek met je doelgroep</td></tr>
+  <tr><td>Platformrichtlijn</td><td>Een vakartikel of de uitleg van het platform zelf</td></tr>
+ </table></div>
+ <p><b>SMART-check voor je norm:</b> is hij specifiek, meetbaar, haalbaar voor jouw account, relevant voor de fase en gekoppeld aan een periode?</p>
+ <p class="tip">Een nieuw account haalt zelden de cijfers van een groot merk. Kies een vergelijkbaar account als ijkpunt, niet de marktleider.</p>
+</article>
+
+<article class="card" id="k7" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 7</div>
+ <h2>AI briefen met een promptketen</h2>
+ <p>In level 1 en 2 gebruikte je een briefingkaart. Vanaf nu ontwerp je je eigen aanpak: een <b>promptketen</b>. Dat is een reeks prompts die op elkaar voortbouwen. Elke stap heeft één doel, en jij controleert tussendoor.</p>
+ <div class="tbl"><table>
+  <tr><th>Stap</th><th>Doel</th><th>Voorbeeld</th></tr>
+  <tr><td>1 · Context</td><td>AI kent je merk en laat zien wat nog ontbreekt</td><td>Hier is mijn context. Stel me eerst 3 vragen.</td></tr>
+  <tr><td>2 · Maken</td><td>Een eerste versie in een vast format</td><td>Maak een kalender van 13 weken als tabel met deze 10 kolommen.</td></tr>
+  <tr><td>3 · Checken</td><td>AI toetst zijn eigen werk aan jouw eisen</td><td>Past elke week binnen 4 uur? Past elke KPI bij de fase?</td></tr>
+ </table></div>
+ <p>Een sterke keten heeft minstens drie stappen, en bij elke stap kun je uitleggen <b>waarom</b> hij erin zit. Je mag ook stappen toevoegen, bijvoorbeeld eerst thema's laten bedenken en daarna pas datums.</p>
+ <p class="tip">Vraag om een tabel met precies de kolommen uit de game. Dan kun je hem in één keer plakken en hoef je niets over te typen.</p>
+</article>
+
+<article class="card" id="k8" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 8</div>
+ <h2>Tools voor je planning</h2>
+ <p>De game is je bouwplaats. Voor het echte werk kun je je kalender overzetten naar een tool. Kopieer hem in de oplevering als tabel en plak hem in een leeg blad.</p>
+ <div class="tbl"><table>
+  <tr><th>Tool</th><th>Handig voor</th></tr>
+  <tr><td>Google Sheets of Excel</td><td>Eenvoudig, gratis, makkelijk delen met je studio</td></tr>
+  <tr><td>Trello</td><td>Kaartjes per uiting die je van idee naar gepubliceerd schuift</td></tr>
+  <tr><td>Planable</td><td>Posts vooraf bekijken en laten goedkeuren</td></tr>
+  <tr><td>Hootsuite</td><td>Inplannen op meerdere kanalen en statistieken op één plek</td></tr>
+  <tr><td>Later</td><td>Visueel plannen voor Instagram en TikTok</td></tr>
+ </table></div>
+ <p>Kies een tool die bij je past. Belangrijker dan de tool is dat je hem bijhoudt: plan, publiceer, meet en stuur bij.</p>
+</article>
+
+<article class="card" id="toets" style="--c:var(--orange)">
+ <div class="eyebrow">Zelftoets · <span class="score" id="score">0 / 5</span></div>
+ <h2>Klaar voor de les?</h2>
+ <p>Kun je deze vragen beantwoorden? Vink ze af; dan ben je klaar voor de les.</p>
+ <ul class="check" id="checks">
+  <li><label><input type="checkbox">Wat zijn de minimale eisen van de contentkalender?</label></li>
+  <li><label><input type="checkbox">Welke KPI past bij See en welke bij Do?</label></li>
+  <li><label><input type="checkbox">Hoeveel uitingen heb je nodig bij een doel van 30 aanmeldingen, 3% actie, 5% interesse en 2.000 bereik per uiting?</label></li>
+  <li><label><input type="checkbox">Hoeveel uur per week kun jij echt aan content besteden?</label></li>
+  <li><label><input type="checkbox">Wat is het verschil tussen een KPI en een norm?</label></li>
+ </ul>
+</article>
+<footer>Content Challenge · Level 3 · Het bouwplan</footer>
+</main>
+<script>
+(function(){
+ var KEY='cc-kaarten-l3', boxes=[].slice.call(document.querySelectorAll('#checks input')), st=[];
+ try{st=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){}
+ function upd(){var n=boxes.filter(function(b){return b.checked}).length;document.getElementById('score').textContent=n+' / '+boxes.length;
+  try{localStorage.setItem(KEY,JSON.stringify(boxes.map(function(b){return b.checked})))}catch(e){}}
+ boxes.forEach(function(b,i){b.checked=!!st[i];b.addEventListener('change',upd)});upd();
+})();
+</script>
+</body>
+</html>

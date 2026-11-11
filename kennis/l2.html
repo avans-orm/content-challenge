@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kenniskaarten Level 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Neon Live, dezelfde stijl als de game: altijd donker, magenta naar oranje, ON AIR-logo. */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"],:root[data-theme="light"]{
+ --paper:#120B26;--card:#1C1338;--ink:#F5F0FF;--muted:#B4A8D9;--line:#3A2C66;
+ --pink:#FF5FDC;--orange:#FFA14A;--gold:#FFB547;--cyan:#3CE6E0;--violet:#8C9BFF;--green:#3CF0A0;
+ --f-display:"Unbounded","Trebuchet MS",sans-serif;--f-body:"Manrope","Segoe UI",sans-serif;--f-mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--f-body);color:var(--ink);line-height:1.6;font-size:16px;
+ background:radial-gradient(ellipse at 10% -10%,#3B1670 0,transparent 45%),radial-gradient(ellipse at 95% 10%,#0E3A5C 0,transparent 40%),var(--paper);background-attachment:fixed;min-height:100vh}
+.top{position:sticky;top:0;z-index:5;background:rgba(18,11,38,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo b{display:inline-block;font-family:var(--f-display);font-weight:800;font-size:18px;color:#FFE3F7;text-shadow:0 0 6px var(--pink),0 0 18px var(--pink);border:2px solid var(--pink);border-radius:10px;padding:3px 11px;box-shadow:0 0 14px rgba(255,95,220,.45),inset 0 0 12px rgba(255,95,220,.35)}
+.logo span{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.logo span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF3B5C;margin-right:7px;box-shadow:0 0 10px #FF3B5C;vertical-align:1px}
+@media (prefers-reduced-motion:no-preference){.logo span::before{animation:rec 1.6s ease-in-out infinite}@keyframes rec{50%{opacity:.25}}}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+nav a{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--pink);box-shadow:0 0 12px rgba(255,95,220,.3);outline:none}
+main{max-width:1080px;margin:0 auto;padding:32px 16px 80px}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 12px;color:#FFF4E8;text-shadow:0 0 10px rgba(255,161,74,.6),0 0 28px rgba(255,95,220,.4)}
+.hero p{color:var(--muted);max-width:640px;margin:0 0 28px;font-size:17px}
+.card{position:relative;background:var(--card);border:1px solid #5A2B7A;border-radius:20px;padding:28px;margin:0 0 24px;box-shadow:0 0 0 1px rgba(255,95,220,.06),0 24px 60px rgba(0,0,0,.4);scroll-margin-top:110px}
+.card::before{content:"";position:absolute;left:28px;right:28px;top:-1px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--c,var(--pink)),var(--orange))}
+.eyebrow{font-family:var(--f-mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c,var(--gold))}
+.card h2{font-family:var(--f-display);font-weight:700;font-size:clamp(20px,3vw,26px);line-height:1.2;margin:6px 0 14px}
+.card p{margin:0 0 14px;max-width:760px}
+.card b{color:#FFE3F7}
+ol,ul{margin:0 0 16px;padding-left:22px}
+li{margin:4px 0}
+li::marker{color:var(--c,var(--pink));font-weight:700}
+.tbl{overflow-x:auto;margin:0 0 16px;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--c,var(--gold));background:rgba(255,255,255,.03);padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{font-weight:700;white-space:nowrap}
+.cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.cycle>div{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
+.cycle .L{font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1;color:var(--pink);text-shadow:0 0 14px rgba(255,95,220,.6)}
+.cycle .t{font-weight:800;margin:8px 0 2px}
+.cycle .d{font-size:14px;color:var(--muted)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+.duo div{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.duo .bad{border-color:#6A2A44;background:rgba(255,107,129,.06)}
+.duo .good{border-color:#1F5A47;background:rgba(60,240,160,.06)}
+.duo h3{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.duo .bad h3{color:#FF8FA1}.duo .good h3{color:var(--green)}
+.tip{border-left:3px solid var(--gold);background:rgba(255,181,71,.08);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 14px;max-width:760px}
+.check{list-style:none;padding:0}
+.check label{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin:0 0 8px;cursor:pointer}
+.check input{appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--pink);border-radius:7px;margin-top:2px;display:grid;place-content:center;cursor:pointer}
+.check input:checked{background:linear-gradient(135deg,var(--pink),var(--orange));box-shadow:0 0 12px rgba(255,95,220,.5)}
+.check input:checked::after{content:"✓";color:#1A0B2E;font-weight:800;font-size:14px}
+.check input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.score{font-family:var(--f-mono);font-weight:700;color:var(--gold)}
+footer{color:var(--muted);font-size:13px;text-align:center;padding-bottom:24px}
+@media (max-width:520px){.cycle{grid-template-columns:1fr!important}}
+@media (max-width:700px){.cycle{grid-template-columns:repeat(2,minmax(0,1fr))}.duo{grid-template-columns:1fr}.card{padding:22px 18px}.card::before{left:18px;right:18px}nav{margin-left:0}}
+.sw{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.sw div{border-radius:12px;padding:44px 10px 10px;font-size:13px;font-weight:700;border:1px solid var(--line)}
+.ct{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.ct div{border-radius:12px;padding:14px;font-weight:700;border:1px solid var(--line)}
+.ct small{display:block;font-family:var(--f-mono);font-size:12px;font-weight:700;margin-top:6px}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:1px}
+.chip.ok{background:rgba(60,240,160,.14);color:var(--green)}.chip.no{background:rgba(255,107,129,.14);color:#FF8FA1}.chip.mid{background:rgba(255,181,71,.14);color:var(--gold)}
+@media (max-width:520px){table{min-width:0;font-size:14px}td:first-child{white-space:normal}th,td{padding:9px 10px}}
+@media (max-width:700px){.sw{grid-template-columns:repeat(2,minmax(0,1fr))}.ct{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+ <div class="logo"><b>Content Challenge</b><span>Kenniskaarten · Level 2</span></div>
+ <nav aria-label="Kaarten">
+  <a href="#k1">1</a><a href="#k2">2</a><a href="#k3">3</a><a href="#k4">4</a><a href="#k5">5</a><a href="#k6">6</a><a href="#k7">7</a><a href="#k8">8</a><a href="#toets">Zelftoets</a>
+ </nav>
+</div></header>
+<main>
+<section class="hero">
+ <h1>De identiteit</h1>
+ <p>Lees deze kaarten vóór de online les. In de les speel je de brand-detective en de pressure cooker; hier staat de theorie die je nodig hebt om je huisstijlhandboek te maken en te checken.</p>
+</section>
+
+<article class="card" id="k1" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 1</div>
+ <h2>Het huisstijlhandboek</h2>
+ <p>Een huisstijl zorgt dat je merk zich <b>visueel onderscheidt</b> en overal herkenbaar is: op Instagram, op je website en op een flyer. Het huisstijlhandboek legt die afspraken vast, zodat iedereen die content maakt (jij, een collega, een freelancer of een AI-tool) hetzelfde merk neerzet.</p>
+ <div class="tbl"><table>
+  <tr><th>Onderdeel</th><th>Wat leg je vast</th></tr>
+  <tr><td>Logo</td><td>Varianten (kleur, zwart, wit), minimale grootte, vrije ruimte eromheen</td></tr>
+  <tr><td>Kleuren</td><td>Hex-codes met een rol: primair, secundair, accent, donker, licht</td></tr>
+  <tr><td>Typografie</td><td>Een font voor koppen en een font voor lopende tekst, met groottes</td></tr>
+  <tr><td>Beeldstijl</td><td>Soort beeld, licht, kleurbewerking, onderwerpen</td></tr>
+  <tr><td>Compositie</td><td>Witruimte, uitlijning, vaste plek voor logo en tekst</td></tr>
+  <tr><td>Tone of voice</td><td>Hoe het merk klinkt, met woorden die je wel en niet gebruikt</td></tr>
+  <tr><td>Do's en don'ts</td><td>Voorbeelden van goed en fout gebruik</td></tr>
+  <tr><td>Toepassingen</td><td>Kanalen en communicatiemiddelen waar de huisstijl op staat</td></tr>
+ </table></div>
+ <p><b>Waarom?</b> Consistentie bouwt herkenning, en herkenning bouwt vertrouwen. Elke keuze in je huisstijl volgt uit je strategie van level 1: je kernwaarden, je doelgroep en je centraal thema. Een huisstijl is dus geen smaak, maar een vertaling van je merk.</p>
+</article>
+
+<article class="card" id="k2" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 2</div>
+ <h2>Kleur en kleurenpsychologie</h2>
+ <p>Geef elke kleur een <b>rol</b>. Dan weet je waar je hem gebruikt:</p>
+ <div class="sw">
+  <div style="background:#2F6B3A;color:#FBF8F1">Primair<br>#2F6B3A</div>
+  <div style="background:#F2E8D5;color:#1E2A22">Secundair<br>#F2E8D5</div>
+  <div style="background:#F28C38;color:#1E2A22">Accent<br>#F28C38</div>
+  <div style="background:#1E2A22;color:#FBF8F1">Donker (tekst)<br>#1E2A22</div>
+  <div style="background:#FBF8F1;color:#1E2A22">Licht (achtergrond)<br>#FBF8F1</div>
+ </div>
+ <p>De game werkt met precies deze vijf rollen. <b>Primair</b> is je hoofdkleur (bijvoorbeeld koppen, randen, je merknaam), <b>Secundair</b> ondersteunt, <b>Accent</b> gebruik je spaarzaam voor wat moet opvallen (zoals een knop), <b>Donker</b> is je tekstkleur en <b>Licht</b> je achtergrond.</p>
+ <p>Een vuistregel voor de verdeling is <b>60-30-10</b>: 60% een rustige basiskleur, 30% een ondersteunende kleur en 10% accent voor wat opvalt, zoals een knop of aanbieding.</p>
+ <p>Kleuren roepen associaties op. Gebruik ze als startpunt, niet als wet:</p>
+ <div class="tbl"><table>
+  <tr><th>Kleur</th><th>Veelgenoemde associaties</th></tr>
+  <tr><td>Rood</td><td>Energie, urgentie, passie</td></tr>
+  <tr><td>Oranje</td><td>Vrolijk, toegankelijk, speels</td></tr>
+  <tr><td>Geel</td><td>Optimisme, aandacht</td></tr>
+  <tr><td>Groen</td><td>Natuur, gezondheid, duurzaamheid</td></tr>
+  <tr><td>Blauw</td><td>Betrouwbaar, rustig, zakelijk</td></tr>
+  <tr><td>Paars</td><td>Creatief, luxe</td></tr>
+  <tr><td>Zwart en goud</td><td>Exclusief, premium</td></tr>
+ </table></div>
+ <p class="tip">Kleurbetekenis hangt af van cultuur, context en doelgroep. AI presenteert zulke associaties vaak als feit. Toets ze daarom in je bronnenlogboek, het liefst bij je doelgroep zelf.</p>
+</article>
+
+<article class="card" id="k3" style="--c:var(--cyan)">
+ <div class="eyebrow">Kaart 3 · Checken</div>
+ <h2>Contrast en leesbaarheid</h2>
+ <p>Een mooie kleur is waardeloos als niemand de tekst kan lezen. De internationale richtlijn <b>WCAG</b> geeft een meetbare eis: de contrastverhouding tussen tekst en achtergrond.</p>
+ <div class="tbl"><table>
+  <tr><th>Niveau</th><th>Gewone tekst</th><th>Grote tekst</th></tr>
+  <tr><td>AA (de norm)</td><td>minimaal 4,5:1</td><td>minimaal 3:1</td></tr>
+  <tr><td>AAA (extra goed)</td><td>minimaal 7:1</td><td>minimaal 4,5:1</td></tr>
+ </table></div>
+ <p>Grote tekst is vanaf ongeveer 24 px, of 19 px vet. Zwart op wit is 21:1, gelijk is 1:1.</p>
+ <div class="ct">
+  <div style="background:#FBF8F1;color:#1E2A22">Donker op licht<small>14,0:1 <span class="chip ok">goed</span></small></div>
+  <div style="background:#F28C38;color:#1E2A22">Donker op oranje<small>6,1:1 <span class="chip ok">goed</span></small></div>
+  <div style="background:#FFFFFF;color:#E0B400">Geel op wit<small style="color:#6B5A00">2,0:1 <span class="chip no">onleesbaar</span></small></div>
+ </div>
+ <p>De game rekent het contrast van je palet automatisch uit. Haalt een combinatie het niet, dan kies je: een andere kleur, alleen voor grote koppen, of nooit voor tekst. Dat leg je vast als don't in je handboek.</p>
+ <p class="tip">Zeg het ook nooit alleen met kleur. Een rode prijs zonder tekst als "aanbieding" mist iemand die kleurenblind is.</p>
+</article>
+
+<article class="card" id="k4" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 4</div>
+ <h2>Typografie</h2>
+ <p>Letters hebben een karakter. Een schreefletter (zoals Fraunces of Lora) voelt klassiek of ambachtelijk; een schreefloze letter (zoals Inter of Work Sans) voelt modern en neutraal; een display-letter (zoals Bebas Neue) is luid en alleen geschikt voor korte koppen.</p>
+ <ul>
+  <li><b>Maximaal 2 lettertypen:</b> één voor koppen, één voor lopende tekst. Variatie maak je met dikte en grootte, niet met een derde font.</li>
+  <li><b>Hiërarchie:</b> kop, subkop en tekst zijn duidelijk verschillend in grootte.</li>
+  <li><b>Leesbaarheid:</b> lopende tekst minimaal 16 px op schermen, regels niet breder dan zo'n 60 tot 75 tekens.</li>
+  <li><b>Gratis en beschikbaar:</b> kies uit Google Fonts, zodat je ze overal mag gebruiken. AI noemt soms fonts die niet bestaan of betaald zijn.</li>
+ </ul>
+ <div class="duo">
+  <div class="bad"><h3>Niet</h3><p>Koppen in Bangers, subkoppen in Lobster, tekst in Courier New en citaten in Pacifico.</p></div>
+  <div class="good"><h3>Wel</h3><p>Koppen in Fraunces Bold, tekst in Work Sans. Nadruk met vet, niet met een nieuw font.</p></div>
+ </div>
+</article>
+
+<article class="card" id="k5" style="--c:var(--gold)">
+ <div class="eyebrow">Kaart 5</div>
+ <h2>Beeldstijl en compositie</h2>
+ <p>Je <b>beeldstijl</b> beschrijft hoe je foto's, video's en illustraties eruitzien. Leg vast:</p>
+ <ul>
+  <li><b>Soort beeld:</b> foto, illustratie, AI-beeld of een mix</li>
+  <li><b>Licht en kleur:</b> bijvoorbeeld daglicht, warm, licht gedesatureerd</li>
+  <li><b>Onderwerpen:</b> wie of wat staat erop, en wat juist niet</li>
+  <li><b>Haalbaarheid:</b> kun je dit zelf maken met je telefoon, in het Medialab of met AI?</li>
+ </ul>
+ <p>Je <b>compositie</b> bepaalt hoe je elementen op een vlak zet:</p>
+ <ul>
+  <li><b>Witruimte:</b> lege ruimte geeft rust en laat het belangrijkste opvallen.</li>
+  <li><b>Visuele hiërarchie:</b> één ding valt het eerst op, daarna de rest.</li>
+  <li><b>Uitlijning en grid:</b> vaste plekken voor logo, kop en call-to-action.</li>
+  <li><b>Regel van derden:</b> zet je onderwerp op een van de snijpunten in plaats van precies in het midden.</li>
+ </ul>
+ <p class="tip">Leg je beeldstijl naast je moodboard uit level 1. Past hij bij de sfeer en bij je doelgroep? Glossy stockfoto's bij een nuchter studentenmerk zijn een klassieke mismatch.</p>
+</article>
+
+<article class="card" id="k6" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 6 · Kiezen</div>
+ <h2>Tone of voice</h2>
+ <p>Tone of voice is hoe je merk klinkt. Je beschrijft het met vier schalen:</p>
+ <div class="tbl"><table>
+  <tr><th>Schaal</th><th>Van</th><th>Naar</th></tr>
+  <tr><td>Humor</td><td>Grappig</td><td>Serieus</td></tr>
+  <tr><td>Formaliteit</td><td>Formeel</td><td>Informeel</td></tr>
+  <tr><td>Respect</td><td>Respectvol</td><td>Brutaal</td></tr>
+  <tr><td>Energie</td><td>Enthousiast</td><td>Zakelijk en feitelijk</td></tr>
+ </table></div>
+ <p>Maak het concreet met regels: zeg je je of u? Hoe lang zijn je zinnen? Gebruik je emoji? Welke woorden gebruik je nooit?</p>
+ <div class="duo">
+  <div class="bad"><h3>Botst met doelgroep</h3><p>"Geachte student, wij nodigen u graag uit om kennis te maken met ons verfijnde culinaire assortiment."</p></div>
+  <div class="good"><h3>Past bij doelgroep</h3><p>"Geen zin om te koken? Wij wel. Drie maaltijden voor €12, morgen bij je deur."</p></div>
+ </div>
+ <p class="tip">In de game laat je AI je persona spelen om twee richtingen te testen. Dat is een snelle check, geen echt doelgroeponderzoek: AI is vaak te positief en te algemeen. Beoordeel de reactie daarom zelf, met wat je uit je interviews weet.</p>
+</article>
+
+<article class="card" id="k7" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 7 · Briefen</div>
+ <h2>AI briefen voor een huisstijl</h2>
+ <p>Gebruik dezelfde zeven velden als in level 1: rol, context, taak, materiaal, format, eisen en aannames. Voor een huisstijl zijn twee velden extra belangrijk:</p>
+ <ul>
+  <li><b>Materiaal:</b> voeg je moodboard als afbeelding toe als bijlage in je AI-tool, plus je drie sfeerwoorden.</li>
+  <li><b>Eisen:</b> minimaal 4,5:1 contrast, maximaal 2 lettertypen, alleen Google Fonts.</li>
+ </ul>
+ <p>Typische fouten in AI-voorstellen:</p>
+ <ul>
+  <li>Kleuren die mooi klinken maar onleesbaar zijn als tekst</li>
+  <li>Kleurbetekenissen als feit gepresenteerd, zonder bron</li>
+  <li>Te veel lettertypen, of fonts die niet gratis zijn</li>
+  <li>Een beeldstijl die niet bij je doelgroep of budget past</li>
+  <li>Een tone of voice die je merk niet herkent</li>
+ </ul>
+ <p>Daarom beslis jij: neem over wat past, pas aan wat niet past, en leg in je AI-logboek vast wat je veranderde en waarom.</p>
+</article>
+
+<article class="card" id="k8" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 8 · Opmaak</div>
+ <h2>Veelgemaakte ontwerpfouten</h2>
+ <p>Lees het artikel van Knallr over <a href="https://knallr.nl/de-9-meest-gemaakte-fouten-als-je-zelf-een-flyer-poster-ontwerpt/" target="_blank" rel="noopener noreferrer" style="color:var(--cyan)">de 9 meest gemaakte fouten bij het ontwerpen van een flyer of poster</a>. In de bonusmissie jaag je op deze zes:</p>
+ <div class="tbl"><table>
+  <tr><th>Fout</th><th>Hoe herken je het</th><th>Oplossing</th></tr>
+  <tr><td>Te veel lettertypen</td><td>Elke regel een ander font</td><td>Maximaal 2, variatie met dikte</td></tr>
+  <tr><td>Onleesbaar contrast</td><td>Lichte tekst op lichte achtergrond</td><td>Minimaal 4,5:1</td></tr>
+  <tr><td>Geen witruimte</td><td>Alles tegen elkaar en tegen de rand</td><td>Ruimte rondom en tussen blokken</td></tr>
+  <tr><td>Vervormd beeld of logo</td><td>Uitgerekt of platgedrukt</td><td>Altijd in verhouding schalen</td></tr>
+  <tr><td>Te veel tekst</td><td>Een lap tekst op een flyer of post</td><td>Eén boodschap, kort en scanbaar</td></tr>
+  <tr><td>Spelfout</td><td>Een fout in een kop of datum</td><td>Laat iemand anders meelezen</td></tr>
+ </table></div>
+</article>
+
+<article class="card" id="toets" style="--c:var(--orange)">
+ <div class="eyebrow">Zelftoets · <span class="score" id="score">0 / 5</span></div>
+ <h2>Klaar voor de les?</h2>
+ <p>Kun je deze vragen beantwoorden? Vink ze af; dan ben je klaar voor de les.</p>
+ <ul class="check" id="checks">
+  <li><label><input type="checkbox">Noem vijf onderdelen van een huisstijlhandboek.</label></li>
+  <li><label><input type="checkbox">Welke vijf rollen kan een kleur in je palet hebben?</label></li>
+  <li><label><input type="checkbox">Welke contrastverhouding moet gewone tekst minimaal halen volgens WCAG AA?</label></li>
+  <li><label><input type="checkbox">Waarom gebruik je maximaal twee lettertypen?</label></li>
+  <li><label><input type="checkbox">Welke kernwaarde uit je strategie wil je als eerste terugzien in je kleur of tone of voice?</label></li>
+ </ul>
+</article>
+<footer>Content Challenge · Level 2 · De identiteit</footer>
+</main>
+<script>
+(function(){
+ var KEY='cc-kaarten-l2', boxes=[].slice.call(document.querySelectorAll('#checks input')), st=[];
+ try{st=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){}
+ function upd(){var n=boxes.filter(function(b){return b.checked}).length;document.getElementById('score').textContent=n+' / '+boxes.length;
+  try{localStorage.setItem(KEY,JSON.stringify(boxes.map(function(b){return b.checked})))}catch(e){}}
+ boxes.forEach(function(b,i){b.checked=!!st[i];b.addEventListener('change',upd)});upd();
+})();
+</script>
+</body>
+</html>

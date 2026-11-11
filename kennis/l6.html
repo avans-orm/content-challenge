@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kenniskaarten Level 6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Neon Live, dezelfde stijl als de game: altijd donker, magenta naar oranje, ON AIR-logo. */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"],:root[data-theme="light"]{
+ --paper:#120B26;--card:#1C1338;--ink:#F5F0FF;--muted:#B4A8D9;--line:#3A2C66;
+ --pink:#FF5FDC;--orange:#FFA14A;--gold:#FFB547;--cyan:#3CE6E0;--violet:#8C9BFF;--green:#3CF0A0;
+ --f-display:"Unbounded","Trebuchet MS",sans-serif;--f-body:"Manrope","Segoe UI",sans-serif;--f-mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--f-body);color:var(--ink);line-height:1.6;font-size:16px;
+ background:radial-gradient(ellipse at 10% -10%,#3B1670 0,transparent 45%),radial-gradient(ellipse at 95% 10%,#0E3A5C 0,transparent 40%),var(--paper);background-attachment:fixed;min-height:100vh}
+.top{position:sticky;top:0;z-index:5;background:rgba(18,11,38,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo b{display:inline-block;font-family:var(--f-display);font-weight:800;font-size:18px;color:#FFE3F7;text-shadow:0 0 6px var(--pink),0 0 18px var(--pink);border:2px solid var(--pink);border-radius:10px;padding:3px 11px;box-shadow:0 0 14px rgba(255,95,220,.45),inset 0 0 12px rgba(255,95,220,.35)}
+.logo span{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.logo span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF3B5C;margin-right:7px;box-shadow:0 0 10px #FF3B5C;vertical-align:1px}
+@media (prefers-reduced-motion:no-preference){.logo span::before{animation:rec 1.6s ease-in-out infinite}@keyframes rec{50%{opacity:.25}}}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+nav a{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--pink);box-shadow:0 0 12px rgba(255,95,220,.3);outline:none}
+main{max-width:1080px;margin:0 auto;padding:32px 16px 80px}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 12px;color:#FFF4E8;text-shadow:0 0 10px rgba(255,161,74,.6),0 0 28px rgba(255,95,220,.4)}
+.hero p{color:var(--muted);max-width:640px;margin:0 0 28px;font-size:17px}
+.card{position:relative;background:var(--card);border:1px solid #5A2B7A;border-radius:20px;padding:28px;margin:0 0 24px;box-shadow:0 0 0 1px rgba(255,95,220,.06),0 24px 60px rgba(0,0,0,.4);scroll-margin-top:110px}
+.card::before{content:"";position:absolute;left:28px;right:28px;top:-1px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--c,var(--pink)),var(--orange))}
+.eyebrow{font-family:var(--f-mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c,var(--gold))}
+.card h2{font-family:var(--f-display);font-weight:700;font-size:clamp(20px,3vw,26px);line-height:1.2;margin:6px 0 14px}
+.card p{margin:0 0 14px;max-width:760px}
+.card b{color:#FFE3F7}
+ol,ul{margin:0 0 16px;padding-left:22px}
+li{margin:4px 0}
+li::marker{color:var(--c,var(--pink));font-weight:700}
+.tbl{overflow-x:auto;margin:0 0 16px;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--c,var(--gold));background:rgba(255,255,255,.03);padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{font-weight:700;white-space:nowrap}
+.cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.cycle>div{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
+.cycle .L{font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1;color:var(--pink);text-shadow:0 0 14px rgba(255,95,220,.6)}
+.cycle .t{font-weight:800;margin:8px 0 2px}
+.cycle .d{font-size:14px;color:var(--muted)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+.duo div{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.duo .bad{border-color:#6A2A44;background:rgba(255,107,129,.06)}
+.duo .good{border-color:#1F5A47;background:rgba(60,240,160,.06)}
+.duo h3{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.duo .bad h3{color:#FF8FA1}.duo .good h3{color:var(--green)}
+.tip{border-left:3px solid var(--gold);background:rgba(255,181,71,.08);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 14px;max-width:760px}
+.check{list-style:none;padding:0}
+.check label{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin:0 0 8px;cursor:pointer}
+.check input{appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--pink);border-radius:7px;margin-top:2px;display:grid;place-content:center;cursor:pointer}
+.check input:checked{background:linear-gradient(135deg,var(--pink),var(--orange));box-shadow:0 0 12px rgba(255,95,220,.5)}
+.check input:checked::after{content:"✓";color:#1A0B2E;font-weight:800;font-size:14px}
+.check input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.score{font-family:var(--f-mono);font-weight:700;color:var(--gold)}
+footer{color:var(--muted);font-size:13px;text-align:center;padding-bottom:24px}
+@media (max-width:520px){.cycle{grid-template-columns:1fr!important}}
+@media (max-width:700px){.cycle{grid-template-columns:repeat(2,minmax(0,1fr))}.duo{grid-template-columns:1fr}.card{padding:22px 18px}.card::before{left:18px;right:18px}nav{margin-left:0}}
+.sw{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.sw div{border-radius:12px;padding:44px 10px 10px;font-size:13px;font-weight:700;border:1px solid var(--line)}
+.ct{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.ct div{border-radius:12px;padding:14px;font-weight:700;border:1px solid var(--line)}
+.ct small{display:block;font-family:var(--f-mono);font-size:12px;font-weight:700;margin-top:6px}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:1px}
+.chip.ok{background:rgba(60,240,160,.14);color:var(--green)}.chip.no{background:rgba(255,107,129,.14);color:#FF8FA1}.chip.mid{background:rgba(255,181,71,.14);color:var(--gold)}
+@media (max-width:520px){table{min-width:0;font-size:14px}td:first-child{white-space:normal}th,td{padding:9px 10px}}
+@media (max-width:700px){.sw{grid-template-columns:repeat(2,minmax(0,1fr))}.ct{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+ <div class="logo"><b>Content Challenge</b><span>Kenniskaarten · Level 6</span></div>
+ <nav aria-label="Kaarten">
+  <a href="#k1">1</a><a href="#k2">2</a><a href="#k3">3</a><a href="#k4">4</a><a href="#k5">5</a><a href="#k6">6</a><a href="#k7">7</a><a href="#k8">8</a><a href="#toets">Zelftoets</a>
+ </nav>
+</div></header>
+<main>
+<section class="hero">
+ <h1>De live-ronde</h1>
+ <p>Je campagne staat. Maar werkt hij ook? In level 6 test je 3 uitingen in de simulator, analyseer je de cijfers en geef je een eindadvies. Deze kaarten helpen je testen als een professional.</p>
+</section>
+
+<article class="card" id="k1" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 1</div>
+ <h2>Testen begint met een hypothese</h2>
+ <p>Een <b>hypothese</b> is een verwachting die je kunt controleren. Zonder hypothese kijk je naar cijfers en zie je wat je wilt zien. Met een hypothese weet je vooraf waar je op let.</p>
+ <div class="tbl"><table>
+  <tr><th>Onderdeel</th><th>Voorbeeld</th></tr>
+  <tr><td>Als ik ...</td><td>... een vraag als kop gebruik</td></tr>
+  <tr><td>dan verwacht ik ...</td><td>... meer bereik dan met een gewone kop</td></tr>
+  <tr><td>omdat ...</td><td>... een vraag mensen laat stoppen met scrollen</td></tr>
+ </table></div>
+ <p>Je verwachting uit level 5 is het begin. In de game scherp je hem aan tot een hypothese met een "omdat". Letterlijk overnemen telt niet.</p>
+ <p><b>Voorbeeld.</b> Verwachting uit level 5: "Ik verwacht 60 keer opgeslagen, omdat een lijstje handig is." Hypothese: "Als ik de fouten als genummerd lijstje op de slides zet (B), dan verwacht ik meer opslagen dan met losse tips (A), omdat een lijstje makkelijk te bewaren is."</p>
+ <p class="tip">Een goede hypothese kan ook niet uitkomen. Daar leer je net zo veel van.</p>
+</article>
+
+<article class="card" id="k2" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 2</div>
+ <h2>De A/B-test</h2>
+ <p>Bij een A/B-test maak je twee versies van dezelfde uiting. Variant A is je uiting zoals hij is. In variant B verander je <b>één ding</b>. Daarna kijk je welke versie beter scoort.</p>
+ <div class="tbl"><table>
+  <tr><th>Wat test je</th><th>Variant A</th><th>Variant B</th></tr>
+  <tr><td>Kop</td><td>5 groenten die altijd lukken</td><td>Ook jouw basilicum al dood?</td></tr>
+  <tr><td>Beeld</td><td>Overzicht van de hele bak</td><td>Close-up van handen met aarde</td></tr>
+  <tr><td>Call-to-action</td><td>Bekijk de box</td><td>Doe de plantentest</td></tr>
+  <tr><td>Tijdstip</td><td>Woensdag 19:00</td><td>Zondag 10:00</td></tr>
+  <tr><td>Format</td><td>Reel</td><td>Carrousel</td></tr>
+ </table></div>
+ <p><b>Waarom maar één ding?</b> Verander je de kop én het beeld, en wint variant B, dan weet je niet of het door de kop kwam of door het beeld.</p>
+ <p class="tip">Leg vooraf een <b>beslisregel</b> vast: wanneer is de test geslaagd? Bijvoorbeeld: "Haalt een variant de norm van 1.500 bereik, dan gebruik ik die kop voor alle reels." Een beslisregel bevat altijd een getal: je norm.</p>
+</article>
+
+<article class="card" id="k3" style="--c:var(--cyan)">
+ <div class="eyebrow">Kaart 3</div>
+ <h2>Het meetmoment</h2>
+ <p>Wanneer kijk je naar de cijfers? Dat lijkt een detail, maar het bepaalt je conclusie. Een post groeit nog dagen door. Kijk je te vroeg, dan zie je maar een deel.</p>
+ <div class="tbl"><table>
+  <tr><th>Meetmoment</th><th>Geschikt voor</th><th>Let op</th></tr>
+  <tr><td>Na 24 uur</td><td>Stories, snelle acties</td><td>Bij een post of reel zie je vaak nog maar een deel van het resultaat</td></tr>
+  <tr><td>Na 3 dagen</td><td>Posts en carrousels</td><td>De meeste interactie is dan binnen</td></tr>
+  <tr><td>Na 7 dagen</td><td>Reels, nieuwsbrieven, acties</td><td>Volledig beeld, maar je moet geduld hebben</td></tr>
+ </table></div>
+ <p>Meet A en B altijd op hetzelfde moment. Anders vergelijk je appels met peren.</p>
+ <p><b>In de game</b> rekenen je voorspelling en je analyse op jouw meetmoment. Halverwege de live-ronde, op dag 3, gebeurt er iets onverwachts. Meet je al na 24 uur, dan zie je het effect daarvan niet.</p>
+ <p class="tip">Een percentage (zoals het openpercentage van een nieuwsbrief) groeit niet zoals een aantal. Een aantal (bereik, klikken) wel.</p>
+</article>
+
+<article class="card" id="k4" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 4</div>
+ <h2>Resultaten analyseren</h2>
+ <p>Je hebt cijfers. Stel jezelf per uiting deze vier vragen, in deze volgorde:</p>
+ <div class="tbl"><table>
+  <tr><th>Vraag</th><th>Waar kijk je naar</th></tr>
+  <tr><td>1. Is de norm gehaald?</td><td>Vergelijk het resultaat met de norm uit je kalender.</td></tr>
+  <tr><td>2. Welke variant won?</td><td>En is het verschil groot genoeg om iets te betekenen?</td></tr>
+  <tr><td>3. Klopte je hypothese?</td><td>Ja, deels of nee. Wees eerlijk.</td></tr>
+  <tr><td>4. Wat doe je nu?</td><td>Opschalen, aanpassen en opnieuw testen, of stoppen. Volgens je beslisregel.</td></tr>
+ </table></div>
+ <p><b>Klein verschil? Pas op.</b> Bij kleine aantallen kan toeval een groot verschil maken. Wint variant B met 7 tegen 5 aanmeldingen, dan is dat geen bewijs. Test dan opnieuw met meer mensen voordat je conclusies trekt. Vuistregel in de game: minder dan 30 per variant, of minder dan 10% verschil, is te klein om op te bouwen.</p>
+ <p><b>Labels in de game.</b> "Alleen B haalt de norm" betekent dat B wint én als enige de norm haalt. Kan je de hypothese niet eerlijk beoordelen (te weinig data, of de gebeurtenis verstoorde de test)? Kies dan "Niet te beoordelen" en leg uit waarom.</p>
+ <p class="tip">Kijk ook naar wat er buiten je test gebeurde: een boze reactie, een algoritme-update of een actie van de concurrent kan je cijfers beïnvloeden.</p>
+</article>
+
+<article class="card" id="k5" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 5</div>
+ <h2>Benchmarks vinden</h2>
+ <p>Een <b>benchmark</b> is een vergelijkingspunt: wat is normaal in jouw branche, op jouw kanaal? Pas als je dat weet, kun je zeggen of jouw resultaat goed is.</p>
+ <div class="tbl"><table>
+  <tr><th>Soort bron</th><th>Waar vind je het</th></tr>
+  <tr><td>Benchmarkrapport</td><td>Jaarlijkse rapporten van social-media-tools en onderzoeksbureaus. Zoek op "social media benchmark" plus je branche en het jaar.</td></tr>
+  <tr><td>Platform</td><td>Het helpcentrum of de business-pagina's van het platform zelf, bijvoorbeeld over Insights.</td></tr>
+  <tr><td>Vakartikel of onderzoek</td><td>Vakbladen over marketing en onderzoek van hogescholen.</td></tr>
+  <tr><td>Primaire bron</td><td>Vraag iemand uit je doelgroep wat die van je winnende variant vindt, of spreek een expert.</td></tr>
+ </table></div>
+ <p>Let op het jaar, het land en de branche van een benchmark. Cijfers van een groot internationaal merk zijn niet te vergelijken met een nieuw account met een paar honderd volgers.</p>
+ <p><b>Omrekenen.</b> Benchmarks staan meestal in procenten, de game geeft aantallen. Reken om met: resultaat gedeeld door het aantal volgers, keer 100. De game rekent met 900 volgers. Voorbeeld: 54 opslagen / 900 × 100 = 6%.</p>
+ <p class="tip">Jouw resultaten in de game zijn gesimuleerd. Gebruik de benchmark daarom om te bedenken wat je in het echt zou verwachten.</p>
+</article>
+
+<article class="card" id="k6" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 6</div>
+ <h2>Webcare en snel bijsturen</h2>
+ <p>Een campagne loopt nooit helemaal volgens plan. In de live-ronde gebeurt er halverwege iets onverwachts. Ook in het echt moet je dan snel en goed reageren.</p>
+ <div class="tbl"><table>
+  <tr><th>Situatie</th><th>Wat werkt</th><th>Wat werkt niet</th></tr>
+  <tr><td>Boze reactie</td><td>Snel, vriendelijk en openbaar reageren, en een oplossing bieden</td><td>Verwijderen of negeren</td></tr>
+  <tr><td>Algoritme verandert</td><td>Meebewegen met het platform</td><td>Hopen dat het vanzelf goed komt</td></tr>
+  <tr><td>Iemand deelt je post</td><td>Bedanken en zelf ook delen</td><td>Een betaalde samenwerking zonder dat het als reclame herkenbaar is</td></tr>
+  <tr><td>Concurrent doet hetzelfde</td><td>Laten zien wat jouw merk anders maakt</td><td>Meteen de prijs verlagen</td></tr>
+ </table></div>
+ <p class="tip">Spreek vooraf af wie reageert en hoe snel. Zo hoef je niet te twijfelen als het gebeurt.</p>
+ <p>In de game past de gebeurtenis bij een van je uitingen. Alleen je eerste keuze telt voor de bonus, dus denk goed na voordat je kiest.</p>
+</article>
+
+<article class="card" id="k7" style="--c:var(--cyan)">
+ <div class="eyebrow">Kaart 7</div>
+ <h2>AI als analist</h2>
+ <p>AI kan snel patronen zien in je cijfers en een advies geven. Maar AI weet niet alles. In de game laat je AI je resultaten analyseren, en daarna check je kritisch wat AI mist.</p>
+ <div class="tbl"><table>
+  <tr><th>AI is goed in</th><th>AI weet niet</th></tr>
+  <tr><td>Cijfers op een rij zetten en vergelijken</td><td>Wie je doelgroep echt is</td></tr>
+  <tr><td>Mogelijke verklaringen bedenken</td><td>Wat je marge, budget of tijd is</td></tr>
+  <tr><td>Een advies formuleren</td><td>Of een verschil toeval is bij kleine aantallen</td></tr>
+  <tr><td>Nieuwe testideeën geven</td><td>Dat jouw cijfers gesimuleerd zijn</td></tr>
+ </table></div>
+ <p>Klinkt het advies van AI heel zeker? Vraag dan door: "Waarop baseer je dit?" en "Wat als het verschil toeval is?"</p>
+ <p class="tip">Dit is regie over AI: AI doet het denkwerk sneller, jij beslist. Schrijf in de game op waar je het niet met AI eens bent.</p>
+</article>
+
+<article class="card" id="k8" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 8</div>
+ <h2>Van test naar advies</h2>
+ <p>Je eindadvies is één van drie routes. Onderbouw je keuze met je resultaten: welke variant won, welke norm haalde je wel of niet?</p>
+ <div class="tbl"><table>
+  <tr><th>Route</th><th>Kies je als ...</th></tr>
+  <tr><td>Opschalen</td><td>Iets werkte duidelijk. Doe het vaker of zet er budget op.</td></tr>
+  <tr><td>Bijsturen</td><td>Een deel werkte niet. Pas het aan en test opnieuw.</td></tr>
+  <tr><td>Omgooien</td><td>Je doel wordt via dit kanaal of format niet gehaald. Kies iets anders.</td></tr>
+ </table></div>
+ <p><b>Hoe meet je het echt?</b> De simulator is een oefening. In het echt meet je met de statistieken van het platform (zoals Instagram Insights), een <b>UTM-link</b> om te zien hoeveel mensen via jouw post op je website komen, of een eigen kortingscode per uiting. Noem in je advies altijd een tool én een KPI, bijvoorbeeld: "Ik meet klikken met een UTM-link in Google Analytics."</p>
+ <p class="tip">Je testrapport is het laatste stuk van je portfolio. Kopieer het uit de game en zet het bij je strategie, huisstijlhandboek, kalender, beeldbank en campagne.</p>
+</article>
+
+<article class="card" id="toets" style="--c:var(--orange)">
+ <div class="eyebrow">Zelftoets · <span class="score" id="score">0 / 5</span></div>
+ <h2>Klaar voor de live-ronde?</h2>
+ <p>Kun je deze vragen beantwoorden? Vink ze af.</p>
+ <ul class="check" id="checks">
+  <li><label><input type="checkbox">Uit welke drie delen bestaat een goede hypothese?</label></li>
+  <li><label><input type="checkbox">Waarom verander je bij een A/B-test maar één ding?</label></li>
+  <li><label><input type="checkbox">Wat gaat er mis als je te vroeg meet?</label></li>
+  <li><label><input type="checkbox">Wat is een benchmark, en waar vind je er een?</label></li>
+  <li><label><input type="checkbox">Noem twee dingen die AI niet weet als het je resultaten analyseert.</label></li>
+ </ul>
+</article>
+<footer>Content Challenge · Level 6 · De live-ronde</footer>
+</main>
+<script>
+(function(){
+ var KEY='cc-kaarten-l6', boxes=[].slice.call(document.querySelectorAll('#checks input')), st=[];
+ try{st=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){}
+ function upd(){var n=boxes.filter(function(b){return b.checked}).length;document.getElementById('score').textContent=n+' / '+boxes.length;
+  try{localStorage.setItem(KEY,JSON.stringify(boxes.map(function(b){return b.checked})))}catch(e){}}
+ boxes.forEach(function(b,i){b.checked=!!st[i];b.addEventListener('change',upd)});upd();
+})();
+</script>
+</body>
+</html>

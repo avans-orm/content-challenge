@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kenniskaarten Level 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Neon Live, dezelfde stijl als de game: altijd donker, magenta naar oranje, ON AIR-logo. */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"],:root[data-theme="light"]{
+ --paper:#120B26;--card:#1C1338;--ink:#F5F0FF;--muted:#B4A8D9;--line:#3A2C66;
+ --pink:#FF5FDC;--orange:#FFA14A;--gold:#FFB547;--cyan:#3CE6E0;--violet:#8C9BFF;--green:#3CF0A0;
+ --f-display:"Unbounded","Trebuchet MS",sans-serif;--f-body:"Manrope","Segoe UI",sans-serif;--f-mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--f-body);color:var(--ink);line-height:1.6;font-size:16px;
+ background:radial-gradient(ellipse at 10% -10%,#3B1670 0,transparent 45%),radial-gradient(ellipse at 95% 10%,#0E3A5C 0,transparent 40%),var(--paper);background-attachment:fixed;min-height:100vh}
+.top{position:sticky;top:0;z-index:5;background:rgba(18,11,38,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo b{display:inline-block;font-family:var(--f-display);font-weight:800;font-size:18px;color:#FFE3F7;text-shadow:0 0 6px var(--pink),0 0 18px var(--pink);border:2px solid var(--pink);border-radius:10px;padding:3px 11px;box-shadow:0 0 14px rgba(255,95,220,.45),inset 0 0 12px rgba(255,95,220,.35)}
+.logo span{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.logo span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF3B5C;margin-right:7px;box-shadow:0 0 10px #FF3B5C;vertical-align:1px}
+@media (prefers-reduced-motion:no-preference){.logo span::before{animation:rec 1.6s ease-in-out infinite}@keyframes rec{50%{opacity:.25}}}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+nav a{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--pink);box-shadow:0 0 12px rgba(255,95,220,.3);outline:none}
+main{max-width:1080px;margin:0 auto;padding:32px 16px 80px}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 12px;color:#FFF4E8;text-shadow:0 0 10px rgba(255,161,74,.6),0 0 28px rgba(255,95,220,.4)}
+.hero p{color:var(--muted);max-width:640px;margin:0 0 28px;font-size:17px}
+.card{position:relative;background:var(--card);border:1px solid #5A2B7A;border-radius:20px;padding:28px;margin:0 0 24px;box-shadow:0 0 0 1px rgba(255,95,220,.06),0 24px 60px rgba(0,0,0,.4);scroll-margin-top:110px}
+.card::before{content:"";position:absolute;left:28px;right:28px;top:-1px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--c,var(--pink)),var(--orange))}
+.eyebrow{font-family:var(--f-mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c,var(--gold))}
+.card h2{font-family:var(--f-display);font-weight:700;font-size:clamp(20px,3vw,26px);line-height:1.2;margin:6px 0 14px}
+.card p{margin:0 0 14px;max-width:760px}
+.card b{color:#FFE3F7}
+ol,ul{margin:0 0 16px;padding-left:22px}
+li{margin:4px 0}
+li::marker{color:var(--c,var(--pink));font-weight:700}
+.tbl{overflow-x:auto;margin:0 0 16px;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--c,var(--gold));background:rgba(255,255,255,.03);padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{font-weight:700;white-space:nowrap}
+.cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.cycle>div{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
+.cycle .L{font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1;color:var(--pink);text-shadow:0 0 14px rgba(255,95,220,.6)}
+.cycle .t{font-weight:800;margin:8px 0 2px}
+.cycle .d{font-size:14px;color:var(--muted)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+.duo div{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.duo .bad{border-color:#6A2A44;background:rgba(255,107,129,.06)}
+.duo .good{border-color:#1F5A47;background:rgba(60,240,160,.06)}
+.duo h3{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.duo .bad h3{color:#FF8FA1}.duo .good h3{color:var(--green)}
+.tip{border-left:3px solid var(--gold);background:rgba(255,181,71,.08);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 14px;max-width:760px}
+.check{list-style:none;padding:0}
+.check label{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin:0 0 8px;cursor:pointer}
+.check input{appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--pink);border-radius:7px;margin-top:2px;display:grid;place-content:center;cursor:pointer}
+.check input:checked{background:linear-gradient(135deg,var(--pink),var(--orange));box-shadow:0 0 12px rgba(255,95,220,.5)}
+.check input:checked::after{content:"✓";color:#1A0B2E;font-weight:800;font-size:14px}
+.check input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.score{font-family:var(--f-mono);font-weight:700;color:var(--gold)}
+footer{color:var(--muted);font-size:13px;text-align:center;padding-bottom:24px}
+@media (max-width:520px){.cycle{grid-template-columns:1fr!important}}
+@media (max-width:700px){.cycle{grid-template-columns:repeat(2,minmax(0,1fr))}.duo{grid-template-columns:1fr}.card{padding:22px 18px}.card::before{left:18px;right:18px}nav{margin-left:0}}
+.sw{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.sw div{border-radius:12px;padding:44px 10px 10px;font-size:13px;font-weight:700;border:1px solid var(--line)}
+.ct{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.ct div{border-radius:12px;padding:14px;font-weight:700;border:1px solid var(--line)}
+.ct small{display:block;font-family:var(--f-mono);font-size:12px;font-weight:700;margin-top:6px}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:1px}
+.chip.ok{background:rgba(60,240,160,.14);color:var(--green)}.chip.no{background:rgba(255,107,129,.14);color:#FF8FA1}.chip.mid{background:rgba(255,181,71,.14);color:var(--gold)}
+@media (max-width:520px){table{min-width:0;font-size:14px}td:first-child{white-space:normal}th,td{padding:9px 10px}}
+@media (max-width:700px){.sw{grid-template-columns:repeat(2,minmax(0,1fr))}.ct{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+ <div class="logo"><b>Content Challenge</b><span>Kenniskaarten · Level 4</span></div>
+ <nav aria-label="Kaarten">
+  <a href="#k1">1</a><a href="#k2">2</a><a href="#k3">3</a><a href="#k4">4</a><a href="#k5">5</a><a href="#k6">6</a><a href="#k7">7</a><a href="#k8">8</a><a href="#toets">Zelftoets</a>
+ </nav>
+</div></header>
+<main>
+<section class="hero">
+ <h1>De studio</h1>
+ <p>In de les zie je in het Medialab wat er met professionele apparatuur kan. Thuis maak je zelf content met je mobiel en met AI. Deze kaarten geven je de tips die je daarvoor nodig hebt.</p>
+</section>
+
+<article class="card" id="k1" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 1</div>
+ <h2>Fotograferen met je mobiel: de basis</h2>
+ <p>Je telefoon maakt prima foto's, als je een paar dingen goed doet. Deze zeven tips leveren direct betere foto's op:</p>
+ <div class="tbl"><table>
+  <tr><th>Tip</th><th>Waarom</th></tr>
+  <tr><td>Maak je lens schoon</td><td>Een vette vingerafdruk maakt elke foto wazig en flets.</td></tr>
+  <tr><td>Zet het raster aan</td><td>Dan kun je de regel van derden toepassen en blijft je horizon recht.</td></tr>
+  <tr><td>Tik om scherp te stellen</td><td>Tik op je onderwerp en schuif daarna omhoog of omlaag om lichter of donkerder te maken.</td></tr>
+  <tr><td>Loop naar je onderwerp toe</td><td>Digitaal inzoomen kost kwaliteit. Gebruik je voeten of een andere lens van je telefoon.</td></tr>
+  <tr><td>Fotografeer bij het raam</td><td>Daglicht van opzij geeft zachte schaduwen en natuurlijke kleuren.</td></tr>
+  <tr><td>Flits uit</td><td>Flits maakt het licht hard en plat. Zoek liever meer licht.</td></tr>
+  <tr><td>Maak er meerdere</td><td>Maak een paar varianten en kies de beste. Dat doen professionals ook.</td></tr>
+ </table></div>
+ <p><b>Licht is alles.</b> Het mooiste licht buiten is vlak na zonsopkomst of vlak voor zonsondergang (het gouden uur). Midden op de dag is het licht hard: zoek dan schaduw. Binnen werk je met een raam als lichtbron; een wit vel papier aan de andere kant van je onderwerp kaatst licht terug en maakt de schaduwen zachter.</p>
+ <p class="tip">Fotografeer in de verhouding van je kanaal: 4:5 (of vierkant 1:1) voor de Instagram-feed, 9:16 voor story en reel. Dan hoef je achteraf niets weg te snijden.</p>
+</article>
+
+<article class="card" id="k2" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 2</div>
+ <h2>Compositie en perspectief</h2>
+ <p>Compositie is hoe je de dingen in je beeld plaatst. Met deze technieken stuur je waar de kijker naar kijkt. In de game laat je er minstens vier zien.</p>
+ <div class="tbl"><table>
+  <tr><th>Techniek</th><th>Hoe</th><th>Effect</th></tr>
+  <tr><td>Regel van derden</td><td>Onderwerp op een lijn of snijpunt van het raster</td><td>Spannender dan in het midden</td></tr>
+  <tr><td>Ooghoogte</td><td>Camera op de hoogte van de ogen van je onderwerp</td><td>Gelijkwaardig, persoonlijk</td></tr>
+  <tr><td>Kikkerperspectief</td><td>Van onderaf fotograferen</td><td>Onderwerp lijkt groot en krachtig</td></tr>
+  <tr><td>Vogelperspectief</td><td>Recht van bovenaf (flatlay)</td><td>Overzicht, ideaal voor producten</td></tr>
+  <tr><td>Scherptediepte</td><td>Portretmodus of dichtbij, achtergrond ver weg</td><td>Alle aandacht naar je onderwerp</td></tr>
+  <tr><td>Natuurlijk licht</td><td>Bij het raam of in de schaduw, zonder flits</td><td>Zacht, eerlijk, natuurlijke kleuren</td></tr>
+  <tr><td>Leidende lijnen</td><td>Een pad, tafelrand of hek dat naar je onderwerp loopt</td><td>Het oog volgt de lijn</td></tr>
+  <tr><td>Detail</td><td>Heel dichtbij: textuur, handen, materiaal</td><td>Tastbaar, ambachtelijk</td></tr>
+  <tr><td>Kader in kader</td><td>Een deur, raam of tak rond je onderwerp</td><td>Diepte en focus</td></tr>
+ </table></div>
+ <p class="tip">Kijk ook naar je achtergrond. Een prullenbak, een rommelige kast of een paal die uit iemands hoofd lijkt te groeien leidt af. Een stap opzij lost het vaak al op.</p>
+</article>
+
+<article class="card" id="k3" style="--c:var(--cyan)">
+ <div class="eyebrow">Kaart 3</div>
+ <h2>Video met je mobiel</h2>
+ <p>Een goede korte video begint met een <b>shotlist</b>: een lijstje van de shots die je wilt filmen, in de volgorde van je verhaal. Zo film je gericht en heb je bij het monteren alles wat je nodig hebt.</p>
+ <div class="tbl"><table>
+  <tr><th>Shot</th><th>Wat zie je</th><th>Waarvoor</th></tr>
+  <tr><td>Totaal</td><td>De hele omgeving</td><td>Laten zien waar je bent</td></tr>
+  <tr><td>Medium</td><td>Een persoon van het middel omhoog</td><td>Iemand die vertelt</td></tr>
+  <tr><td>Close-up</td><td>Een gezicht of product</td><td>Emotie en aandacht</td></tr>
+  <tr><td>Detail</td><td>Handen, textuur, een klein onderdeel</td><td>Afwisseling en sfeer</td></tr>
+  <tr><td>Over de schouder</td><td>Over iemands schouder mee naar wat die doet of ziet</td><td>Meekijken bij een handeling</td></tr>
+  <tr><td>Point of view</td><td>Wat jij ziet</td><td>De kijker zit erin</td></tr>
+ </table></div>
+ <p><b>De hook.</b> In de eerste 3 seconden beslist een kijker of die blijft kijken. Begin met het eindresultaat, een vraag of iets onverwachts, niet met "hoi, welkom".</p>
+ <p><b>Opnamecheck:</b></p>
+ <ul>
+  <li><b>Stabiel:</b> een statief, de telefoon tegen iets aan, of twee handen met je ellebogen tegen je lichaam.</li>
+  <li><b>Licht van voren:</b> nooit met een raam achter je, dan word je een silhouet.</li>
+  <li><b>Geluid:</b> slecht geluid is erger dan slecht beeld. Gebruik een clipmicrofoon of film in een stille, kleine ruimte.</li>
+  <li><b>Verhouding:</b> 9:16 verticaal voor reels, stories en TikTok.</li>
+  <li><b>Ondertitels:</b> veel mensen kijken zonder geluid. CapCut maakt ze automatisch.</li>
+ </ul>
+ <p class="tip">Film elk shot een paar seconden langer dan nodig. Dan heb je ruimte bij het monteren.</p>
+</article>
+
+<article class="card" id="k4" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 4</div>
+ <h2>Beeld maken met AI</h2>
+ <p>Een AI-beeldtool maakt wat je beschrijft. Hoe preciezer je briefing, hoe beter het resultaat. Brief AI zoals je een fotograaf zou briefen:</p>
+ <div class="tbl"><table>
+  <tr><th>Onderdeel</th><th>Voorbeeld</th></tr>
+  <tr><td>Onderwerp</td><td>Een tomatenplant in een terracotta pot</td></tr>
+  <tr><td>Plek</td><td>Op een klein balkon in Utrecht</td></tr>
+  <tr><td>Perspectief</td><td>Kikkerperspectief, of recht van bovenaf</td></tr>
+  <tr><td>Compositie</td><td>Plant op de linker lijn van de regel van derden</td></tr>
+  <tr><td>Licht</td><td>Zacht ochtendlicht van opzij</td></tr>
+  <tr><td>Lens en scherpte</td><td>35 mm, kleine scherptediepte, achtergrond wazig</td></tr>
+  <tr><td>Stijl en kleur</td><td>Fotorealistisch, smartphonefoto, groen #2F6B3A</td></tr>
+ </table></div>
+ <p><b>Typische AI-fouten</b> om op te letten: handen en vingers kloppen niet, tekst in beeld is onleesbaar, alles is te perfect en glanzend, en details zoals een pot of een tafel hebben vreemde vormen.</p>
+ <p class="tip">Wil je dat het echt lijkt? Vraag om "een gewone smartphonefoto, niet te perfect". AI maakt anders al snel een glanzende reclamefoto.</p>
+ <p class="tip">Sla elk AI-beeld direct op (rechtermuisklik of lang tikken, "Afbeelding opslaan") en upload het in de game bij je AI-versies. Let op: niet elke chatbot maakt zelf beeld. Claude maakt bijvoorbeeld geen foto's; gebruik daarvoor bijvoorbeeld ChatGPT, Gemini of Microsoft Copilot.</p>
+</article>
+
+<article class="card" id="k5" style="--c:var(--gold)">
+ <div class="eyebrow">Kaart 5</div>
+ <h2>Bewerken met AI</h2>
+ <p>AI is ook een handige assistent voor je eigen beeld. Je houdt de echtheid van je foto, en AI helpt bij het opknappen.</p>
+ <div class="tbl"><table>
+  <tr><th>Wat wil je</th><th>Tools</th></tr>
+  <tr><td>Iets wegpoetsen</td><td>Magic Eraser of Magic Editor (Google Foto's), object wissen in de fotogalerij van je telefoon, Canva</td></tr>
+  <tr><td>Foto uitbreiden naar 9:16</td><td>Canva Magic Expand, Adobe Express of Photoshop (generatief vullen)</td></tr>
+  <tr><td>Achtergrond vervagen of vervangen</td><td>Canva, CapCut, je telefoon (portretmodus achteraf)</td></tr>
+  <tr><td>Licht en kleur</td><td>Je telefoon (automatisch verbeteren), Snapseed, Lightroom Mobile</td></tr>
+  <tr><td>Video: ondertitels, stiltes knippen</td><td>CapCut, Canva</td></tr>
+  <tr><td>Foto bewerken met een prompt</td><td>ChatGPT of Gemini: "maak de achtergrond rustiger, verander verder niets"</td></tr>
+ </table></div>
+ <p><b>Blijf de regisseur.</b> AI verandert vaak meer dan je vraagt: kleuren worden feller, gezichten gladder, tekst verdwijnt. Vergelijk altijd voor en na, en zet terug wat niet bij je huisstijl past.</p>
+ <p class="tip">Voegt AI iets toe wat er in het echt niet was, of verandert het iets wezenlijks? Dan is het niet meer gewoon jouw foto. Zie kaart 6 over labelen.</p>
+</article>
+
+<article class="card" id="k6" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 6</div>
+ <h2>Recht en ethiek</h2>
+ <p>Voordat je een beeld plaatst, stel je jezelf drie vragen:</p>
+ <div class="tbl"><table>
+  <tr><th>Vraag</th><th>Wat moet je doen</th></tr>
+  <tr><td>Staat er iemand herkenbaar op?</td><td>Vraag toestemming, het liefst zwart op wit. Dat heet <b>portretrecht</b> (Auteurswet, artikel 19 tot en met 21).</td></tr>
+  <tr><td>Is het beeld, de muziek of het lettertype van iemand anders?</td><td>Gebruik het alleen met een licentie. Dat is <b>auteursrecht</b>. Muziek uit de bibliotheek van Instagram of TikTok mag binnen dat platform.</td></tr>
+  <tr><td>Is het (deels) met AI gemaakt?</td><td>Label realistisch AI-beeld als AI-content. Instagram, TikTok en YouTube vragen dit, en de Europese AI-verordening verplicht dat nep-beeld dat echt lijkt herkenbaar is. Label ook als je met AI iets aan je eigen foto <b>toevoegt</b> of wezenlijk verandert. Een AI-persoon mag niet lijken op een bestaand persoon.</td></tr>
+ </table></div>
+ <p><b>Ethiek gaat verder dan de wet.</b> Een merk dat "eerlijk" en "echt" wil zijn, verliest vertrouwen als blijkt dat de mooie oogstfoto's door AI zijn gemaakt. Bedenk dus ook: past dit beeld bij wat ik beloof?</p>
+ <p class="tip">Regels van platforms veranderen snel. Zoek de actuele richtlijn op in het helpcentrum van het platform en gebruik die als bron in de game.</p>
+ <p><b>Bron in APA:</b> Auteurswet. (1912, 23 september). <i>Artikel 19-21</i>. Geraadpleegd op [datum], van https://wetten.overheid.nl/BWBR0001886</p>
+</article>
+
+<article class="card" id="k7" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 7</div>
+ <h2>Je beeldbriefing</h2>
+ <p>Een beeldbriefing legt vast hoe beeld voor jouw merk eruitziet. Je gebruikt hem zelf bij het fotograferen, en je plakt hem in AI als je beeld laat maken of bewerken. Zo blijft alles herkenbaar, ook bij 12 uitingen in level 5.</p>
+ <div class="tbl"><table>
+  <tr><th>Onderdeel</th><th>Voorbeeld Groenbak</th></tr>
+  <tr><td>Stijl en sfeer</td><td>Eerlijk, licht, een beetje rommelig</td></tr>
+  <tr><td>Licht</td><td>Daglicht van opzij, nooit flits</td></tr>
+  <tr><td>Compositie</td><td>Onderwerp op een derde, veel lucht eromheen</td></tr>
+  <tr><td>Kleuren</td><td>Uit je huisstijlhandboek, met hex-codes</td></tr>
+  <tr><td>Altijd</td><td>Echte handen met aarde, mislukte plantjes mogen</td></tr>
+  <tr><td>Nooit</td><td>Glanzende stockbeelden, perfecte plantjes</td></tr>
+ </table></div>
+ <p>De game zet je beeldbriefing automatisch in elkaar met je kleuren en beeldstijl uit level 2. Je kunt hem kopiëren en bewaren. In de game vul je de briefing in vóór de AI-vergelijkingen: de game zet je briefing en hexcodes dan meteen in de promptsjablonen.</p>
+</article>
+
+<article class="card" id="k8" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 8</div>
+ <h2>Het Medialab</h2>
+ <p>In het Medialab van Avans kun je met professionele apparatuur werken. In de les ga je langs drie stations:</p>
+ <div class="tbl"><table>
+  <tr><th>Station</th><th>Wat zie en doe je</th></tr>
+  <tr><td>Fotografie</td><td>Een systeemcamera en studiolicht. Hoe zet je licht neer voor een productfoto of portret?</td></tr>
+  <tr><td>Podcast</td><td>Microfoons, een gedempte ruimte en montage. Hoe neem je een gesprek op dat goed klinkt?</td></tr>
+  <tr><td>Video met autocue</td><td>Je leest tekst terwijl je in de lens kijkt. Hoe kom je toch natuurlijk over?</td></tr>
+ </table></div>
+ <p><b>Zelf terugkomen?</b> Je kunt het Medialab reserveren of apparatuur lenen. Dat is niet verplicht. Hoe reserveren werkt, hoor je van je docent.</p>
+ <p class="tip">Bedenk vooraf wat je wilt maken en neem je shotlist of draaiboek mee. Zo haal je het meeste uit je studiotijd.</p>
+</article>
+
+<article class="card" id="toets" style="--c:var(--orange)">
+ <div class="eyebrow">Zelftoets · <span class="score" id="score">0 / 5</span></div>
+ <h2>Klaar om te maken?</h2>
+ <p>Kun je deze vragen beantwoorden? Vink ze af.</p>
+ <ul class="check" id="checks">
+  <li><label><input type="checkbox">Noem drie tips voor een betere foto met je mobiel.</label></li>
+  <li><label><input type="checkbox">Wat is het verschil tussen kikker- en vogelperspectief?</label></li>
+  <li><label><input type="checkbox">Wat is een hook, en waarom is die belangrijk?</label></li>
+  <li><label><input type="checkbox">Welke onderdelen zet je in een prompt voor een AI-foto?</label></li>
+  <li><label><input type="checkbox">Wanneer moet je toestemming vragen, en wanneer label je een beeld als AI?</label></li>
+ </ul>
+</article>
+<footer>Content Challenge · Level 4 · De studio</footer>
+</main>
+<script>
+(function(){
+ var KEY='cc-kaarten-l4', boxes=[].slice.call(document.querySelectorAll('#checks input')), st=[];
+ try{st=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){}
+ function upd(){var n=boxes.filter(function(b){return b.checked}).length;document.getElementById('score').textContent=n+' / '+boxes.length;
+  try{localStorage.setItem(KEY,JSON.stringify(boxes.map(function(b){return b.checked})))}catch(e){}}
+ boxes.forEach(function(b,i){b.checked=!!st[i];b.addEventListener('change',upd)});upd();
+})();
+</script>
+</body>
+</html>

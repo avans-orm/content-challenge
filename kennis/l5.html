@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kenniskaarten Level 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Neon Live, dezelfde stijl als de game: altijd donker, magenta naar oranje, ON AIR-logo. */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"],:root[data-theme="light"]{
+ --paper:#120B26;--card:#1C1338;--ink:#F5F0FF;--muted:#B4A8D9;--line:#3A2C66;
+ --pink:#FF5FDC;--orange:#FFA14A;--gold:#FFB547;--cyan:#3CE6E0;--violet:#8C9BFF;--green:#3CF0A0;
+ --f-display:"Unbounded","Trebuchet MS",sans-serif;--f-body:"Manrope","Segoe UI",sans-serif;--f-mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--f-body);color:var(--ink);line-height:1.6;font-size:16px;
+ background:radial-gradient(ellipse at 10% -10%,#3B1670 0,transparent 45%),radial-gradient(ellipse at 95% 10%,#0E3A5C 0,transparent 40%),var(--paper);background-attachment:fixed;min-height:100vh}
+.top{position:sticky;top:0;z-index:5;background:rgba(18,11,38,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo b{display:inline-block;font-family:var(--f-display);font-weight:800;font-size:18px;color:#FFE3F7;text-shadow:0 0 6px var(--pink),0 0 18px var(--pink);border:2px solid var(--pink);border-radius:10px;padding:3px 11px;box-shadow:0 0 14px rgba(255,95,220,.45),inset 0 0 12px rgba(255,95,220,.35)}
+.logo span{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.logo span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF3B5C;margin-right:7px;box-shadow:0 0 10px #FF3B5C;vertical-align:1px}
+@media (prefers-reduced-motion:no-preference){.logo span::before{animation:rec 1.6s ease-in-out infinite}@keyframes rec{50%{opacity:.25}}}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+nav a{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--pink);box-shadow:0 0 12px rgba(255,95,220,.3);outline:none}
+main{max-width:1080px;margin:0 auto;padding:32px 16px 80px}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 12px;color:#FFF4E8;text-shadow:0 0 10px rgba(255,161,74,.6),0 0 28px rgba(255,95,220,.4)}
+.hero p{color:var(--muted);max-width:640px;margin:0 0 28px;font-size:17px}
+.card{position:relative;background:var(--card);border:1px solid #5A2B7A;border-radius:20px;padding:28px;margin:0 0 24px;box-shadow:0 0 0 1px rgba(255,95,220,.06),0 24px 60px rgba(0,0,0,.4);scroll-margin-top:110px}
+.card::before{content:"";position:absolute;left:28px;right:28px;top:-1px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--c,var(--pink)),var(--orange))}
+.eyebrow{font-family:var(--f-mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c,var(--gold))}
+.card h2{font-family:var(--f-display);font-weight:700;font-size:clamp(20px,3vw,26px);line-height:1.2;margin:6px 0 14px}
+.card p{margin:0 0 14px;max-width:760px}
+.card b{color:#FFE3F7}
+ol,ul{margin:0 0 16px;padding-left:22px}
+li{margin:4px 0}
+li::marker{color:var(--c,var(--pink));font-weight:700}
+.tbl{overflow-x:auto;margin:0 0 16px;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--c,var(--gold));background:rgba(255,255,255,.03);padding:10px 14px}
+td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{font-weight:700;white-space:nowrap}
+.cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 16px}
+.cycle>div{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
+.cycle .L{font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1;color:var(--pink);text-shadow:0 0 14px rgba(255,95,220,.6)}
+.cycle .t{font-weight:800;margin:8px 0 2px}
+.cycle .d{font-size:14px;color:var(--muted)}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+.duo div{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.duo .bad{border-color:#6A2A44;background:rgba(255,107,129,.06)}
+.duo .good{border-color:#1F5A47;background:rgba(60,240,160,.06)}
+.duo h3{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.duo .bad h3{color:#FF8FA1}.duo .good h3{color:var(--green)}
+.tip{border-left:3px solid var(--gold);background:rgba(255,181,71,.08);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 14px;max-width:760px}
+.check{list-style:none;padding:0}
+.check label{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin:0 0 8px;cursor:pointer}
+.check input{appearance:none;flex:none;width:22px;height:22px;border:2px solid var(--pink);border-radius:7px;margin-top:2px;display:grid;place-content:center;cursor:pointer}
+.check input:checked{background:linear-gradient(135deg,var(--pink),var(--orange));box-shadow:0 0 12px rgba(255,95,220,.5)}
+.check input:checked::after{content:"✓";color:#1A0B2E;font-weight:800;font-size:14px}
+.check input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.score{font-family:var(--f-mono);font-weight:700;color:var(--gold)}
+footer{color:var(--muted);font-size:13px;text-align:center;padding-bottom:24px}
+@media (max-width:520px){.cycle{grid-template-columns:1fr!important}}
+@media (max-width:700px){.cycle{grid-template-columns:repeat(2,minmax(0,1fr))}.duo{grid-template-columns:1fr}.card{padding:22px 18px}.card::before{left:18px;right:18px}nav{margin-left:0}}
+.sw{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.sw div{border-radius:12px;padding:44px 10px 10px;font-size:13px;font-weight:700;border:1px solid var(--line)}
+.ct{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 16px}
+.ct div{border-radius:12px;padding:14px;font-weight:700;border:1px solid var(--line)}
+.ct small{display:block;font-family:var(--f-mono);font-size:12px;font-weight:700;margin-top:6px}
+.chip{display:inline-block;font-family:var(--f-mono);font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:1px}
+.chip.ok{background:rgba(60,240,160,.14);color:var(--green)}.chip.no{background:rgba(255,107,129,.14);color:#FF8FA1}.chip.mid{background:rgba(255,181,71,.14);color:var(--gold)}
+@media (max-width:520px){table{min-width:0;font-size:14px}td:first-child{white-space:normal}th,td{padding:9px 10px}}
+@media (max-width:700px){.sw{grid-template-columns:repeat(2,minmax(0,1fr))}.ct{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+ <div class="logo"><b>Content Challenge</b><span>Kenniskaarten · Level 5</span></div>
+ <nav aria-label="Kaarten">
+  <a href="#k1">1</a><a href="#k2">2</a><a href="#k3">3</a><a href="#k4">4</a><a href="#k5">5</a><a href="#k6">6</a><a href="#k7">7</a><a href="#k8">8</a><a href="#toets">Zelftoets</a>
+ </nav>
+</div></header>
+<main>
+<section class="hero">
+ <h1>De campagne</h1>
+ <p>In level 3 heb je 12 uitingen gepland. In level 4 heb je beeld gemaakt. Nu breng je die twee samen: je maakt alle 12 uitingen echt af, met tekst, beeld en een call-to-action. Deze kaarten helpen je daarbij.</p>
+</section>
+
+<article class="card" id="k1" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 1</div>
+ <h2>Van kalender naar campagne</h2>
+ <p>Je hoeft niet opnieuw te bedenken wat je gaat maken. Dat staat al in je contentkalender. Per uiting weet je de fase, het kanaal, het format, het doel en de KPI met norm. Die gegevens zijn je opdracht.</p>
+ <div class="tbl"><table>
+  <tr><th>Uit je kalender</th><th>Wat het betekent voor je uiting</th></tr>
+  <tr><td>Fase (See, Think, Do, Care)</td><td>See: opvallen en nieuwsgierig maken. Think: uitleggen en overtuigen. Do: laten handelen. Care: bedanken en binden.</td></tr>
+  <tr><td>Kanaal en format</td><td>Bepaalt de maat van je beeld en hoeveel tekst past. Een story is anders dan een LinkedIn-post.</td></tr>
+  <tr><td>KPI en norm</td><td>Je uiting moet iets doen wat je kunt meten. Wil je klikken, dan heb je een duidelijke link en CTA nodig.</td></tr>
+  <tr><td>Beeld uit level 4</td><td>Kies uit je eigen foto's, je video, je AI-beelden en je bewerking. Eigen beeld werkt vaak beter dan stock.</td></tr>
+ </table></div>
+ <p class="tip">Werk niet uiting voor uiting van boven naar beneden. Maak eerst van alle 12 een snelle eerste versie, en schaaf daarna. Dan zie je sneller of je feed één geheel wordt.</p>
+</article>
+
+<article class="card" id="k2" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 2</div>
+ <h2>De productiekaart</h2>
+ <p>Voor elke uiting vul je in de game een productiekaart in. Daarmee leg je vast wat er gemaakt is en hoe. Zo kan je docent, je jury en jijzelf later precies zien welke keuzes je hebt gemaakt.</p>
+ <div class="tbl"><table>
+  <tr><th>Veld</th><th>Wat vul je in</th></tr>
+  <tr><td>Kop</td><td>De eerste regel die mensen lezen. Kort en concreet.</td></tr>
+  <tr><td>Tekst</td><td>De caption of bodytekst, in je tone of voice uit level 2.</td></tr>
+  <tr><td>CTA</td><td>Wat moet de lezer nu doen?</td></tr>
+  <tr><td>Extra bij een format</td><td>Een carrousel krijgt extra slides. Een nieuwsbrief krijgt een onderwerpregel en een preheader (de grijze regel na het onderwerp in je inbox).</td></tr>
+  <tr><td>Beeld</td><td>Een beeld uit je beeldbank van level 4, of een nieuw beeld dat je uploadt.</td></tr>
+  <tr><td>Prompt</td><td>Als AI heeft meegeschreven of meegemaakt: welke prompt gebruikte je? Bij 0% AI vul je geen prompt en geen aanpassing in.</td></tr>
+  <tr><td>Aanpassing</td><td>Wat heb je zelf veranderd aan wat AI maakte, en waarom?</td></tr>
+  <tr><td>AI-aandeel</td><td>Een eerlijke schatting: van 0% (alles zelf) tot 100% (alles AI).</td></tr>
+  <tr><td>Claim en bron</td><td>Staat er een bewering in die je moet kunnen bewijzen? Zie kaart 6.</td></tr>
+ </table></div>
+ <p class="tip">Het veld "Aanpassing" is het belangrijkste. Daar laat je zien dat jij de regie hebt over AI, en niet andersom.</p>
+</article>
+
+<article class="card" id="k3" style="--c:var(--cyan)">
+ <div class="eyebrow">Kaart 3</div>
+ <h2>Copy schrijven: kop, tekst en CTA</h2>
+ <p>Op social media scrollen mensen snel. Je hebt ongeveer één seconde om op te vallen. Daarom zet je het belangrijkste vooraan.</p>
+ <div class="tbl"><table>
+  <tr><th>Onderdeel</th><th>Tips</th><th>Voorbeeld Groenbak</th></tr>
+  <tr><td>Kop</td><td>Maximaal 8 woorden. Een vraag, een getal of iets herkenbaars.</td><td>Ook jouw basilicum al dood?</td></tr>
+  <tr><td>Tekst</td><td>Korte zinnen. Eén boodschap per uiting. Schrijf zoals je praat.</td><td>Geen schuldgevoel. In 3 minuten zie je wat je plant echt nodig heeft.</td></tr>
+  <tr><td>CTA</td><td>Begin met een werkwoord. Maak het klein en makkelijk.</td><td>Doe de plantentest</td></tr>
+ </table></div>
+ <p><b>Laat AI varianten maken, en kies zelf.</b> Vraag bijvoorbeeld: "Geef 5 koppen van maximaal 8 woorden voor deze uiting, in deze tone of voice: [plak je tone of voice]." Kies de beste en pas hem aan tot hij klinkt als jouw merk.</p>
+ <p class="tip">Lees je tekst hardop. Klinkt het als een folder, dan is het te stijf. Klinkt het als je merk dat tegen één persoon praat, dan zit je goed.</p>
+ <p><b>Nieuwsbrief.</b> De onderwerpregel bepaalt of iemand de mail opent: kort (maximaal 6 tot 8 woorden), concreet en nieuwsgierig makend. De preheader vult die aan en herhaalt hem niet. Voorbeeld: "Je basilicum redden in 3 minuten" met als preheader "Plus de fout die bijna iedereen maakt".</p>
+ <p><b>Reel of story (9:16).</b> Zet de hook in de eerste seconde, groot en in het midden van het beeld. Houd de boven- en onderkant vrij, want daar staan de knoppen van de app.</p>
+</article>
+
+<article class="card" id="k4" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 4</div>
+ <h2>Eén merk in je hele feed</h2>
+ <p>Losse uitingen kunnen allemaal goed zijn, terwijl je feed toch rommelig oogt. In de game zie je je 12 uitingen naast elkaar, in je eigen kleuren en lettertypen. Kijk dan als een vreemde: herken je het merk meteen?</p>
+ <div class="tbl"><table>
+  <tr><th>Check</th><th>Waar let je op</th></tr>
+  <tr><td>Kleur</td><td>Komen je huisstijlkleuren terug? Valt er één uiting uit de toon?</td></tr>
+  <tr><td>Beeld</td><td>Minstens 6 verschillende beelden, zodat het niet saai wordt. Wel in dezelfde stijl, volgens je beeldbriefing.</td></tr>
+  <tr><td>Toon</td><td>Praat je merk overal op dezelfde manier?</td></tr>
+  <tr><td>Afwisseling</td><td>Wissel af tussen foto, video, tekst en formats. Niet drie keer hetzelfde achter elkaar.</td></tr>
+  <tr><td>CTA</td><td>Heeft elke uiting een duidelijke volgende stap?</td></tr>
+ </table></div>
+ <p>In de game kies je de <b>2 zwakste uitingen</b> en leg je uit waarom. Dat is geen straf: het is de snelste manier om je campagne beter te maken.</p>
+ <p class="tip">Zet je telefoon op armlengte en kijk naar het raster. Wat valt het eerst op? Is dat ook wat je wilt dat opvalt?</p>
+</article>
+
+<article class="card" id="k5" style="--c:var(--pink)">
+ <div class="eyebrow">Kaart 5</div>
+ <h2>AI als productieassistent</h2>
+ <p>Met AI maak je in korte tijd veel. Het risico is dat alles op elkaar gaat lijken en nergens naar jouw merk klinkt. Gebruik AI daarom als assistent, niet als maker.</p>
+ <div class="tbl"><table>
+  <tr><th>Goed gebruik</th><th>Minder goed gebruik</th></tr>
+  <tr><td>Varianten van een kop laten maken en zelf kiezen</td><td>De eerste versie letterlijk overnemen</td></tr>
+  <tr><td>Je tone of voice en beeldbriefing in de prompt plakken</td><td>Een prompt van één zin zonder context</td></tr>
+  <tr><td>Je eigen foto laten bewerken (licht, achtergrond, maat)</td><td>Een "echte" situatie laten verzinnen die nooit gebeurd is</td></tr>
+  <tr><td>AI om feedback vragen op je tekst</td><td>AI laten bepalen wat je boodschap is</td></tr>
+ </table></div>
+ <p><b>Het AI-aandeel.</b> Per uiting schat je hoeveel AI erin zit. Er is geen goed of fout percentage. Wel moet je kunnen uitleggen waarom je AI op die plek gebruikte, en wat je zelf hebt toegevoegd.</p>
+ <p><b>Labelen.</b> Is een beeld door AI gemaakt of sterk bewerkt, en lijkt het echt? Zet er dan een AI-label bij. De game houdt bij of dat bij elk AI-beeld gebeurd is.</p>
+ <p class="tip">Bewaar je beste prompts. Een goede prompt kun je voor elke uiting opnieuw gebruiken, je past alleen de uiting-specifieke delen aan.</p>
+ <p><b>Een herbruikbare prompt</b> bestaat uit vaste delen en delen per uiting. De knop "Kopieer prompt voor deze uiting" in de game zet hem voor je in elkaar:</p>
+ <div class="tbl"><table>
+  <tr><th>Deel</th><th>Voorbeeld</th></tr>
+  <tr><td>Kalenderregel (per uiting)</td><td>12 nov · Think · Carrousel · Instagram · thema "3 fouten bij water geven" · KPI opgeslagen, norm 40</td></tr>
+  <tr><td>Tone of voice (vast)</td><td>Eerlijk, een beetje droog, nooit belerend. Je spreekt de lezer aan met "je".</td></tr>
+  <tr><td>Beeldbriefing (vast)</td><td>Daglicht van opzij, echte handen met aarde, kleuren #2F6B3A en #F4EFE6</td></tr>
+  <tr><td>Opdracht</td><td>Geef 5 koppen van maximaal 8 woorden, 2 captions en 3 CTA's.</td></tr>
+ </table></div>
+</article>
+
+<article class="card" id="k6" style="--c:var(--orange)">
+ <div class="eyebrow">Kaart 6</div>
+ <h2>Claims en bronnen</h2>
+ <p>Een <b>claim</b> is een bewering die je moet kunnen waarmaken. Denk aan een getal ("bespaart 30% water"), een prijs, een vergelijking ("de beste"), of een woord als "gezond", "duurzaam" of "groen".</p>
+ <div class="tbl"><table>
+  <tr><th>Regel</th><th>Wat betekent het</th></tr>
+  <tr><td>Reclamecode</td><td>De Nederlandse Reclame Code zegt dat reclame niet misleidend mag zijn. Iedereen kan klagen bij de Reclame Code Commissie.</td></tr>
+  <tr><td>ACM over duurzaamheidsclaims</td><td>De ACM heeft regels voor duurzaamheidsclaims opgesteld. Kort gezegd: wees concreet, onderbouw het met feiten, en vertel niet alleen het goede nieuws.</td></tr>
+  <tr><td>Strengere EU-regels</td><td>Sinds eind september 2026 zijn vage milieuclaims zoals "milieuvriendelijk" of "groen" zonder bewijs verboden in de hele EU.</td></tr>
+  <tr><td>Reclame herkenbaar maken</td><td>Werk je met een influencer, dan moet duidelijk zijn dat het reclame is, bijvoorbeeld met #ad of #adv.</td></tr>
+ </table></div>
+ <div class="tbl"><table>
+  <tr><th>Niet zo</th><th>Wel zo</th></tr>
+  <tr><td>Groenbak is duurzaam</td><td>Onze potten zijn van 80% gerecycled plastic (bron: leverancier)</td></tr>
+  <tr><td>De beste plantenapp</td><td>Al 1.200 plantjes gered (eigen data, juni 2026)</td></tr>
+  <tr><td>9 van de 10 gebruikers is tevreden</td><td>9 van de 10 testers gaf een 4 of 5 (eigen enquête, 40 testers, mei 2026)</td></tr>
+  <tr><td>Oogst 2 kilo tomaten per pot</td><td>Een tester oogstte 2 kilo uit één pot (foto en logboek)</td></tr>
+ </table></div>
+ <p>In de game geef je per uiting aan of er een claim in staat. Zo ja, dan noem je de bron. Bij geen goede bron: maak de claim kleiner of laat hem weg. Ziet de game een mogelijke claim (een getal, "de beste", "duurzaam") en kies je toch "Nee, geen claim"? Leg dan in één zin uit waarom, bijvoorbeeld: "3 minuten is de duur van de test zelf, geen belofte over het resultaat."</p>
+ <p class="tip">Zoek de actuele regels op bij de <a href="https://www.acm.nl/nl/onderwerpen/verkoop-aan-consumenten/eerlijke-handelspraktijken/duurzaamheidsclaims" target="_blank" rel="noopener">ACM</a> en de <a href="https://www.reclamecode.nl" target="_blank" rel="noopener">Stichting Reclame Code</a>, en gebruik die als bron in de game. Regels veranderen, dus ga niet alleen op deze kaart af.</p>
+</article>
+
+<article class="card" id="k7" style="--c:var(--cyan)">
+ <div class="eyebrow">Kaart 7</div>
+ <h2>Feedback geven en ontvangen</h2>
+ <p>In de juryronde beoordelen studio's elkaars eerste 3 uitingen. Goede feedback is concreet en helpt de ander verder. Gebruik deze volgorde:</p>
+ <div class="tbl"><table>
+  <tr><th>Stap</th><th>Voorbeeld</th></tr>
+  <tr><td>1. Wat werkt</td><td>"De kop is kort en je ziet meteen het product."</td></tr>
+  <tr><td>2. Wat beter kan</td><td>"De CTA staat onderaan en valt weg tegen de foto."</td></tr>
+  <tr><td>3. Een concrete tip</td><td>"Zet de CTA in je accentkleur, bovenin het beeld."</td></tr>
+ </table></div>
+ <p>De jury scoort drie dingen van 1 tot 5: <b>huisstijl herkenbaar</b>, <b>boodschap helder</b> en <b>beeld ondersteunt de boodschap</b>. Geef bij een lage score altijd een tip. Je kiest zelf welke 3 uitingen je in de les maakt; die gaan naar de jury.</p>
+ <p><b>Feedback ontvangen?</b> Je hoeft niet alles over te nemen. Kies wat je uiting beter maakt, pas het aan en schrijf in de game op wat je veranderd hebt. Je XP krijg je voor het verwerken van de tips, niet voor een hoge score.</p>
+ <p class="tip">"Mooi!" of "Niet zo goed" helpt niemand. Noem altijd wat je ziet, en wat je zou doen.</p>
+</article>
+
+<article class="card" id="k8" style="--c:var(--violet)">
+ <div class="eyebrow">Kaart 8</div>
+ <h2>Kiezen voor de test</h2>
+ <p>In level 6 test je een deel van je campagne. Daarom kies je nu 3 uitingen. Kies niet alleen je mooiste, maar de uitingen waar je het meest van leert.</p>
+ <div class="tbl"><table>
+  <tr><th>Kies zo</th><th>Waarom</th></tr>
+  <tr><td>Uit verschillende fasen</td><td>Dan test je of je hele funnel werkt, niet alleen het begin.</td></tr>
+  <tr><td>Verschillende formats</td><td>Bijvoorbeeld een foto, een video en een carrousel. Dan zie je wat beter werkt.</td></tr>
+  <tr><td>Eén waar je twijfelt</td><td>Twijfel is een goede reden om te testen.</td></tr>
+ </table></div>
+ <p><b>Schrijf je verwachting op.</b> Per uiting zeg je wat je denkt dat er gebeurt, in de KPI uit je kalender. Bijvoorbeeld: "Ik verwacht dat deze reel een hoger bereik haalt dan de foto, omdat de hook in de eerste seconde zit." Dat is je hypothese. In level 6 kijk je of hij klopt.</p>
+ <div class="tbl"><table>
+  <tr><th>Te vaag</th><th>Goed</th></tr>
+  <tr><td>Ik denk dat deze het goed gaat doen.</td><td>Ik verwacht 60 keer opgeslagen (norm 40), omdat een lijstje met fouten iets is wat je wilt bewaren.</td></tr>
+ </table></div>
+ <p>Een goede verwachting heeft altijd een <b>getal</b> in je KPI en een <b>omdat</b>.</p>
+ <p class="tip">Een verwachting die niet uitkomt is geen mislukking. Het is precies wat een test je moet opleveren.</p>
+</article>
+
+<article class="card" id="toets" style="--c:var(--orange)">
+ <div class="eyebrow">Zelftoets · <span class="score" id="score">0 / 5</span></div>
+ <h2>Klaar voor de campagne?</h2>
+ <p>Kun je deze vragen beantwoorden? Vink ze af.</p>
+ <ul class="check" id="checks">
+  <li><label><input type="checkbox">Welke gegevens uit je contentkalender gebruik je voor elke uiting?</label></li>
+  <li><label><input type="checkbox">Waar let je op bij een goede kop en een goede CTA?</label></li>
+  <li><label><input type="checkbox">Hoe check je of je 12 uitingen samen één merk laten zien?</label></li>
+  <li><label><input type="checkbox">Wat is een claim, en wat doe je als je er geen bron voor hebt?</label></li>
+  <li><label><input type="checkbox">Hoe kies je 3 uitingen voor de test, en wat is een verwachting?</label></li>
+ </ul>
+</article>
+<footer>Content Challenge · Level 5 · De campagne</footer>
+</main>
+<script>
+(function(){
+ var KEY='cc-kaarten-l5', boxes=[].slice.call(document.querySelectorAll('#checks input')), st=[];
+ try{st=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){}
+ function upd(){var n=boxes.filter(function(b){return b.checked}).length;document.getElementById('score').textContent=n+' / '+boxes.length;
+  try{localStorage.setItem(KEY,JSON.stringify(boxes.map(function(b){return b.checked})))}catch(e){}}
+ boxes.forEach(function(b,i){b.checked=!!st[i];b.addEventListener('change',upd)});upd();
+})();
+</script>
+</body>
+</html>
