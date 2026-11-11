@@ -6,8 +6,8 @@
    Laat je ze leeg, dan start de site in demomodus: alles staat dan alleen in deze browser.
 */
 window.CC_CONFIG = {
-  supabaseUrl: "",
-  supabaseAnonKey: "",
+  supabaseUrl: "https://kmzzggkmuntsarpdxudk.supabase.co",
+  supabaseAnonKey: "sb_publishable_E9zgWL5w-6AFVCHoi-17DQ_v6deTYeY",
 
   /* Opslag per student voor beelden, in MB. */
   maxOpslagMB: 12
