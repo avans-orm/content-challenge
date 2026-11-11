@@ -682,7 +682,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
         <button id="roleStudent" aria-pressed="true">Student</button>
         <button id="roleDocent" aria-pressed="false">Docent</button>
       </div>
-      <a class="kbtn" id="deckBtn" href="https://claude.ai/artifact/PeqWKwmgCz3Q4rXuqSqpNr" target="_blank" rel="noopener" title="Open het lesdeck van dit level"><span class="kw">Lesdeck</span><span class="ks">Deck</span></a>
+      <a class="kbtn" id="deckBtn" href="lesdeck/l1.pdf" target="_blank" rel="noopener" title="Open het lesdeck van dit level"><span class="kw">Lesdeck</span><span class="ks">Deck</span></a>
       <a class="kbtn" id="kaartenBtn" href="kennis/l1.html" target="_blank" rel="noopener" title="Open de kenniskaarten van dit level"><span class="kw">Kenniskaarten</span><span class="ks">Kaarten</span></a>
     </div>
   </div>
@@ -701,7 +701,7 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
 const DOCENTCODE="contentdocent"; /* pas hier de docentcode aan */
 const DOCKEY="cq-docent";
 /* Gepubliceerde kenniskaarten per level. Linken naar een kaart: URL + "#k1" ... "#k8". */
-const LESDECK_URL={1:"https://claude.ai/artifact/PeqWKwmgCz3Q4rXuqSqpNr",2:"https://claude.ai/artifact/BDgSAvtSSyQvZauSPDFhPL",3:"https://claude.ai/artifact/88CUMApW6dNHAC6EFyTbGj",4:"https://claude.ai/artifact/Mx9BWSFEfzqqXvdwkc7tmk",5:"https://claude.ai/artifact/Ek4eUf6sGkcKvRPRdkLQfx",6:"https://claude.ai/artifact/4eG54EDAMrtT2eTiWaQDzA"};
+const LESDECK_URL={1:"lesdeck/l1.pdf",2:"lesdeck/l2.pdf",3:"lesdeck/l3.pdf",4:"lesdeck/l4.pdf",5:"lesdeck/l5.pdf",6:"lesdeck/l6.pdf"};
 const KAART_URL={1:"kennis/l1.html",2:"kennis/l2.html",3:"kennis/l3.html",4:"kennis/l4.html",5:"kennis/l5.html",6:"kennis/l6.html"};
 /* Kennischeck per level: 6 meerkeuzevragen {q:"vraag",o:["optie 1","optie 2","optie 3","optie 4"],a:0 (index goede optie),k:"k3" (kaart)}.
    Minimaal 75% goed om het level te spelen. Een lege lijst betekent: geen kennischeck voor dat level. */

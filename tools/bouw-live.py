@@ -68,6 +68,10 @@ rep('const f=h("iframe",{class:"hbframe",title:"Voorbeeld van je huisstijlhandbo
 rep(r'const KAART_URL=\{.*?\};', 'const KAART_URL={1:"kennis/l1.html",2:"kennis/l2.html",3:"kennis/l3.html",4:"kennis/l4.html",5:"kennis/l5.html",6:"kennis/l6.html"};', regex=True)
 rep('id="kaartenBtn" href="https://claude.ai/artifact/4KaNAPnvqaFUtwBovYstZw"', 'id="kaartenBtn" href="kennis/l1.html"')
 
+# Lesdecks als PDF in de site (map lesdeck/).
+rep(r'const LESDECK_URL=\{.*?\};', 'const LESDECK_URL={1:"lesdeck/l1.pdf",2:"lesdeck/l2.pdf",3:"lesdeck/l3.pdf",4:"lesdeck/l4.pdf",5:"lesdeck/l5.pdf",6:"lesdeck/l6.pdf"};', regex=True)
+rep('id="deckBtn" href="https://claude.ai/artifact/PeqWKwmgCz3Q4rXuqSqpNr"', 'id="deckBtn" href="lesdeck/l1.pdf"')
+
 # 4. Teksten over opslag in de browser.
 rep('Opslag in je browser: ongeveer ', 'Opslag van je account: ongeveer ')
 rep('"Opslag in je browser"', '"Opslag van je account"')
