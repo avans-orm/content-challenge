@@ -208,6 +208,7 @@ function viewNood(){const aan=NOOD===true;const mist=NOOD===undefined;
  const zet=async v=>{try{await CC.setSetting("noodplan",v);NOOD=v;toast(v?"Noodplan staat aan voor alle studenten":"Noodplan staat uit");render();}catch(e){toast(e.message);}};
  return h("section",{class:"panel",id:"noodplan"},h("h2",null,"Noodplan"),
   h("p",{class:"lead"},"Liep de game vast en hebben studenten een les buiten de game gedaan met de ",h("a",{href:"noodplan.html",target:"_blank",rel:"noopener"},"noodkaarten"),"? Zet dan het noodplan aan. Een student die op een level klikt dat nog op slot staat, krijgt dan een kort formulier met alleen de gegevens die de volgende levels nodig hebben. Daarna gaat het volgende level open. Een level dat al is ingehaald, blijft open als je het noodplan weer uitzet. Studenten zien de wijziging binnen een minuut."),
+  h("div",{style:"display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px"},h("a",{class:"btn small",href:"noodplan.html",target:"_blank",rel:"noopener"},"Open de noodkaarten"),h("a",{class:"btn small ghost",href:"noodplan.pdf",download:"Content Challenge - noodkaarten.pdf"},"Download de noodkaarten (PDF)")),
   mist?h("p",{class:"msg bad"},"De schakelaar werkt nog niet: voer eerst eenmalig supabase/noodplan.sql uit in Supabase (SQL Editor)."):
   h("div",{class:"row",style:"display:flex;gap:12px;align-items:center;flex-wrap:wrap"},
    aan?h("span",{class:"pill p-wait"},"Aan voor alle studenten"):h("span",{class:"pill p-ok"},"Uit (normale situatie)"),
