@@ -93,6 +93,7 @@ CCLIVE.koppel({samenvatting(){
   if(!open[n]()){out.lv[n]={x:[0,0,0,0],b:0,st:"Nog niet open",open:false};if(n===3)out.lv[n].ev="Nog niet getrokken";if(n===6)out.lv[n].sz=0;continue;}
   const r=rows[n]();delete r.me;delete r.n;delete r.s;r.open=true;r.klaar=!!D[n]("oplevering");
   r.st=r.klaar?(n===6?"Challenge klaar":"Oplevering klaar"):"Bezig: "+((MS[n].find(m=>m.id===cur[n]())||{}).t||"-");
+  r.inh=n<6&&!r.klaar&&inh(n);if(r.inh)r.st="Ingehaald buiten de game";
   out.lv[n]=r;}catch(e){out.lv[n]={x:[0,0,0,0],b:0,st:"-"};}}
  return out;}});
 '''

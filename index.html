@@ -1112,7 +1112,7 @@ function blank6(){return{
 };}
 
 function blank(){return{
- role:"student",cur:"profiel",lvl:1,kc:{},l2:blank2(),l3:blank3(),l4:blank4(),l5:blank5(),l6:blank6(),
+ role:"student",cur:"profiel",lvl:1,kc:{},inh:{},l2:blank2(),l3:blank3(),l4:blank4(),l5:blank5(),l6:blank6(),
  p:{naam:"",studio:"",bedrijf:"",omschrijving:"",doelgroep:"",doel:"",kw:["","",""],tool:""},
  duel:{kaal:"",brief:{},briefOut:"",verschillen:["","",""]},
  model:{vakken:{},gerretsen:[],checkV:3},
@@ -1276,11 +1276,97 @@ function ML(){return S.lvl===6?MISSIONS6:S.lvl===5?MISSIONS5:S.lvl===4?MISSIONS4
 function DN(id){return S.lvl===6?done6(id):S.lvl===5?done5(id):S.lvl===4?done4(id):S.lvl===3?done3(id):S.lvl===2?done2(id):done(id);}
 function curId(){return S.lvl===6?S.l6.cur:S.lvl===5?S.l5.cur:S.lvl===4?S.l4.cur:S.lvl===3?S.l3.cur:S.lvl===2?S.l2.cur:S.cur;}
 function setCur(id){if(S.lvl===6)S.l6.cur=id;else if(S.lvl===5)S.l5.cur=id;else if(S.lvl===4)S.l4.cur=id;else if(S.lvl===3)S.l3.cur=id;else if(S.lvl===2)S.l2.cur=id;else S.cur=id;}
-function l2open(){return done("oplevering");}
-function l3open(){return l2open()&&done2("oplevering");}
-function l4open(){return l3open()&&lk3("oplevering");}
-function l5open(){return l4open()&&lk4("oplevering");}
-function l6open(){return l5open()&&lk5("oplevering");}
+function l2open(){return done("oplevering")||inh(1);}
+function l3open(){return l2open()&&(done2("oplevering")||inh(2));}
+function l4open(){return l3open()&&(lk3("oplevering")||inh(3));}
+function l5open(){return l4open()&&(lk4("oplevering")||inh(4));}
+function l6open(){return l5open()&&(lk5("oplevering")||inh(5));}
+/* ---------- inhaal-invoer: een level buiten de game gedaan (noodplan) ----------
+   Liep de game vast en deed de student een level buiten de game (met AI, in het portfolio)? Dan vult hij alleen
+   de gegevens in die de volgende levels nodig hebben. Daarna gaat het volgende level open. Het gemiste level blijft
+   speelbaar; XP telt alleen voor wat in de game zelf is gedaan. S.inh[k] = {t} markeert level k als ingehaald. */
+let INH=0;
+function inh(k){return!!(S.inh&&typeof S.inh==="object"&&S.inh[k]);}
+const OPEN_INH=()=>[null,()=>true,l2open,l3open,l4open,l5open,l6open];
+function inhFirst(n){const O=OPEN_INH();for(let k=1;k<n;k++){if(!O[k+1]())return k;}return 0;}
+const INHNAAM=[null,"Het fundament","De identiteit","Het bouwplan","De studio","De campagne"];
+let INHD=null;
+function inhDraft(k){if(INHD&&INHD.k===k)return INHD;const P=S.p,L2=S.l2,L3=S.l3,L4=S.l4,L5=S.l5;const d={k,err:[]};
+ if(k===1)Object.assign(d,{naam:P.naam||"",studio:P.studio||"",bedrijf:P.bedrijf||"",omschrijving:P.omschrijving||"",doelgroep:P.doelgroep||"",doel:P.doel||"",kw:kwArr().slice(0,3),thema:(S.keuze.eind||{}).thema||""});
+ if(k===2)Object.assign(d,{pal:Object.assign({},L2.pal),kop:L2.kop||"",tekst:L2.tekst||"",beeld:L2.beeld||"",tov:(L2.tov||{}).regels||""});
+ if(k===3)Object.assign(d,{datum:L3.start.datum||"",uren:L3.start.uren||"",kanalen:L3.start.kanalen||"",plak:""});
+ if(k===4)Object.assign(d,{stijl:L4.bb.stijl||"",ok:false});
+ if(k===5){const t=(L5.keuze.test||[]).slice(0,3);d.test=t.slice();d.u={};t.forEach(i=>{const u=L5.uit[i]||{};d.u[i]={kop:u.kop||"",cta:u.cta||"",verw:(L5.keuze.verw||{})[i]||""};});}
+ return(INHD=d);}
+function inhIn(id,val,fn,ph,type){const t=h(type==="ta"?"textarea":"input",{id,type:type==="ta"?null:(type||"text"),placeholder:ph||""});t.value=val||"";t.addEventListener("input",()=>fn(t.value));return t;}
+const HEXRE=/^#?[0-9a-f]{6}$/i;
+function inhCheck(d){const e=[];const k=d.k;
+ if(k===1){if(!len(d.naam))e.push("je naam");if(!d.studio)e.push("je studio");if(!len(d.bedrijf))e.push("je bedrijf of idee");if(len(d.doelgroep)<10)e.push("je doelgroep (minimaal 10 tekens)");if(len(d.doel)<10)e.push("je doel (minimaal 10 tekens)");if(d.kw.filter(x=>len(x)>=3).length<3)e.push("3 kernwaarden");}
+ if(k===2){if(!ROLES.every(r=>HEXRE.test(String(d.pal[r.id]||"").trim())))e.push("5 kleuren als hex-code, bijvoorbeeld #2F6B3A");if(!len(d.kop))e.push("je kopfont");if(!len(d.tekst))e.push("je tekstfont");if(len(d.tov)<10)e.push("je tone of voice (minimaal 10 tekens)");}
+ if(k===3){if(!/^\d{4}-\d{2}-\d{2}$/.test(d.datum))e.push("je startdatum");if(!(num(d.uren)>0))e.push("je uren per week");if(!len(d.kanalen))e.push("je kanalen");const n=inhRows(d).length;if(n<12)e.push("minimaal 12 uitingen uit je kalender (nu "+n+")");}
+ if(k===4){if(len(d.stijl)<20)e.push("je beeldstijl in het kort (minimaal 20 tekens)");if(!d.ok)e.push("het vinkje dat je beelden in je portfolio staan");}
+ if(k===5){if(d.test.length!==3)e.push("precies 3 uitingen voor de test (nu "+d.test.length+")");d.test.forEach((i,n)=>{const u=d.u[i]||{};if(len(u.kop)<3)e.push("de kop van testuiting "+(n+1));if(!verwOk(u.verw))e.push("de verwachting van testuiting "+(n+1)+" (met een getal en 'omdat')");});}
+ return e;}
+/* Kalender: geplakte tabel, of de rijen die al in de game staan. */
+function inhRows(d){if(len(d.plak)){const keep=S.l3.start.datum;S.l3.start.datum=d.datum||keep;let r=[];try{r=parseTable(d.plak);}catch(e){}S.l3.start.datum=keep;return r;}return S.l3.rows||[];}
+function inhSave(d){const k=d.k;
+ if(k===1){const P=S.p;["naam","studio","bedrijf","omschrijving","doelgroep","doel"].forEach(x=>{P[x]=String(d[x]||"").trim();});kwArr();d.kw.forEach((x,i)=>{P.kw[i]=String(x||"").trim();});
+  if(!S.model.vakken.doelgroep)S.model.vakken.doelgroep={};if(!len(S.model.vakken.doelgroep.eigen))S.model.vakken.doelgroep.eigen=P.doelgroep;
+  if(!S.keuze.eind)S.keuze.eind={thema:"",story:""};if(len(d.thema))S.keuze.eind.thema=d.thema.trim();}
+ if(k===2){const L=S.l2;ROLES.forEach(r=>{let v=String(d.pal[r.id]||"").trim();if(v&&v[0]!=="#")v="#"+v;L.pal[r.id]=v.toUpperCase();});L.kop=d.kop.trim();L.tekst=d.tekst.trim();if(len(d.beeld))L.beeld=d.beeld.trim();L.tov.regels=d.tov.trim();}
+ if(k===3){const L=S.l3;L.start.datum=d.datum;L.start.uren=String(d.uren).trim();L.start.kanalen=d.kanalen.trim();if(len(d.plak)){L.rows=parseTable(d.plak);L.plak=d.plak;}}
+ if(k===4){S.l4.bb.stijl=d.stijl.trim();}
+ if(k===5){const L=S.l5;d.test.forEach(i=>{if(!L.sel.includes(i)&&L.sel.length<12)L.sel.push(i);const u=L.uit[i]=Object.assign({},U5KEYS,L.uit[i]||{});const x=d.u[i];u.kop=x.kop.trim();if(len(x.cta))u.cta=x.cta.trim();L.keuze.verw[i]=x.verw.trim();});
+  L.sel.sort((a,b)=>a-b);L.keuze.test=d.test.slice();}
+ if(!S.inh||typeof S.inh!=="object")S.inh={};S.inh[k]={t:Date.now()};INHD=null;save();}
+function viewInhaal(){const n=INH;const k=inhFirst(n);
+ if(!k){INH=0;INHD=null;S.lvl=n;KCOPEN=0;save();return null;}
+ const d=inhDraft(k);const set=(x,v)=>{d[x]=v;};
+ let body=[];
+ if(k===1){const st=h("select",{id:"ih-studio"},h("option",{value:""},"Kies je studio"),[1,2,3,4,5,6,7,8].map(i=>h("option",{value:String(i),selected:d.studio===String(i)},"Studio "+i)));st.addEventListener("change",()=>d.studio=st.value);
+  body=[h("div",{class:"grid2"},field("Je naam",null,inhIn("ih-naam",d.naam,v=>set("naam",v))),field("Studio",null,st)),
+   field("Je (project)bedrijf of idee",null,inhIn("ih-bedrijf",d.bedrijf,v=>set("bedrijf",v),"Bijv.: Groenbak")),
+   field("Korte omschrijving","Wat bied je aan?",inhIn("ih-omschr",d.omschrijving,v=>set("omschrijving",v),"",'ta')),
+   field("Doelgroep","Uit je contentstrategie.",inhIn("ih-dg",d.doelgroep,v=>set("doelgroep",v),"",'ta')),
+   field("Doel","Je doel uit je strategie, met een getal.",inhIn("ih-doel",d.doel,v=>set("doel",v),"Bijv.: Binnen een halfjaar 500 volgers en 40 abonnees.")),
+   h("div",{class:"grid2"},[0,1,2].map(i=>field("Kernwaarde "+(i+1),null,inhIn("ih-kw"+i,d.kw[i],v=>{d.kw[i]=v;})))),
+   field("Centraal thema (mag leeg)","Het thema uit je definitieve contentstrategie.",inhIn("ih-thema",d.thema,v=>set("thema",v)))];}
+ if(k===2){body=[h("p",{class:"status"},"Neem de hex-codes over uit je huisstijlhandboek."),
+   h("div",{class:"grid2"},ROLES.map(r=>field(r.t,null,inhIn("ih-"+r.id,d.pal[r.id],v=>{d.pal[r.id]=v;},"#000000")))),
+   h("div",{class:"grid2"},field("Kopfont",null,inhIn("ih-kop",d.kop,v=>set("kop",v),"Bijv.: Poppins")),field("Tekstfont",null,inhIn("ih-tekst",d.tekst,v=>set("tekst",v),"Bijv.: Inter"))),
+   field("Beeldstijl (mag leeg)","In één of twee zinnen.",inhIn("ih-beeld",d.beeld,v=>set("beeld",v),"",'ta')),
+   field("Tone of voice","Hoe klinkt je merk? Je regels in het kort.",inhIn("ih-tov",d.tov,v=>set("tov",v),"Bijv.: Vrolijk en direct, we spreken je aan met je, geen vakjargon.",'ta'))];}
+ if(k===3){const cnt=h("p",{class:"status",id:"ih-cnt"});const upd=()=>{const r=inhRows(d);cnt.textContent=(len(d.plak)?"Gevonden in je plaktekst: ":"Al in de game: ")+r.length+" uitingen, waarvan "+r.filter(rowComplete).length+" compleet.";};
+  const pl=inhIn("ih-plak",d.plak,v=>{set("plak",v);upd();},COLS3.join("\t"),'ta');pl.rows=8;
+  const dt=inhIn("ih-datum",d.datum,v=>{set("datum",v);upd();},"","date");
+  body=[h("div",{class:"grid2"},field("Startdatum",null,dt),field("Uren per week",null,inhIn("ih-uren",d.uren,v=>set("uren",v),"Bijv.: 6"))),
+   field("Kanalen",null,inhIn("ih-kan",d.kanalen,v=>set("kanalen",v),"Bijv.: Instagram, nieuwsbrief")),
+   field("Je contentkalender","Kopieer je kalender uit Excel of Google Sheets, met de kopregel erbij, en plak hem hier. Kolommen: "+COLS3.join(", ")+".",pl),cnt];
+  upd();}
+ if(k===4){const c=h("input",{type:"checkbox",id:"ih-ok"});c.checked=!!d.ok;c.addEventListener("change",()=>d.ok=c.checked);
+  body=[field("Je beeldstijl en beeldbriefing in het kort","Welke soort beelden gebruik je, met welk licht en welke compositie?",inhIn("ih-stijl",d.stijl,v=>set("stijl",v),"Bijv.: Eigen foto's bij daglicht, close-ups van handen en aarde, warme kleuren, veel witruimte.",'ta')),
+   h("label",{class:"chk",for:"ih-ok"},c," Mijn foto's, video en AI-beelden staan in mijn portfolio. In level 5 upload ik per uiting het beeld dat ik gebruik.")];}
+ if(k===5){const rows=S.l3.rows||[];const per=h("div",{id:"ih-per"});
+  const drawPer=()=>{per.innerHTML="";d.test.forEach((i,n)=>{const u=d.u[i]||(d.u[i]={kop:"",cta:"",verw:""});
+   per.append(h("div",{class:"block"},h("h3",null,"Testuiting "+(n+1)+": "+uitShort(i)),
+    h("div",{class:"grid2"},field("Kop",null,inhIn("ih-kop"+i,u.kop,v=>{u.kop=v;})),field("Call-to-action (mag leeg)",null,inhIn("ih-cta"+i,u.cta,v=>{u.cta=v;}))),
+    field("Je verwachting","Met een getal en een 'omdat'.",inhIn("ih-verw"+i,u.verw,v=>{u.verw=v;},"Bijv.: Ik verwacht 60 keer opgeslagen, omdat een lijstje handig is.",'ta'))));});};
+  const list=h("div",{class:"uitlist"},rows.map((r,i)=>{const c=h("input",{type:"checkbox",id:"ih-t"+i});c.checked=d.test.includes(i);
+   c.addEventListener("change",()=>{const at=d.test.indexOf(i);if(c.checked&&at<0){if(d.test.length>=3){c.checked=false;toast("Je kiest er precies 3.");return;}d.test.push(i);}if(!c.checked&&at>=0)d.test.splice(at,1);drawPer();});
+   return h("label",{class:"chk",for:"ih-t"+i},c," "+uitLabel(i)+(r.fase?" · "+r.fase:"")+(r.kanaal?" · "+r.kanaal:""));}));
+  drawPer();
+  body=[rows.length?h("div",{class:"block"},h("h3",null,"Welke 3 uitingen test je in level 6?"),list):h("p",{class:"callout"},"Je kalender uit level 3 is nog leeg."),per];}
+ const errs=h("div",{id:"ih-err"});
+ return h("div",null,
+  head("Noodplan · Level "+k,"Level "+k+" buiten de game gedaan?",["Liep de game vast en heb je level "+k+" ("+INHNAAM[k]+") met AI en in je portfolio gedaan? Vul dan hier alleen in wat de volgende levels nodig hebben. Daarna gaat level "+(k+1)+" open. Je kunt level "+k+" later alsnog in de game spelen; XP krijg je alleen voor wat je in de game zelf doet."],[["t-brief","Inhaal-invoer"]]),
+  n>k+1?h("p",{class:"callout"},"Je wilt naar level "+n+". Daarvoor vul je dit in voor elk level dat nog niet is opgeleverd, één voor één."):null,
+  h("div",{class:"block"},...body),errs,
+  h("div",{class:"block"},h("div",{class:"row"},
+   h("button",{class:"btn",type:"button",onclick:()=>{const e=inhCheck(d);errs.innerHTML="";
+     if(e.length){errs.append(h("div",{class:"callout warnbox",role:"alert"},h("strong",null,"Nog nodig: "),e.join(", ")+"."));errs.scrollIntoView({behavior:"smooth",block:"center"});return;}
+     inhSave(d);toast("Level "+k+" staat als ingehaald. Level "+(k+1)+" is open.");render();window.scrollTo({top:0});}},"Opslaan en level "+(k+1)+" openen"),
+   h("button",{class:"btn ghost",type:"button",onclick:()=>{INH=0;INHD=null;S.lvl=k;save();render();window.scrollTo({top:0});}},"Toch level "+k+" in de game spelen"))));
+}
 function unlocked(i){const L=ML();if(!kcOk(S.lvl)&&!(S.lvl===1&&i===0))return false;if(i===0)return true;const D=S.lvl===3?lk3:S.lvl===4?lk4:S.lvl===5?lk5:S.lvl===6?lk6:DN;if(L[i].id==="bug")return D("bronnen");const prev=L[i-1].id==="bug"?L[i-2]:L[i-1];if(S.lvl===1&&prev.id==="kernwaarden"&&K1().legacy)return D("profiel");return D(prev.id);}
 
 
@@ -1355,7 +1441,7 @@ function renderRail(){
  ML().forEach((m,i)=>{
   const lock=!unlocked(i);
   const b=h("button",{class:"step"+(DN(m.id)?" done":"")+(lock?" locked":""),"aria-current":!kcShow&&curId()===m.id?"true":"false","aria-disabled":lock?"true":null,
-   onclick:()=>{if(lock){toast(kcGate?"Doe eerst de kennischeck":"Rond eerst de vorige missie af");return;}KCOPEN=0;setCur(m.id);save();render();window.scrollTo({top:0});}},
+   onclick:()=>{if(lock){toast(kcGate?"Doe eerst de kennischeck":"Rond eerst de vorige missie af");return;}KCOPEN=0;INH=0;INHD=null;setCur(m.id);save();render();window.scrollTo({top:0});}},
    h("span",{class:"n"},DN(m.id)?"✓":String(i)),h("span",null,h("strong",null,m.t),h("small",null,lock?(kcGate?"Doe eerst de kennischeck":"Vergrendeld"):m.s)));
   r.append(b);
   if(kcStep&&S.lvl===1&&i===0)r.append(kcStep);
@@ -1369,7 +1455,7 @@ function railScroll(r,keepX){requestAnimationFrame(()=>{try{if(r.scrollWidth<=r.
 function renderLevels(){
  const el=$("#levels");el.innerHTML="";
  [[1,"Level 1"],[2,"Level 2"],[3,"Level 3"],[4,"Level 4"],[5,"Level 5"],[6,"Level 6"]].forEach(([n,t])=>{const lock=(n===2&&!l2open())||(n===3&&!l3open())||(n===4&&!l4open())||(n===5&&!l5open())||(n===6&&!l6open());
-  el.append(h("button",{class:lock?"locked":null,"aria-pressed":S.lvl===n?"true":"false",title:lock?"Gaat open na de oplevering van level "+(n-1):null,"aria-label":t,onclick:()=>{if(lock){toast("Level "+n+" gaat open als je level "+(n-1)+" hebt opgeleverd");return;}S.lvl=n;KCOPEN=0;save();render();window.scrollTo({top:0});}},h("span",{class:"lw"},"Level "),String(n)));});
+  el.append(h("button",{class:lock?"locked":null,"aria-pressed":S.lvl===n?"true":"false",title:lock?"Gaat open na de oplevering van level "+(n-1)+", of als je level "+(n-1)+" buiten de game hebt gedaan":null,"aria-label":t,onclick:()=>{if(lock){if(S.role==="docent"){toast("Level "+n+" gaat open als level "+(n-1)+" is opgeleverd");return;}INH=n;INHD=null;render();window.scrollTo({top:0});return;}INH=0;INHD=null;S.lvl=n;KCOPEN=0;save();render();window.scrollTo({top:0});}},h("span",{class:"lw"},"Level "),String(n)));});
  const kb=$("#kaartenBtn");if(kb){kb.href=kaartUrl(S.lvl);kb.title="Open de kenniskaarten van level "+S.lvl;}
  const db=$("#deckBtn");if(db){db.href=LESDECK_URL[S.lvl]||LESDECK_URL[1];db.title="Open het lesdeck van level "+S.lvl;}
  $("#lvlname").textContent=S.lvl===6?"Level 6 · De live-ronde":S.lvl===5?"Level 5 · De campagne":S.lvl===4?"Level 4 · De studio":S.lvl===3?"Level 3 · Het bouwplan":S.lvl===2?"Level 2 · De identiteit":"Level 1 · Het fundament";
@@ -1388,6 +1474,7 @@ function render(){
  renderXP();renderRail();
  const p=$("#panel");p.innerHTML="";
  if(S.role==="docent"){if(!isDocent()){p.append(viewDocentLogin());return;}p.append(docentBar(),S.lvl===6?viewDocent6():S.lvl===5?viewDocent5():S.lvl===4?viewDocent4():S.lvl===3?viewDocent3():S.lvl===2?viewDocent2():viewDocent());return;}
+ if(INH){const iv=viewInhaal();if(iv){p.append(iv);return;}renderLevels();renderXP();renderRail();}
  if(kcView()){p.append(viewKC(S.lvl));return;}
  if(S.lvl===4&&!MISSIONS4.some(m=>m.id===S.l4.cur))S.l4.cur="start";
  const v=S.lvl===6?{testplan:view6Testplan,live:view6Live,analyse:view6Analyse,bronnen:view6Bronnen,advies:view6Advies,oplevering:view6Oplevering}[S.l6.cur]:S.lvl===5?{raad:view5Raad,start:view5Start,productie:view5Productie,jury:view5Jury,quiz:view5Quiz,campagne:view5Campagne,bronnen:view5Bronnen,keuze:view5Keuze,oplevering:view5Oplevering}[S.l5.cur]:S.lvl===4?{start:view4Start,foto:view4Foto,video:view4Video,echtai:view4Echt,edit:view4Edit,bronnen:view4Bronnen,keuze:view4Keuze,oplevering:view4Oplevering}[S.l4.cur]:S.lvl===3?{start:view3Start,funnel:view3Funnel,kalender:view3Kalender,budget:view3Budget,bronnen:view3Bronnen,bug:view3Bug,event:view3Event,oplevering:view3Oplevering}[S.l3.cur]:S.lvl===2?{start:view2Start,detective:view2Detective,cooker:view2Cooker,check:view2Check,bronnen:view2Bronnen,bug:view2Flyer,keuze:view2Keuze,oplevering:view2Oplevering}[S.l2.cur]:{profiel:viewProfiel,kernwaarden:viewKernwaarden,duel:viewDuel,model:viewModel,bronnen:viewBronnen,keuze:viewKeuze,bug:viewBug,oplevering:viewOplevering}[S.cur];
@@ -1402,7 +1489,7 @@ function lvlProgress(l){const M=[null,MISSIONS,MISSIONS2,MISSIONS3,MISSIONS4,MIS
 /* kcOk(l): mag de student de missies van level l spelen? Waar als er geen vragen zijn, als de check gehaald is,
    of als de student al missies van dit level had afgerond (oude voortgang telt als gehaald). */
 function kcOk(l){if(!kcHas(l))return true;const r=S.kc&&S.kc[l];if(r&&r.passed)return true;
- if(lvlProgress(l)){const x=kcRec(l);x.passed=true;x.legacy=true;save();return true;}return false;}
+ if(lvlProgress(l)&&!inh(l)){const x=kcRec(l);x.passed=true;x.legacy=true;save();return true;}return false;}
 function kcPass(l){const r=kcRec(l);r.passed=true;r.checked=false;r.demo=true;}
 /* Level 1: eerst het spelersprofiel, daarna de kennischeck. De andere levels beginnen met de kennischeck. */
 function kcAfterProfiel(l){return l===1&&!done("profiel");}
@@ -4589,6 +4676,7 @@ CCLIVE.koppel({samenvatting(){
   if(!open[n]()){out.lv[n]={x:[0,0,0,0],b:0,st:"Nog niet open",open:false};if(n===3)out.lv[n].ev="Nog niet getrokken";if(n===6)out.lv[n].sz=0;continue;}
   const r=rows[n]();delete r.me;delete r.n;delete r.s;r.open=true;r.klaar=!!D[n]("oplevering");
   r.st=r.klaar?(n===6?"Challenge klaar":"Oplevering klaar"):"Bezig: "+((MS[n].find(m=>m.id===cur[n]())||{}).t||"-");
+  r.inh=n<6&&!r.klaar&&inh(n);if(r.inh)r.st="Ingehaald buiten de game";
   out.lv[n]=r;}catch(e){out.lv[n]={x:[0,0,0,0],b:0,st:"-"};}}
  return out;}});
 

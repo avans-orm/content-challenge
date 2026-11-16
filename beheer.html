@@ -73,6 +73,7 @@ td .em{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
 .lv span{font-family:"JetBrains Mono",monospace;font-size:11px;min-width:30px;text-align:center;padding:2px 3px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
 .lv span.klaar{background:#12352A;border-color:#1f6b4d;color:var(--good)}
 .lv span.bezig{border-color:var(--gold);color:var(--gold)}
+.lv span.inh{border-color:#3CE6E0;color:#3CE6E0}
 .acts{display:flex;gap:6px;flex-wrap:wrap}
 .cq{font-size:13px;color:#FFD0D8}
 .empty{padding:24px;text-align:center;color:var(--muted)}
@@ -157,7 +158,7 @@ function viewInvite(){
 
 /* ---------- overzicht ---------- */
 function lvCells(r){return h("div",{class:"lv"},[1,2,3,4,5,6].map(n=>{const l=r.lv[n];if(!l||l.open===false)return h("span",{title:"Level "+n+": nog niet open"},"·");
- const xp=(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);return h("span",{class:l.klaar?"klaar":"bezig",title:"Level "+n+": "+(l.st||"")+" · "+xp+" XP"},l.klaar?"✓"+xp:String(xp));}));}
+ const xp=(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);return h("span",{class:l.klaar?"klaar":l.inh?"inh":"bezig",title:"Level "+n+": "+(l.st||"")+" · "+xp+" XP"},l.klaar?"✓"+xp:l.inh?"↺"+xp:String(xp));}));}
 function statusPill(r){return r.status==="actief"?h("span",{class:"pill p-ok"},"Actief"):r.status==="uitgenodigd"?h("span",{class:"pill p-wait",title:"Laatst verstuurd: "+dt(r.inv.laatst_verstuurd)},"Uitgenodigd"):h("span",{class:"pill p-no"},"Mail niet verstuurd");}
 function actions(r){const own=r.email===(ME&&ME.email);
  return h("div",{class:"acts"},
@@ -186,7 +187,7 @@ function viewStudents(){
  const sortTh=(key,label,cls)=>h("th",{class:cls||null,"aria-sort":F.sort===key?(F.dir>0?"ascending":"descending"):null},h("button",{type:"button",onclick:()=>{if(F.sort===key)F.dir*=-1;else{F.sort=key;F.dir=key==="xp"||key==="actief"?-1:1;}render();}},label+(F.sort===key?(F.dir>0?" ▲":" ▼"):"")));
  fill();
  return h("section",{class:"panel",id:"studenten"},h("h2",null,"Studenten"),
-  h("p",{class:"lead"},"Klik op 'Bekijk werk' om de game van een student te openen, alleen om te lezen. De XP per level staat in de vakjes: groen met een vinkje is opgeleverd."),
+  h("p",{class:"lead"},"Klik op 'Bekijk werk' om de game van een student te openen, alleen om te lezen. De XP per level staat in de vakjes: groen met een vinkje is opgeleverd, blauw met ↺ is buiten de game gedaan (noodplan) en via de inhaal-invoer ingevuld."),
   h("div",{class:"stats"},h("div",{class:"stat"},h("b",null,st.length),h("span",null,"uitgenodigd")),h("div",{class:"stat"},h("b",null,actief),h("span",null,"actief (ingelogd)")),h("div",{class:"stat"},h("b",null,gem),h("span",null,"gem. XP (actief)")),h("div",{class:"stat"},h("b",null,klaar),h("span",null,"challenge voltooid"))),
   h("div",{class:"filters"},q,fs,fst,h("button",{class:"btn small ghost",type:"button",onclick:csv},"Download als CSV")),count,
   h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,sortTh("naam","Student"),sortTh("studio","Studio"),sortTh("status","Status"),h("th",null,"XP per level (1 t/m 6)"),sortTh("xp","Totaal","num"),sortTh("actief","Laatst opgeslagen"),h("th",null,""))),body)));
