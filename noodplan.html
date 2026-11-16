@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Content Challenge Noodplan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Neon Live, dezelfde stijl als de game en de kenniskaarten. Deze pagina werkt zonder inlog en zonder server. */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"],:root[data-theme="light"]{
+ --paper:#120B26;--card:#1C1338;--ink:#F5F0FF;--muted:#B4A8D9;--line:#3A2C66;
+ --pink:#FF5FDC;--orange:#FFA14A;--gold:#FFB547;--cyan:#3CE6E0;--violet:#8C9BFF;--green:#3CF0A0;--red:#FF6B81;
+ --f-display:"Unbounded","Trebuchet MS",sans-serif;--f-body:"Manrope","Segoe UI",sans-serif;--f-mono:"JetBrains Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;font-family:var(--f-body);color:var(--ink);line-height:1.55;font-size:16px;
+ background:radial-gradient(ellipse at 10% -10%,#3B1670 0,transparent 45%),radial-gradient(ellipse at 95% 10%,#0E3A5C 0,transparent 40%),var(--paper);background-attachment:fixed;min-height:100vh}
+.top{position:sticky;top:0;z-index:5;background:rgba(18,11,38,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo b{display:inline-block;font-family:var(--f-display);font-weight:800;font-size:18px;color:#FFE3F7;text-shadow:0 0 6px var(--pink),0 0 18px var(--pink);border:2px solid var(--pink);border-radius:10px;padding:3px 11px;box-shadow:0 0 14px rgba(255,95,220,.45),inset 0 0 12px rgba(255,95,220,.35)}
+.logo span{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.logo span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF3B5C;margin-right:7px;box-shadow:0 0 10px #FF3B5C;vertical-align:1px}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+nav a{font-family:var(--f-mono);font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+nav a:hover,nav a:focus-visible{color:var(--ink);border-color:var(--pink);box-shadow:0 0 12px rgba(255,95,220,.3);outline:none}
+main{max-width:1080px;margin:0 auto;padding:32px 16px 80px}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 12px;color:#FFF4E8;text-shadow:0 0 10px rgba(255,161,74,.6),0 0 28px rgba(255,95,220,.4)}
+.hero p{color:var(--muted);max-width:680px;margin:0 0 28px;font-size:17px}
+.card{position:relative;background:var(--card);border:1px solid #5A2B7A;border-radius:20px;padding:28px;margin:0 0 24px;box-shadow:0 0 0 1px rgba(255,95,220,.06),0 24px 60px rgba(0,0,0,.4);scroll-margin-top:110px}
+.card::before{content:"";position:absolute;left:28px;right:28px;top:-1px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--c,var(--pink)),var(--orange))}
+.eyebrow{font-family:var(--f-mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--c,var(--gold))}
+.card h2{font-family:var(--f-display);font-weight:700;font-size:clamp(20px,3vw,28px);line-height:1.2;margin:6px 0 10px}
+.card h3{font-family:var(--f-mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--c,var(--gold));margin:20px 0 8px}
+.card p{margin:0 0 12px;max-width:780px}
+.card b{color:#FFE3F7}
+.lead{color:var(--muted);font-size:17px}
+ol,ul{margin:0 0 12px;padding-left:22px}
+li{margin:5px 0}
+li::marker{color:var(--c,var(--pink));font-weight:700}
+.steps{counter-reset:s;list-style:none;padding:0}
+.steps li{counter-increment:s;position:relative;padding:10px 14px 10px 52px;border:1px solid var(--line);border-radius:14px;margin:0 0 8px;background:rgba(255,255,255,.02)}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:10px;width:28px;height:28px;border-radius:50%;display:grid;place-content:center;font-family:var(--f-display);font-weight:800;font-size:14px;color:#1A0B2E;background:linear-gradient(135deg,var(--c,var(--pink)),var(--orange))}
+.steps .w{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.box{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:rgba(255,255,255,.02)}
+.box h3{margin-top:0}
+.box ul{margin:0;padding-left:20px}
+.save{border-color:#1F5A47;background:rgba(60,240,160,.06)}.save h3{color:var(--green)}
+.back{border-color:#2A4C7A;background:rgba(60,230,224,.06)}.back h3{color:var(--cyan)}
+.skip{border-color:#6A2A44;background:rgba(255,107,129,.06)}.skip h3{color:#FF8FA1}
+.prompt{position:relative;font-family:var(--f-mono);font-size:13.5px;line-height:1.55;white-space:pre-wrap;background:#0D0820;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 12px;color:#EDE6FF}
+.copy{position:absolute;top:8px;right:8px;font-family:var(--f-mono);font-size:12px;font-weight:700;color:#1A0B2E;background:linear-gradient(135deg,var(--pink),var(--orange));border:0;border-radius:999px;padding:5px 12px;cursor:pointer}
+.copy:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.tip{border-left:3px solid var(--gold);background:rgba(255,181,71,.08);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 12px;max-width:780px}
+.url{font-family:var(--f-mono);font-weight:700;color:var(--gold);word-break:break-all}
+.tbl{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--c,var(--gold));background:rgba(255,255,255,.03);padding:9px 14px}
+td{padding:9px 14px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{font-weight:700;white-space:nowrap}
+footer{color:var(--muted);font-size:13px;text-align:center;padding-bottom:24px}
+@media (max-width:700px){.grid2{grid-template-columns:1fr}.card{padding:22px 18px}.card::before{left:18px;right:18px}nav{margin-left:0}}
+@media print{
+ @page{size:A4;margin:0}
+ body{background:var(--paper);font-size:12.5px;line-height:1.45}
+ .top,.copy,footer,.scr{display:none}
+ main{max-width:none;padding:0}
+ .hero{display:none}
+ .card{break-before:page;break-inside:avoid;border:0;border-radius:0;box-shadow:none;margin:0;min-height:297mm;padding:14mm 14mm 10mm;
+  background:radial-gradient(ellipse at 10% -10%,#3B1670 0,transparent 45%),radial-gradient(ellipse at 95% 10%,#0E3A5C 0,transparent 40%),var(--paper)}
+ .card:first-of-type{break-before:auto}
+ .card::before{left:14mm;right:14mm;top:9mm}
+ .card h2{font-size:22px;margin:4px 0 6px}
+ .card h3{font-size:11px;margin:12px 0 6px}
+ .lead{font-size:13.5px}
+ .steps li{padding:6px 10px 6px 42px;margin:0 0 5px;border-radius:10px}
+ .steps li::before{width:22px;height:22px;font-size:12px;top:6px;left:10px}
+ .prompt{font-size:11px;padding:10px 12px;margin:0 0 8px}
+ .box{padding:10px 12px}
+ .grid2{gap:10px}
+ .pfoot{display:flex!important}
+ .tbl{overflow:visible}table{font-size:10.5px;min-width:0;table-layout:fixed}th,td{padding:5px 6px;white-space:normal!important;word-break:break-word}th{font-size:8.5px;letter-spacing:.02em}
+}
+.kk{font-family:var(--f-mono);font-weight:700;color:var(--gold)}
+.pfoot{display:none;justify-content:space-between;margin-top:10px;font-family:var(--f-mono);font-size:10px;color:var(--muted);letter-spacing:.06em}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+ <div class="logo"><b>Content Challenge</b><span>Noodplan</span></div>
+ <nav aria-label="Noodkaarten">
+  <a href="#docent">Docent</a><a href="#l1">L1</a><a href="#l2">L2</a><a href="#l3">L3</a><a href="#l4">L4</a><a href="#l5">L5</a><a href="#l6">L6</a>
+ </nav>
+</div></header>
+<main>
+<section class="hero">
+ <h1>Noodplan: de game loopt vast</h1>
+ <p>Werkt de game niet? Dan gaat de les gewoon door. Je voert de opdrachten van het level zelf uit met een AI-tool naar keuze en zet alles in je portfolio. Per level staat hieronder een noodkaart. Deze pagina werkt zonder inloggen.</p>
+</section>
+
+<!-- ============ DOCENT ============ -->
+<article class="card" id="docent" style="--c:var(--gold)">
+ <div class="eyebrow">Voor de docent</div>
+ <h2>Wat doe je als de game vastloopt?</h2>
+ <p class="lead">Je hebt niets anders nodig dan het lesdeck en deze kaarten. Het werk van studenten dat al in de game staat, blijft bewaard op de server.</p>
+ <ol class="steps">
+  <li><b>Probeer eerst 5 minuten.</b> Laat studenten de pagina herladen (Ctrl+F5 of Cmd+Shift+R), een andere browser proberen of opnieuw inloggen. Werkt het bij een paar studenten niet, laat die dan met de noodkaart beginnen en de rest doorspelen.</li>
+  <li><b>Werkt het voor de klas niet?</b> Zet de noodkaart van het level van vandaag op het scherm. Studenten openen deze pagina zelf via <span class="url">avans-orm.github.io/content-challenge/noodplan.html</span></li>
+  <li><b>Geef de les met het lesdeck.</b> De uitleg en de opdrachten staan daar al in. De kenniskaarten werken ook zonder game: <span class="url">avans-orm.github.io/content-challenge/kennis/l1.html</span> (l1 tot en met l6).</li>
+  <li><b>Studenten werken met AI en in hun portfolio.</b> Ieder maakt een document "Noodplan level N" in het portfolio en houdt een AI-logboek bij: welke tool, welke prompt, wat heb je zelf aangepast en waarom.</li>
+  <li><b>Spellen in de les vallen af.</b> Brand-detective, bug hunts, de eindbaas-quiz en de simulator kunnen niet zonder game. Dat zijn vooral bonusonderdelen. De noodkaart zegt per level wat je in plaats daarvan doet.</li>
+  <li><b>Werkt de game weer?</b> Zet in het docentendashboard (beheer.html) het <b>noodplan</b> aan. Dan kunnen studenten het gemiste level inhalen. Zet het weer uit als iedereen bij is.</li>
+  <li><b>Meld de storing</b> bij de moduleverantwoordelijke, met tijdstip en wat studenten zagen (een screenshot helpt).</li>
+ </ol>
+ <div class="grid2">
+  <div class="box back"><h3>Als de game weer werkt</h3><ul>
+   <li>Iedereen gaat verder bij het level waar de klas op dat moment is.</li>
+   <li>Het gemiste level hoeft niet opnieuw. Staat het noodplan aan in het dashboard en klikt een student op een level dat nog op slot staat, dan vraagt de game: "Level N buiten de game gedaan?" De student vult daar alleen de gegevens in die op de noodkaart onder "Bewaar dit" staan, en het volgende level gaat open.</li>
+   <li>Wie wil, speelt het gemiste level later alsnog in de game voor XP. In het docentdashboard zie je een ingehaald level als blauw vakje met ↺.</li>
+  </ul></div>
+  <div class="box"><h3>Beoordeling</h3><ul>
+   <li>XP is formatief, het cijfer komt uit het portfolio. Een noodplan-uitwerking telt dus gewoon mee.</li>
+   <li>Let bij de beoordeling op het AI-logboek: laat de student zien dat hij of zij de regie had over AI?</li>
+  </ul></div>
+ </div>
+ <div class="pfoot"><span>Content Challenge · Noodplan</span><span>avans-orm.github.io/content-challenge/noodplan.html</span></div>
+</article>
+
+<!-- ============ ALGEMEEN (per kaart herhaald in het kort) ============ -->
+
+<!-- ============ L1 ============ -->
+<article class="card" id="l1" style="--c:var(--pink)">
+ <div class="eyebrow">Noodkaart · Level 1</div>
+ <h2>Het fundament: je contentstrategie</h2>
+ <p class="lead">Je legt de basis voor je merk: wie ben je, voor wie maak je content en wat wil je bereiken? Je eindigt met <b>Mijn definitieve contentstrategie</b>.</p>
+ <h3>Zo doe je het</h3>
+ <ol class="steps">
+  <li><b>Profiel.</b> Schrijf op: je naam, je studio, je merk of bedrijf, wat je verkoopt, je doelgroep en één concreet doel (SMART).</li>
+  <li><b>Kernwaarden en moodboard.</b> Laat AI 10 kernwaarden voorstellen die bij je merk passen. Kies er 3 en leg per waarde in één zin uit waarom. Laat een beeld-AI een moodboard maken bij die 3 waarden.</li>
+  <li><b>Briefing-duel.</b> Vraag dezelfde AI twee keer om een contentstrategie: eerst met één kale zin, daarna met de volledige briefing hieronder. Schrijf in 3 zinnen op wat het verschil is.</li>
+  <li><b>Strategiemodel.</b> Check de strategie van AI met See-Think-Do-Care: heeft elke fase een doel, een KPI en een kanaal? Markeer wat fout, vaag of verzonnen is, en verbeter het.</li>
+  <li><b>Bronnenlogboek.</b> Onderbouw je strategie met minimaal 3 bronnen, waarvan 1 primair (iemand uit je doelgroep gesproken). <span class="w">thuis</span></li>
+  <li><b>Keuzemoment.</b> Laat AI 2 of 3 routes voor je strategie voorstellen. Kies er één en onderbouw je keuze. Dit is je definitieve contentstrategie. <span class="w">thuis</span></li>
+ </ol>
+ <h3>Startprompt (stap 3, de volledige briefing)</h3>
+ <div class="prompt">Rol: je bent een ervaren contentstrateeg.
+Context: mijn merk is [naam], we verkopen [product/dienst] aan [doelgroep]. Onze kernwaarden zijn [1], [2] en [3].
+Taak: maak een contentstrategie volgens See-Think-Do-Care. Geef per fase het doel, de KPI met norm, de kanalen en 2 contentideeën.
+Doel: [jouw SMART-doel].
+Format: een tabel per fase, daarna maximaal 5 zinnen toelichting.
+Toon: zakelijk en concreet. Verzin geen cijfers; zeg het als je iets niet weet.</div>
+ <div class="grid2">
+  <div class="box"><h3>In je portfolio</h3><ul>
+   <li>Profiel, 3 kernwaarden met onderbouwing en je moodboard</li>
+   <li>Beide AI-antwoorden uit het briefing-duel en je vergelijking</li>
+   <li>Je check met het strategiemodel en je bronnen</li>
+   <li>Mijn definitieve contentstrategie</li>
+   <li>AI-logboek: tool, prompts, wat je aanpaste</li>
+  </ul></div>
+  <div class="box save"><h3>Bewaar dit voor de game</h3><ul>
+   <li>Merk- of bedrijfsnaam</li>
+   <li>Doelgroep in één zin</li>
+   <li>Je doel</li>
+   <li>Je 3 kernwaarden</li>
+  </ul><p style="margin:8px 0 0">Valt de bug hunt weg? Dat is bonus-XP, die mag je later alsnog in de game halen.</p></div>
+ </div>
+ <p class="scr"><a class="kk" href="kennis/l1.html">Kenniskaarten level 1 openen</a></p>
+ <div class="pfoot"><span>Content Challenge · Noodkaart L1</span><span>Kenniskaarten: avans-orm.github.io/content-challenge/kennis/l1.html</span></div>
+</article>
+
+<!-- ============ L2 ============ -->
+<article class="card" id="l2" style="--c:var(--violet)">
+ <div class="eyebrow">Noodkaart · Level 2</div>
+ <h2>De identiteit: je huisstijlhandboek</h2>
+ <p class="lead">Je vertaalt je strategie uit level 1 naar een huisstijl. Elke kleur, letter en foto moet terug te voeren zijn op je kernwaarden en je doelgroep.</p>
+ <h3>Zo doe je het</h3>
+ <ol class="steps">
+  <li><b>Startpunt.</b> Zet je kernwaarden, doelgroep en centraal thema uit level 1 bovenaan je document.</li>
+  <li><b>Brand-detective (opwarmer).</b> Laat AI een kort brandbook maken voor een bekend merk. Vergelijk het met de echte website van dat merk en noteer 3 dingen die AI fout had.</li>
+  <li><b>Pressure cooker, 2 x 10 minuten.</b> Ronde 1: laat AI een huisstijl voorstellen met 5 kleuren (primair, secundair, accent, donker, licht) met hex-codes, een kopfont, een tekstfont, beeldstijl en een logo-idee. Ronde 2: verbeter je briefing met wat je in ronde 1 miste en vraag het opnieuw.</li>
+  <li><b>Huisstijlcheck.</b> Check je kleuren op leesbaarheid (bijvoorbeeld met de WebAIM Contrast Checker, minimaal 4,5:1 voor tekst), op je kernwaarden en of je je onderscheidt van een concurrent. Pas aan waar nodig. <span class="w">thuis</span></li>
+  <li><b>Bronnenlogboek.</b> Minimaal 3 bronnen over kleur, typografie of je doelgroep, waarvan 1 primair. <span class="w">thuis</span></li>
+  <li><b>Tone of voice.</b> Laat AI dezelfde post in twee toonrichtingen schrijven. Leg ze voor aan iemand uit je doelgroep en kies er één, met onderbouwing. <span class="w">thuis</span></li>
+  <li><b>Oplevering.</b> Maak je huisstijlhandboek (logo, kleuren, typografie, beeldstijl, compositie, tone of voice, do's en don'ts, toepassingen) in Canva, Figma of met AI, plus één uiting zoals een flyer of post.</li>
+ </ol>
+ <h3>Startprompt (pressure cooker, ronde 1)</h3>
+ <div class="prompt">Je bent een ervaren merkontwerper. Mijn merk is [naam] voor [doelgroep]. Kernwaarden: [1], [2], [3]. Centraal thema: [thema].
+Stel een huisstijl voor met: 5 kleuren met hex-code en rol (primair, secundair, accent, donker voor tekst, licht voor achtergrond), een font voor koppen en een font voor tekst (Google Fonts), een beeldstijl in 3 zinnen en een logo-idee.
+Leg bij elke keuze in één zin uit welke kernwaarde hij ondersteunt.</div>
+ <div class="grid2">
+  <div class="box"><h3>In je portfolio</h3><ul>
+   <li>Je huisstijlhandboek als PDF en je uiting als beeld</li>
+   <li>Je 2 pressure-cooker-briefings en wat er beter werd</li>
+   <li>Huisstijlcheck met contrastwaarden, bronnen, tone-of-voice-keuze</li>
+   <li>AI-logboek: tool, prompts, wat je aanpaste</li>
+  </ul></div>
+  <div class="box save"><h3>Bewaar dit voor de game</h3><ul>
+   <li>Je 5 hex-codes met hun rol</li>
+   <li>Je kopfont en je tekstfont</li>
+   <li>Je tone of voice in één zin</li>
+   <li>Je logo als afbeelding</li>
+  </ul></div>
+ </div>
+ <p class="scr"><a class="kk" href="kennis/l2.html">Kenniskaarten level 2 openen</a></p>
+ <div class="pfoot"><span>Content Challenge · Noodkaart L2</span><span>Kenniskaarten: avans-orm.github.io/content-challenge/kennis/l2.html</span></div>
+</article>
+
+<!-- ============ L3 ============ -->
+<article class="card" id="l3" style="--c:var(--cyan)">
+ <div class="eyebrow">Noodkaart · Level 3</div>
+ <h2>Het bouwplan: je contentkalender</h2>
+ <p class="lead">Je strategie zegt wat je wilt bereiken, je huisstijl hoe het eruitziet. Nu plan je wanneer je wat plaatst, op welk kanaal, en hoe je meet of het werkt.</p>
+ <h3>Zo doe je het</h3>
+ <ol class="steps">
+  <li><b>Startpunt.</b> Noteer je startdatum, hoeveel uur per week je aan content kunt besteden en je kanalen.</li>
+  <li><b>Funnel terugrekenen.</b> Begin bij je doel uit level 1 en reken terug: hoeveel mensen heb je per fase nodig en hoeveel uitingen levert dat op? Het rekenvoorbeeld staat op kenniskaart 3.</li>
+  <li><b>AI-kalender.</b> Maak met een eigen promptketen (minimaal 3 prompts die op elkaar voortbouwen) een kalender van 13 weken in Excel of Google Sheets: minimaal 13 uitingen, waarvan 12 helemaal compleet.</li>
+  <li><b>Tijdbudget.</b> Tel per week de uren. AI plant bijna altijd te veel: schrap, verschuif of kies een lichter format tot het in je uren past.</li>
+  <li><b>KPI-bronnen.</b> Onderbouw je normen met minimaal 3 bronnen, zoals benchmarks per kanaal, waarvan 1 primair. <span class="w">thuis</span></li>
+  <li><b>Eventkaart (mag je overslaan).</b> Laat AI een onverwachte gebeurtenis bedenken, zoals een post die viraal gaat of een week uitval, en stuur je kalender bij. <span class="w">thuis</span></li>
+ </ol>
+ <h3>Kolommen van je kalender (precies deze, dan kun je hem later in de game plakken)</h3>
+ <div class="tbl"><table>
+  <tr><th>Aanmaakdatum</th><th>Publicatiedatum</th><th>Tijdstip</th><th>Fase</th><th>Thema</th><th>Soort content</th><th>Format</th><th>Kanaal</th><th>KPI</th><th>Norm</th></tr>
+  <tr><td>3-2</td><td>5-2</td><td>19:00</td><td>See</td><td>Tips</td><td>Educatief</td><td>Reel</td><td>Instagram</td><td>Bereik</td><td>1.500</td></tr>
+ </table></div>
+ <h3>Startprompt (eerste prompt van je keten)</h3>
+ <div class="prompt">Je bent contentplanner. Hier is mijn strategie: [plak je definitieve contentstrategie]. Mijn huisstijl en tone of voice: [kort].
+Ik heb [X] uur per week, start op [datum] en gebruik [kanalen].
+Stel eerst alleen 4 contentpijlers voor en een ritme per week. Maak nog geen kalender. Ik geef je daarna de volgende stap.</div>
+ <div class="grid2">
+  <div class="box"><h3>In je portfolio</h3><ul>
+   <li>Je funnelberekening</li>
+   <li>Je promptketen en de kalender (tabel)</li>
+   <li>Tijdbudget per week en wat je hebt geschrapt</li>
+   <li>KPI-bronnen en eventueel je eventkaart</li>
+   <li>AI-logboek</li>
+  </ul></div>
+  <div class="box save"><h3>Bewaar dit voor de game</h3><ul>
+   <li>Je kalender als tabel in Excel of Google Sheets, met de kolommen hierboven. Level 4, 5 en 6 bouwen op deze uitingen voort.</li>
+  </ul><p style="margin:8px 0 0">De kalender-bug hunt is bonus-XP en kan later in de game.</p></div>
+ </div>
+ <p class="scr"><a class="kk" href="kennis/l3.html">Kenniskaarten level 3 openen</a></p>
+ <div class="pfoot"><span>Content Challenge · Noodkaart L3</span><span>Kenniskaarten: avans-orm.github.io/content-challenge/kennis/l3.html</span></div>
+</article>
+
+<!-- ============ L4 ============ -->
+<article class="card" id="l4" style="--c:var(--orange)">
+ <div class="eyebrow">Noodkaart · Level 4</div>
+ <h2>De studio: je beeldbank</h2>
+ <p class="lead">De rondleiding in het Medialab gaat gewoon door, daar heb je de game niet voor nodig. Thuis maak je beeld voor je kalender met je mobiel en met AI.</p>
+ <h3>Zo doe je het</h3>
+ <ol class="steps">
+  <li><b>Medialab.</b> Volg de drie stations (fotografie, podcast, video met autocue). Noteer per station één ding dat je wilt gebruiken. <span class="w">in de les</span></li>
+  <li><b>Fotoshoot met je mobiel.</b> Maak minimaal 6 foto's voor je merk. Laat in elke foto een andere techniek zien (kenniskaart 2), passend bij je beeldstijl uit level 2. Noteer per foto de techniek. <span class="w">thuis</span></li>
+  <li><b>Video met je mobiel.</b> Schrijf eerst een shotlist van minimaal 5 shots, film dan een korte video van 15 tot 30 seconden. Check licht, geluid en of het beeld stilstaat. <span class="w">thuis</span></li>
+  <li><b>Echt of AI?</b> Maak 3 van je eigen foto's na met een beeld-AI. Bewaar de prompt en houd geheim welke echt is: in level 5 raden andere studio's het. <span class="w">thuis</span></li>
+  <li><b>Bewerken met AI.</b> Bewerk één eigen beeld met AI (bijvoorbeeld een object wissen, het licht verbeteren of ondertitels toevoegen). Noteer wat je hebt gehouden en wat niet. <span class="w">thuis</span></li>
+  <li><b>Recht en ethiek.</b> Zoek uit wat portretrecht, auteursrecht en een AI-label betekenen voor jouw beelden. Minimaal 3 bronnen. <span class="w">thuis</span></li>
+  <li><b>Keuzemoment.</b> Kies per uiting uit je kalender welk beeld je gebruikt (eigen foto, video, AI-beeld of een combinatie) en waarom. Dit is je beeldbriefing voor level 5. <span class="w">thuis</span></li>
+ </ol>
+ <h3>Startprompt (Echt of AI?)</h3>
+ <div class="prompt">Beschrijf deze foto zo precies mogelijk als prompt voor een beeldgenerator: onderwerp, compositie, perspectief, licht, kleuren, lens en sfeer. [voeg je foto toe]
+Maak daarna van die beschrijving een prompt die een foto oplevert die niet van echt te onderscheiden is.</div>
+ <div class="grid2">
+  <div class="box"><h3>In je portfolio</h3><ul>
+   <li>Je 6 foto's met techniek, je shotlist en je video</li>
+   <li>De 3 AI-versies met prompts en je bewerkte beeld (voor en na)</li>
+   <li>Recht en ethiek met bronnen</li>
+   <li>Je beeldbriefing per uiting</li>
+   <li>AI-logboek</li>
+  </ul></div>
+  <div class="box save"><h3>Bewaar dit voor de game</h3><ul>
+   <li>Al je beelden in één map, genummerd (foto-1, foto-2, ai-1 enzovoort)</li>
+   <li>Je beeldbriefing: welk beeld bij welke uiting</li>
+  </ul><p style="margin:8px 0 0">In level 5 kun je per uiting een beeld uploaden, dus je beeldbank hoef je niet over te typen.</p></div>
+ </div>
+ <p class="scr"><a class="kk" href="kennis/l4.html">Kenniskaarten level 4 openen</a></p>
+ <div class="pfoot"><span>Content Challenge · Noodkaart L4</span><span>Kenniskaarten: avans-orm.github.io/content-challenge/kennis/l4.html</span></div>
+</article>
+
+<!-- ============ L5 ============ -->
+<article class="card" id="l5" style="--c:var(--green)">
+ <div class="eyebrow">Noodkaart · Level 5</div>
+ <h2>De campagne: je 12 uitingen</h2>
+ <p class="lead">Alles komt samen: je kalender uit level 3 zegt wat je maakt, je beelden uit level 4 en je huisstijl uit level 2 zeggen hoe het eruitziet.</p>
+ <h3>Zo doe je het</h3>
+ <ol class="steps">
+  <li><b>Echt of AI? (opwarmer, mag je overslaan).</b> Laat een andere studio je echte foto's en je AI-versies uit level 4 zien: welke zijn echt? Dit kan ook zonder game, op je telefoon.</li>
+  <li><b>Startpunt.</b> Zet de 12 uitingen uit je kalender onder elkaar en kies er 3 die je in de les maakt.</li>
+  <li><b>Productie: de eerste 3.</b> Maak per uiting een productiekaart: kop, tekst, call-to-action, beeld, je prompt, wat je zelf hebt aangepast en het AI-aandeel (0, 25, 50, 75 of 100%).</li>
+  <li><b>Juryronde.</b> Wissel je 3 uitingen met een andere studio. Geef elkaar per uiting een score van 1 tot 5 op: huisstijl herkenbaar, boodschap helder, beeld ondersteunt de boodschap. Plus één tip.</li>
+  <li><b>Alle 12 uitingen.</b> Maak thuis de rest af. Tip: maak eerst van alle 12 een snelle versie en schaaf daarna. <span class="w">thuis</span></li>
+  <li><b>Claimcheck.</b> Zet bij elke bewering die je moet kunnen bewijzen (zoals "de gezondste", "50% minder") een bron. <span class="w">thuis</span></li>
+  <li><b>Keuzemoment.</b> Kies 3 uitingen voor de test in level 6 en schrijf per uiting op wat je verwacht, met een getal en een "omdat". <span class="w">thuis</span></li>
+ </ol>
+ <h3>Startprompt (productiekaart)</h3>
+ <div class="prompt">Je bent copywriter voor [merk]. Tone of voice: [plak je tone of voice uit level 2].
+Uiting: [fase], [kanaal], [format], thema [thema]. Doel: [KPI] met norm [norm].
+Schrijf 3 varianten met een kop (max 8 woorden), een tekst en een call-to-action die past bij de fase. Gebruik geen claims die ik niet kan bewijzen.</div>
+ <div class="grid2">
+  <div class="box"><h3>In je portfolio</h3><ul>
+   <li>12 productiekaarten en de uitingen zelf als beeld</li>
+   <li>Juryfeedback en wat je ermee deed</li>
+   <li>Claimcheck met bronnen</li>
+   <li>Je 3 testuitingen met verwachting</li>
+   <li>AI-logboek</li>
+  </ul></div>
+  <div class="box save"><h3>Bewaar dit voor de game</h3><ul>
+   <li>Je 3 gekozen uitingen: kop, kanaal, format, fase, KPI en norm</li>
+   <li>Per uiting je verwachting met een getal en een "omdat"</li>
+  </ul><p style="margin:8px 0 0">De eindbaas-quiz is bonus-XP en kan later in de game.</p></div>
+ </div>
+ <p class="scr"><a class="kk" href="kennis/l5.html">Kenniskaarten level 5 openen</a></p>
+ <div class="pfoot"><span>Content Challenge · Noodkaart L5</span><span>Kenniskaarten: avans-orm.github.io/content-challenge/kennis/l5.html</span></div>
+</article>
+
+<!-- ============ L6 ============ -->
+<article class="card" id="l6" style="--c:var(--gold)">
+ <div class="eyebrow">Noodkaart · Level 6</div>
+ <h2>De live-ronde: je testplan</h2>
+ <p class="lead">Je campagne staat, maar werkt hij ook? Je maakt een testplan voor 3 uitingen, simuleert de resultaten en geeft een eindadvies.</p>
+ <h3>Zo doe je het</h3>
+ <ol class="steps">
+  <li><b>Testplan.</b> Maak per uiting een A/B-test waarin je één ding verandert (kop, beeld, call-to-action, tijdstip of format). Schrijf een hypothese: "Als ik ..., dan verwacht ik ..., omdat ...". Kies een meetmoment (24 uur, 3 dagen of 7 dagen) en een beslisregel met een getal.</li>
+  <li><b>Live-ronde zonder simulator.</b> Laat AI een week aan resultaten simuleren voor A en B, met op dag 3 één onverwachte gebeurtenis. Beslis zelf wat je op dag 3 doet en schrijf dat op vóórdat je de rest van de week laat zien. Werkt de game weer, dan speel je de echte live-ronde alsnog.</li>
+  <li><b>Analyse.</b> Welke variant wint? Klopt je hypothese (ja, deels, nee, niet te beoordelen)? Wat beslis je: opschalen, aanpassen en opnieuw testen, of stoppen? Vraag AI om een analyse en check of die klopt met je eigen cijfers.</li>
+  <li><b>Benchmark.</b> Zoek wat normaal is in jouw branche en op jouw kanaal, en vraag iemand uit je doelgroep wat die van je winnende variant vindt. <span class="w">thuis</span></li>
+  <li><b>Eindadvies.</b> Wat adviseer je: opschalen, bijsturen of omgooien? En wat heb je in deze module geleerd over het aansturen van AI? <span class="w">thuis</span></li>
+ </ol>
+ <h3>Startprompt (live-ronde zonder simulator)</h3>
+ <div class="prompt">Simuleer realistische resultaten voor een A/B-test op [kanaal], format [format], fase [fase].
+Variant A: [beschrijving]. Variant B: [wat er anders is]. Mijn KPI is [KPI] met norm [norm].
+Geef per dag (dag 1 tot en met 3) de cijfers voor A en B in een tabel. Bedenk op dag 3 één onverwachte gebeurtenis en stop daar.
+Ik vertel je wat ik besluit, daarna geef je dag 4 tot en met 7. Houd de cijfers realistisch voor een klein, nieuw account.</div>
+ <div class="grid2">
+  <div class="box"><h3>In je portfolio</h3><ul>
+   <li>Je testrapport: testplan, resultaten, analyse, benchmark en eindadvies</li>
+   <li>Je beslissing op dag 3 en waarom</li>
+   <li>AI-logboek, met waar je de analyse van AI hebt verbeterd</li>
+  </ul></div>
+  <div class="box back"><h3>Als de game weer werkt</h3><ul>
+   <li>Klik op het level waar de klas is. Staat het op slot, dan vraagt de game "Level N buiten de game gedaan?". Vul daar in wat bij "Bewaar dit" op de noodkaart van dat level staat.</li>
+   <li>Wil je je XP compleet hebben? Speel het gemiste level later alsnog.</li>
+  </ul></div>
+ </div>
+ <p class="scr"><a class="kk" href="kennis/l6.html">Kenniskaarten level 6 openen</a></p>
+ <div class="pfoot"><span>Content Challenge · Noodkaart L6</span><span>Kenniskaarten: avans-orm.github.io/content-challenge/kennis/l6.html</span></div>
+</article>
+
+</main>
+<footer>Content Challenge · Noodplan · werkt zonder inloggen</footer>
+<script>
+document.querySelectorAll(".prompt").forEach(p=>{const b=document.createElement("button");b.className="copy";b.type="button";b.textContent="Kopieer";
+ b.addEventListener("click",()=>{const t=p.firstChild.textContent;const done=()=>{b.textContent="Gekopieerd";setTimeout(()=>b.textContent="Kopieer",1600);};
+  try{navigator.clipboard.writeText(t).then(done,()=>{});}catch(e){}});p.append(b);});
+</script>
+</body>
+</html>

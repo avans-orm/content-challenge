@@ -73,6 +73,7 @@ td .em{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
 .lv span{font-family:"JetBrains Mono",monospace;font-size:11px;min-width:30px;text-align:center;padding:2px 3px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
 .lv span.klaar{background:#12352A;border-color:#1f6b4d;color:var(--good)}
 .lv span.bezig{border-color:var(--gold);color:var(--gold)}
+.lv span.inh{border-color:#3CE6E0;color:#3CE6E0}
 .acts{display:flex;gap:6px;flex-wrap:wrap}
 .cq{font-size:13px;color:#FFD0D8}
 .empty{padding:24px;text-align:center;color:var(--muted)}
@@ -107,11 +108,12 @@ function confirmBtn(label,yesLabel,fn,msg){const w=h("span",{class:"acts"});cons
   w.append(h("span",{class:"cq"},msg||"Zeker weten?"),y,h("button",{class:"btn small ghost",type:"button",onclick:reset},"Annuleer"));y.focus();});
  reset();return w;}
 
+let NOOD;
 let ME=null,PROF=null,DATA=[],F={q:"",studio:"",status:"",sort:"naam",dir:1};
 
 /* ---------- gegevens ---------- */
 async function load(){
- const [inv,prof,klas]=await Promise.all([CC.invites(),CC.profielen(),CC.klas()]);
+ const [inv,prof,klas,nood]=await Promise.all([CC.invites(),CC.profielen(),CC.klas(),CC.getSetting("noodplan").catch(()=>undefined)]);NOOD=nood;
  const by={};
  inv.forEach(i=>{by[i.email]={email:i.email,rol:i.rol,inv:i};});
  prof.forEach(p=>{const r=by[p.email]||(by[p.email]={email:p.email,rol:p.rol});r.prof=p;r.rol=r.inv?r.inv.rol:p.rol;});
@@ -157,7 +159,7 @@ function viewInvite(){
 
 /* ---------- overzicht ---------- */
 function lvCells(r){return h("div",{class:"lv"},[1,2,3,4,5,6].map(n=>{const l=r.lv[n];if(!l||l.open===false)return h("span",{title:"Level "+n+": nog niet open"},"·");
- const xp=(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);return h("span",{class:l.klaar?"klaar":"bezig",title:"Level "+n+": "+(l.st||"")+" · "+xp+" XP"},l.klaar?"✓"+xp:String(xp));}));}
+ const xp=(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);return h("span",{class:l.klaar?"klaar":l.inh?"inh":"bezig",title:"Level "+n+": "+(l.st||"")+" · "+xp+" XP"},l.klaar?"✓"+xp:l.inh?"↺"+xp:String(xp));}));}
 function statusPill(r){return r.status==="actief"?h("span",{class:"pill p-ok"},"Actief"):r.status==="uitgenodigd"?h("span",{class:"pill p-wait",title:"Laatst verstuurd: "+dt(r.inv.laatst_verstuurd)},"Uitgenodigd"):h("span",{class:"pill p-no"},"Mail niet verstuurd");}
 function actions(r){const own=r.email===(ME&&ME.email);
  return h("div",{class:"acts"},
@@ -186,7 +188,7 @@ function viewStudents(){
  const sortTh=(key,label,cls)=>h("th",{class:cls||null,"aria-sort":F.sort===key?(F.dir>0?"ascending":"descending"):null},h("button",{type:"button",onclick:()=>{if(F.sort===key)F.dir*=-1;else{F.sort=key;F.dir=key==="xp"||key==="actief"?-1:1;}render();}},label+(F.sort===key?(F.dir>0?" ▲":" ▼"):"")));
  fill();
  return h("section",{class:"panel",id:"studenten"},h("h2",null,"Studenten"),
-  h("p",{class:"lead"},"Klik op 'Bekijk werk' om de game van een student te openen, alleen om te lezen. De XP per level staat in de vakjes: groen met een vinkje is opgeleverd."),
+  h("p",{class:"lead"},"Klik op 'Bekijk werk' om de game van een student te openen, alleen om te lezen. De XP per level staat in de vakjes: groen met een vinkje is opgeleverd, blauw met ↺ is buiten de game gedaan (noodplan) en via de inhaal-invoer ingevuld."),
   h("div",{class:"stats"},h("div",{class:"stat"},h("b",null,st.length),h("span",null,"uitgenodigd")),h("div",{class:"stat"},h("b",null,actief),h("span",null,"actief (ingelogd)")),h("div",{class:"stat"},h("b",null,gem),h("span",null,"gem. XP (actief)")),h("div",{class:"stat"},h("b",null,klaar),h("span",null,"challenge voltooid"))),
   h("div",{class:"filters"},q,fs,fst,h("button",{class:"btn small ghost",type:"button",onclick:csv},"Download als CSV")),count,
   h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,sortTh("naam","Student"),sortTh("studio","Studio"),sortTh("status","Status"),h("th",null,"XP per level (1 t/m 6)"),sortTh("xp","Totaal","num"),sortTh("actief","Laatst opgeslagen"),h("th",null,""))),body)));
@@ -201,8 +203,18 @@ function csv(){const L=filtered();const esc=v=>{v=String(v==null?"":v);return/[;
  const txt="﻿"+[head,...rows].map(r=>r.map(esc).join(";")).join("\r\n");
  const a=h("a",{href:URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"})),download:"content-challenge-studenten-"+new Date().toISOString().slice(0,10)+".csv"});document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);}
 
+/* ---------- noodplan ---------- */
+function viewNood(){const aan=NOOD===true;const mist=NOOD===undefined;
+ const zet=async v=>{try{await CC.setSetting("noodplan",v);NOOD=v;toast(v?"Noodplan staat aan voor alle studenten":"Noodplan staat uit");render();}catch(e){toast(e.message);}};
+ return h("section",{class:"panel",id:"noodplan"},h("h2",null,"Noodplan"),
+  h("p",{class:"lead"},"Liep de game vast en hebben studenten een les buiten de game gedaan met de ",h("a",{href:"noodplan.html",target:"_blank",rel:"noopener"},"noodkaarten"),"? Zet dan het noodplan aan. Een student die op een level klikt dat nog op slot staat, krijgt dan een kort formulier met alleen de gegevens die de volgende levels nodig hebben. Daarna gaat het volgende level open. Een level dat al is ingehaald, blijft open als je het noodplan weer uitzet. Studenten zien de wijziging binnen een minuut."),
+  h("div",{style:"display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px"},h("a",{class:"btn small",href:"noodplan.html",target:"_blank",rel:"noopener"},"Open de noodkaarten"),h("a",{class:"btn small ghost",href:"noodplan.pdf",download:"Content Challenge - noodkaarten.pdf"},"Download de noodkaarten (PDF)")),
+  mist?h("p",{class:"msg bad"},"De schakelaar werkt nog niet: voer eerst eenmalig supabase/noodplan.sql uit in Supabase (SQL Editor)."):
+  h("div",{class:"row",style:"display:flex;gap:12px;align-items:center;flex-wrap:wrap"},
+   aan?h("span",{class:"pill p-wait"},"Aan voor alle studenten"):h("span",{class:"pill p-ok"},"Uit (normale situatie)"),
+   aan?h("button",{class:"btn small ghost",type:"button",onclick:()=>zet(false)},"Zet het noodplan uit"):confirmBtn("Zet het noodplan aan","Ja, zet aan voor alle studenten",()=>zet(true),"Alle studenten kunnen dan levels inhalen.")));}
 let INV=null;
-function render(){const app=$("#app");const y=window.scrollY;app.innerHTML="";INV=INV||viewInvite();app.append(INV,viewStudents(),viewDocenten(),
+function render(){const app=$("#app");const y=window.scrollY;app.innerHTML="";INV=INV||viewInvite();app.append(INV,viewNood(),viewStudents(),viewDocenten(),
  CC.mode==="demo"?h("section",{class:"panel"},h("h2",null,"Demo-postvak"),h("p",{class:"lead"},"Demomodus: er gaan geen echte mails de deur uit. Open een link om in te loggen als die persoon. Je wordt dan in deze browser uitgelogd als docent."),h("ul",null,CC.mails().slice(0,15).map(m=>h("li",null,h("strong",null,m.soort+" voor "+m.to+": "),h("a",{href:m.link,target:"_blank"},"link"))))):null);window.scrollTo(0,y);}
 async function refresh(full){try{await load();render();}catch(e){if(full)throw e;toast(e.message);}}
 

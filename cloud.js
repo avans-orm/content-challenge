@@ -160,6 +160,17 @@
         if (error) throw nl(error);
         await sb.from("uitnodigingen").update({ laatst_verstuurd: new Date().toISOString() }).eq("email", email);
       },
+      /* Instelling (zoals het noodplan). Geeft undefined als de tabel nog niet bestaat (noodplan.sql niet gedraaid). */
+      async getSetting(k) {
+        const { data, error } = await sb.from("instellingen").select("waarde").eq("sleutel", k).maybeSingle();
+        if (error) return undefined;
+        return data ? data.waarde : null;
+      },
+      async setSetting(k, v) {
+        const u = await api.user();
+        const { error } = await sb.from("instellingen").upsert({ sleutel: k, waarde: v, bijgewerkt_door: u.id }, { onConflict: "sleutel" });
+        if (error) throw nl(error);
+      },
       async verwijder(email, uid) {
         if (uid) { try { const ids = await api.listImgs(uid); for (let i = 0; i < ids.length; i += 100) await api.delImgs(uid, ids.slice(i, i + 100)); } catch (e) { /* beelden later opruimen */ } }
         const { error } = await sb.rpc("verwijder_gebruiker", { p_email: email });
@@ -228,6 +239,8 @@
         await wait(150); db = load() || db; if (!userBy(email)) db.users.push({ id: "demo-" + Math.random().toString(36).slice(2, 10), email, pw: "" });
         db.invites[email].laatst_verstuurd = new Date().toISOString(); put(); mail(email, "Uitnodiging");
       },
+      async getSetting(k) { db = load() || db; return (db.set || {})[k] == null ? null : db.set[k]; },
+      async setSetting(k, v) { await wait(); db = load() || db; (db.set = db.set || {})[k] = v; put(); },
       async verwijder(email) {
         await wait(); db = load() || db; const u = userBy(email);
         if (u) { if (u.id === uid()) throw new Error("Je kunt jezelf niet verwijderen."); delete db.prof[u.id]; delete db.vg[u.id]; delete db.img[u.id]; db.users = db.users.filter(x => x !== u); }
