@@ -218,6 +218,9 @@
 
   /* ---------- klas: scorebord en klasoverzicht ---------- */
   const KLAS = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] }; let KLAST = null;
+  /* Noodplan: staat de inhaal-invoer aan? Een docent zet hem aan in het dashboard. */
+  let NOOD = false;
+  async function loadNood() { try { NOOD = (await CC.getSetting("noodplan")) === true; } catch (e) { NOOD = false; } }
   async function loadKlas() {
     try {
       const rows = await CC.klas(); KLAST = new Date();
@@ -230,11 +233,12 @@
       }
     } catch (e) { /* scorebord blijft zoals het was */ }
   }
-  setInterval(() => { if (document.visibilityState === "visible" && OWNER) loadKlas(); }, 60000);
+  setInterval(() => { if (document.visibilityState === "visible" && OWNER) { loadKlas(); loadNood(); } }, 60000);
   const tijd = () => KLAST ? KLAST.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" }) : "-";
 
   window.CCLIVE = {
     isDocent: () => ROL === "docent",
+    noodplan: () => NOOD && !READONLY,
     bekijk: () => READONLY,
     klasArr: n => KLAS[n],
     naamCel(r) {
@@ -306,6 +310,7 @@
       viewLoading("Je werk laden…");
       await loadOwner(OWNER);
       await loadKlas();
+      await loadNood();
       gate().hidden = true; document.body.classList.remove("cc-wait");
       runGame();
       topBar(prof, viewName || "deze student");

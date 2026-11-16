@@ -13,6 +13,8 @@ De game met echte logins. Docenten nodigen studenten uit per e-mail, alles wat s
 | `live.js`, `live.css` | Inloggen, laden en automatisch opslaan. |
 | `vendor/supabase.js` | Supabase-bibliotheek (versie 2.117.3), lokaal zodat de site niet van een andere server afhangt. |
 | `supabase/setup.sql` | Database-opzet. Eén keer draaien in de SQL Editor van Supabase. |
+| `supabase/noodplan.sql` | Schakelaar voor het noodplan (tabel `instellingen`). Eén keer draaien; zit ook in `setup.sql`. |
+| `noodplan.html`, `noodplan.pdf` | Noodkaarten L1-L6 voor als de game vastloopt. Werkt zonder inloggen. |
 | `supabase/mail-*.html` | Teksten voor de uitnodigings- en inlogmail. |
 | `tools/bouw-live.py` | Zet een nieuwe versie van het prototype om naar `index.html`. |
 | `tools/prototype.html` | De prototypeversie waar deze live versie op is gebaseerd. |
@@ -29,3 +31,7 @@ De game met echte logins. Docenten nodigen studenten uit per e-mail, alles wat s
 
 Zonder gegevens in `config.js` draait alles in je eigen browser, met een demo-postvak in plaats van echte mails.
 Docent: `docent@demo.nl`, wachtwoord `demo1234`.
+
+## Noodplan
+
+Loopt de game vast, dan werken studenten met de noodkaarten (`noodplan.html`) en zetten ze hun werk in hun portfolio. Werkt de game weer, dan zet een docent in het dashboard het **noodplan** aan. Studenten kunnen dan een gemist level inhalen met een kort formulier, waarna het volgende level opengaat. Standaard staat het noodplan uit. Een level dat al is ingehaald, blijft open als het noodplan weer uitgaat.

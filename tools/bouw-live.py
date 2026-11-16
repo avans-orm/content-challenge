@@ -64,6 +64,9 @@ for t in ["Kennischeck van deze student (jij)", "Eventkaart van deze student (ji
 # Voorbeeld van het huisstijlhandboek in een afgeschermd kader: geen scripts, eigen herkomst.
 rep('const f=h("iframe",{class:"hbframe",title:"Voorbeeld van je huisstijlhandboek"});f.srcdoc=', 'const f=h("iframe",{class:"hbframe",title:"Voorbeeld van je huisstijlhandboek",sandbox:"allow-popups"});f.srcdoc=')
 
+# Noodplan: de inhaal-invoer staat alleen aan als een docent hem in het dashboard aanzet.
+rep('function inhAan(){return true;}', 'function inhAan(){return CCLIVE.noodplan();}')
+
 # Kenniskaarten staan in de site zelf (map kennis/), niet meer op claude.ai.
 rep(r'const KAART_URL=\{.*?\};', 'const KAART_URL={1:"kennis/l1.html",2:"kennis/l2.html",3:"kennis/l3.html",4:"kennis/l4.html",5:"kennis/l5.html",6:"kennis/l6.html"};', regex=True)
 rep('id="kaartenBtn" href="https://claude.ai/artifact/4KaNAPnvqaFUtwBovYstZw"', 'id="kaartenBtn" href="kennis/l1.html"')

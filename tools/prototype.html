@@ -1333,6 +1333,8 @@ function l6open(){return l5open()&&(lk5("oplevering")||inh(5));}
    speelbaar; XP telt alleen voor wat in de game zelf is gedaan. S.inh[k] = {t} markeert level k als ingehaald. */
 let INH=0;
 function inh(k){return!!(S.inh&&typeof S.inh==="object"&&S.inh[k]);}
+/* inhAan(): mag de student de inhaal-invoer gebruiken? In de live-versie zet een docent dit aan in het dashboard. */
+function inhAan(){return true;}
 const OPEN_INH=()=>[null,()=>true,l2open,l3open,l4open,l5open,l6open];
 function inhFirst(n){const O=OPEN_INH();for(let k=1;k<n;k++){if(!O[k+1]())return k;}return 0;}
 const INHNAAM=[null,"Het fundament","De identiteit","Het bouwplan","De studio","De campagne"];
@@ -1501,7 +1503,7 @@ function railScroll(r,keepX){requestAnimationFrame(()=>{try{if(r.scrollWidth<=r.
 function renderLevels(){
  const el=$("#levels");el.innerHTML="";
  [[1,"Level 1"],[2,"Level 2"],[3,"Level 3"],[4,"Level 4"],[5,"Level 5"],[6,"Level 6"]].forEach(([n,t])=>{const lock=(n===2&&!l2open())||(n===3&&!l3open())||(n===4&&!l4open())||(n===5&&!l5open())||(n===6&&!l6open());
-  el.append(h("button",{class:lock?"locked":null,"aria-pressed":S.lvl===n?"true":"false",title:lock?"Gaat open na de oplevering van level "+(n-1)+", of als je level "+(n-1)+" buiten de game hebt gedaan":null,"aria-label":t,onclick:()=>{if(lock){if(S.role==="docent"){toast("Level "+n+" gaat open als level "+(n-1)+" is opgeleverd");return;}INH=n;INHD=null;render();window.scrollTo({top:0});return;}INH=0;INHD=null;S.lvl=n;KCOPEN=0;save();render();window.scrollTo({top:0});}},h("span",{class:"lw"},"Level "),String(n)));});
+  el.append(h("button",{class:lock?"locked":null,"aria-pressed":S.lvl===n?"true":"false",title:lock?"Gaat open na de oplevering van level "+(n-1)+(inhAan()?", of als je level "+(n-1)+" buiten de game hebt gedaan":""):null,"aria-label":t,onclick:()=>{if(lock){if(S.role==="docent"||!inhAan()){toast("Level "+n+" gaat open als je level "+(n-1)+" hebt opgeleverd");return;}INH=n;INHD=null;render();window.scrollTo({top:0});return;}INH=0;INHD=null;S.lvl=n;KCOPEN=0;save();render();window.scrollTo({top:0});}},h("span",{class:"lw"},"Level "),String(n)));});
  const kb=$("#kaartenBtn");if(kb){kb.href=kaartUrl(S.lvl);kb.title="Open de kenniskaarten van level "+S.lvl;}
  const db=$("#deckBtn");if(db){db.href=LESDECK_URL[S.lvl]||LESDECK_URL[1];db.title="Open het lesdeck van level "+S.lvl;}
  $("#lvlname").textContent=S.lvl===6?"Level 6 · De live-ronde":S.lvl===5?"Level 5 · De campagne":S.lvl===4?"Level 4 · De studio":S.lvl===3?"Level 3 · Het bouwplan":S.lvl===2?"Level 2 · De identiteit":"Level 1 · Het fundament";
@@ -1520,6 +1522,7 @@ function render(){
  renderXP();renderRail();
  const p=$("#panel");p.innerHTML="";
  if(S.role==="docent"){if(!isDocent()){p.append(viewDocentLogin());return;}p.append(docentBar(),S.lvl===6?viewDocent6():S.lvl===5?viewDocent5():S.lvl===4?viewDocent4():S.lvl===3?viewDocent3():S.lvl===2?viewDocent2():viewDocent());return;}
+ if(INH&&!inhAan()){INH=0;INHD=null;}
  if(INH){const iv=viewInhaal();if(iv){p.append(iv);return;}renderLevels();renderXP();renderRail();}
  if(kcView()){p.append(viewKC(S.lvl));return;}
  if(S.lvl===4&&!MISSIONS4.some(m=>m.id===S.l4.cur))S.l4.cur="start";
