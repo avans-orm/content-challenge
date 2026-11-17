@@ -662,6 +662,31 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .imgbox.drop,.pzone.drop{outline:2px dashed #FF5FDC;outline-offset:2px}
 .pastehint{font-size:13px;color:var(--muted);margin:0}
 .moodimg{max-width:420px}
+/* Strategie-samenvatting (level 1): visuele one-pager, ook als pdf te printen */
+.ssum{background:#120B26;color:#F5F0FF;border:1px solid #3A2C66;border-radius:16px;padding:28px;margin-top:12px;font-family:Manrope,sans-serif}
+.ssum-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;border-bottom:2px solid #FF5FDC;padding-bottom:16px;margin-bottom:18px}
+.ssum-eb{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#FFB547}
+.ssum-naam{font-family:Unbounded,sans-serif;font-weight:800;font-size:30px;line-height:1.1;color:#fff;text-shadow:0 0 12px rgba(255,95,220,.6);margin-top:4px}
+.ssum-sub{font-size:14px;color:#C9BDEB;margin-top:6px}
+.ssum-kw{display:flex;gap:8px;flex-wrap:wrap}.ssum-kw span{border:1.5px solid #3CE6E0;color:#3CE6E0;border-radius:999px;padding:3px 12px;font-weight:700;font-size:13px}
+.ssum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ssum-vak{background:#1C1338;border-radius:12px;padding:16px 18px;border-top:5px solid #FF5FDC;break-inside:avoid}
+.ssum-vak.c1{border-top-color:#3CE6E0}.ssum-vak.c2{border-top-color:#FFA14A}
+.ssum-nr{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;color:#B4A8D9}
+.ssum-vak h4{font-family:Unbounded,sans-serif;font-size:14px;line-height:1.25;margin:4px 0 8px;color:#fff}
+.ssum-kern{font-weight:700;font-size:14px;line-height:1.45;margin:0 0 6px;color:#F5F0FF}
+.ssum-kern.leeg{color:#9C8FC7;font-style:italic;font-weight:500}
+.ssum-vak ul{margin:0;padding-left:18px;font-size:12.5px;line-height:1.45;color:#C9BDEB}
+.ssum-foot{margin-top:16px;font-size:12px;color:#9C8FC7}
+@media (max-width:760px){.ssum-grid{grid-template-columns:1fr}.ssum{padding:18px}}
+#printzone{display:none}
+@media print{@page{size:A4 landscape;margin:0}
+ body.printing{background:#120B26!important;padding:0!important}
+ body.printing>*:not(#printzone){display:none!important}
+ body.printing>#printzone{display:block!important}
+ #printzone .ssum{margin:0;border:0;border-radius:0;padding:12mm;min-height:209mm}
+ #printzone .ssum-grid{grid-template-columns:repeat(3,1fr)}
+ #printzone,#printzone *{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 
 <header class="top">
@@ -1852,7 +1877,44 @@ function viewModel(){
   h("div",{class:"row"},confirmBtn("Haal AI-output op uit het briefing-duel","Ja, overschrijf",()=>{if(!len(S.duel.briefOut)){toast("Plak eerst de output van je briefing in het briefing-duel.");return;}if(importModel(true)){render();toast("De AI-output staat per vak klaar.");}else toast("De vakken zijn niet herkend. Plak de tekst per vak zelf, of vraag de AI om elk vak te beginnen met een nummer en naam.");},{msg:"Dit overschrijft het AI-voorstel in de vakken. Jouw versie blijft staan.",ask:()=>len(S.duel.briefOut)>0&&VAKKEN.some(v=>len((S.model.vakken[v.id]||{}).ai))})),
   h("div",{class:"block"},vakken),
   h("div",{class:"block"},h("h3",null,"Eindcheck: 13 succesfactoren (Gerretsen, 2017)"),h("p",{class:"status"},["Beantwoord per factor de vraag voor je strategie als geheel. Eerlijk antwoorden is belangrijker dan overal Ja. Alle 13 beantwoord: 1 XP. Uitleg op ",kaartLink(1,7),"."]),gcnt,ger),
+  sumBlock(false),
   nextBtn("model"));
+}
+/* Strategie-samenvatting: per vak de kern (eerste zin) en de belangrijkste punten, als visuele one-pager.
+   final=true gebruikt het definitieve thema en de storyline uit het keuzemoment. sumPrint() print alleen de samenvatting (Opslaan als pdf). */
+function sumClean(x){return String(x||"").replace(/\*\*/g,"").replace(/^[\s\-*•#>\d.)]+/,"").trim();}
+function sumCut(x,n){return x.length>n?x.slice(0,n-1).replace(/[\s,;:]+\S*$/,"")+"…":x;}
+function sumParts(t){const z=sentList(t).map(sumClean).filter(x=>x.length>1);return{kern:sumCut(z[0]||"",200),rest:z.slice(1,4).map(x=>sumCut(x,150))};}
+function sumItems(final){const E=(S.keuze&&S.keuze.eind)||{};
+ return VAKKEN.map(v=>{const d=S.model.vakken[v.id]||{};let t=d.eigen||"";if(final&&v.id==="thema"&&len(E.thema))t=E.thema;if(final&&v.id==="story"&&len(E.story))t=E.story;return{t:v.t,txt:t};});}
+function sumMissing(){return VAKKEN.map((v,i)=>len((S.model.vakken[v.id]||{}).eigen)>=20?0:i+1).filter(Boolean);}
+function sumNode(final){
+ const kw=kwArr().filter(k=>len(k)).map(k=>k.trim());const st=final?strat():null;
+ return h("div",{class:"ssum"},
+  h("div",{class:"ssum-top"},h("div",null,h("div",{class:"ssum-eb"},final?"Mijn definitieve contentstrategie":"Mijn contentstrategie"),h("div",{class:"ssum-naam"},S.p.bedrijf||"Mijn merk"),st&&st.route?h("div",{class:"ssum-sub"},"Gekozen route: "+st.route):null),
+   kw.length?h("div",{class:"ssum-kw"},kw.map(k=>h("span",null,k))):null),
+  h("div",{class:"ssum-grid"},sumItems(final).map((it,i)=>{const p=sumParts(it.txt);
+   return h("div",{class:"ssum-vak c"+(i%3)},h("div",{class:"ssum-nr"},"VAK "+(i+1)),h("h4",null,it.t),h("p",{class:"ssum-kern"+(p.kern?"":" leeg")},p.kern||"Nog niet ingevuld."),p.rest.length?h("ul",null,p.rest.map(r=>h("li",null,r))):null);})),
+  h("div",{class:"ssum-foot"},"Gemaakt door "+(S.p.naam||"student")+" · Content Challenge · Level 1: Het fundament · "+new Date().toLocaleDateString("nl-NL")));
+}
+function sumPrint(final){
+ const mis=sumMissing();if(mis.length){toast("Maak eerst alle vakken af. Nog niet af: vak "+mis.join(", ")+".");return;}
+ const old=document.getElementById("printzone");if(old)old.remove();
+ const z=h("div",{id:"printzone"},sumNode(final));document.body.append(z);document.body.classList.add("printing");
+ const klaar=()=>{document.body.classList.remove("printing");z.remove();window.removeEventListener("afterprint",klaar);};
+ window.addEventListener("afterprint",klaar);toast("Kies in het printvenster bij Printer of Bestemming: Opslaan als pdf.");
+ setTimeout(()=>{try{window.print();}catch(e){klaar();toast("Printen lukt hier niet. Open de game in Chrome, Edge of Safari.");}},60);
+}
+function sumBlock(final){
+ const box=h("div");
+ const draw=()=>{box.innerHTML="";const mis=sumMissing();
+  if(mis.length){box.append(h("p",{class:"status"},"Je samenvatting verschijnt hier zodra elk vak je eigen versie heeft (minimaal 20 tekens). Nog niet af: vak "+mis.join(", ")+"."));return;}
+  box.append(sumNode(final));};
+ draw();
+ return h("div",{class:"block",id:final?"ssum-opl":"ssum-model"},h("h3",null,final?"Je definitieve strategie als pdf":"Je strategie in één oogopslag"),
+  h("p",{class:"status"},final?"Dezelfde samenvatting als bij het strategiemodel, nu met het thema en de storyline uit je keuzemoment. Zet de pdf in je portfolio.":"Per vak de kern van jouw versie: de eerste zin als kern, daaronder de belangrijkste punten. Staat de kern niet bovenaan? Zet je belangrijkste zin vooraan in je versie en klik op Vernieuw. Download als pdf opent het printvenster: kies daar Opslaan als pdf."),
+  h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>{draw();sumPrint(final);}},"Download als pdf"),h("button",{class:"btn ghost",type:"button",onclick:()=>{draw();toast("Samenvatting bijgewerkt.");}},"Vernieuw samenvatting")),
+  box);
 }
 const APA1="APA 7: auteur of organisatie. (jaar, datum). Titel [soort bron]. Link. Eigen onderzoek, bijv.: Groenbak. (2026, 3 oktober). Interviews met vier klanten over kweken op het balkon [Ongepubliceerde interviews]. Website, bijv.: Google. (2026). Google Trends: zoekterm moestuin balkon. https://trends.google.nl";
 function viewBronnen(){
@@ -1990,6 +2052,7 @@ function viewOplevering(){
    h("div",{class:"boards"},
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Studio"),h("th",{class:"num"},"Gem. XP"))),h("tbody",null,sRows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,"Studio "+r.s),h("td",{class:"num"},r.avg)))))),
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Student"),h("th",{class:"num"},"XP"))),h("tbody",null,rows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,r.n),h("td",{class:"num"},r.tot)))))))),
+  sumBlock(true),
   h("div",{class:"block"},h("h3",null,"Voor je portfolio"),h("p",{class:"status"},"Kopieer je oplevering inclusief kernwaarden, moodboard en AI-logboek en plak die in je portfolio."),
    h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>copy(portfolio)},"Kopieer oplevering"),richBtn(portfolio)),h("div",{class:"prompt",id:"portfolio1",style:"max-height:260px;overflow:auto"},portfolio),
    imgGet(K1().mood.img)?h("div",{class:"field"},h("span",{class:"lbl"},"Je moodboard"),h("img",{src:imgGet(K1().mood.img),alt:"Moodboard",class:"moodimg",style:"width:100%;border-radius:12px"}),h("p",{class:"pastehint"},"Zet je moodboard ook in je portfolio: rechtermuisklik of lang tikken en kies 'Afbeelding opslaan' of 'Kopiëren'.")):null));
