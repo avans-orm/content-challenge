@@ -680,13 +680,39 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center}
 .ssum-foot{margin-top:16px;font-size:12px;color:#9C8FC7}
 @media (max-width:760px){.ssum-grid{grid-template-columns:1fr}.ssum{padding:18px}}
 #printzone{display:none}
-@media print{@page{size:A4 landscape;margin:0}
- body.printing{background:#120B26!important;padding:0!important}
+/* Pdf-opleveringen (alle levels): Neon Live-document dat alleen bij printen zichtbaar is */
+.pdoc{background:#120B26;color:#F5F0FF;font-family:Manrope,sans-serif;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.pdoc-head{border-bottom:2px solid #FF5FDC;padding-bottom:14px;margin-bottom:18px}
+.pdoc-sec{margin:0 0 20px}
+.pdoc-sec>h2{font-family:Unbounded,sans-serif;font-size:18px;color:#FF5FDC;margin:0 0 10px;break-after:avoid}
+.pdoc .wk{cursor:default}
+.pdoc-sec h3{font-family:Unbounded,sans-serif;font-size:15px;color:#fff;margin:0 0 6px}
+.pdoc p,.pdoc li{font-size:13px;line-height:1.5}
+.pdoc-md{font-size:12.5px;line-height:1.5;color:#E6DEFF}
+.pdoc-md h1{font-family:Unbounded,sans-serif;font-size:20px;color:#fff;margin:18px 0 8px}
+.pdoc-md h2{font-family:Unbounded,sans-serif;font-size:15px;color:#FF5FDC;margin:16px 0 6px}
+.pdoc-md h3{font-family:Unbounded,sans-serif;font-size:13px;color:#3CE6E0;margin:12px 0 4px}
+.pdoc-md h4{font-size:13px;color:#FFB547;margin:10px 0 4px}
+.pdoc-md h1,.pdoc-md h2,.pdoc-md h3,.pdoc-md h4{break-after:avoid}
+.pdoc-md p{margin:4px 0}.pdoc-md ul,.pdoc-md ol{margin:4px 0;padding-left:20px}
+.pdoc-md table{border-collapse:collapse;width:100%;font-size:10.5px;margin:8px 0}
+.pdoc-md th,.pdoc-md td{border:1px solid #3A2C66;padding:4px 6px;text-align:left;vertical-align:top}
+.pdoc-md th{background:#1C1338;color:#FFB547}
+.pdoc-md tr,.pdoc figure,.pdoc .post{break-inside:avoid}
+.pdoc .gallery{grid-template-columns:repeat(5,1fr)}
+.pdoc .feed.big{grid-template-columns:repeat(3,1fr)}
+.pdoc .pairs{grid-template-columns:repeat(3,1fr)}
+.pdoc img.pdoc-mood{max-width:100%;max-height:140mm;border-radius:12px;display:block}
+@media print{
+ body.printing{background:#120B26!important;padding:0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
  body.printing>*:not(#printzone){display:none!important}
  body.printing>#printzone{display:block!important}
- #printzone .ssum{margin:0;border:0;border-radius:0;padding:12mm;min-height:209mm}
- #printzone .ssum-grid{grid-template-columns:repeat(3,1fr)}
- #printzone,#printzone *{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+ #printzone,#printzone *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .pdoc{padding:12mm;min-height:100vh}
+ .pdoc .ssum{margin:0;border:0;border-radius:0;padding:0}
+ .pdoc .ssum-grid{grid-template-columns:repeat(3,1fr)}
+ .pdoc-page{break-before:page}
+ .pdoc .btn{display:none!important}}
 </style>
 
 <header class="top">
@@ -1897,23 +1923,53 @@ function sumNode(final){
    return h("div",{class:"ssum-vak c"+(i%3)},h("div",{class:"ssum-nr"},"VAK "+(i+1)),h("h4",null,it.t),h("p",{class:"ssum-kern"+(p.kern?"":" leeg")},p.kern||"Nog niet ingevuld."),p.rest.length?h("ul",null,p.rest.map(r=>h("li",null,r))):null);})),
   h("div",{class:"ssum-foot"},"Gemaakt door "+(S.p.naam||"student")+" · Content Challenge · Level 1: Het fundament · "+new Date().toLocaleDateString("nl-NL")));
 }
-function sumPrint(final){
- const mis=sumMissing();if(mis.length){toast("Maak eerst alle vakken af. Nog niet af: vak "+mis.join(", ")+".");return;}
+/* Pdf-opleveringen: pdocPrint(nodes,landscape) zet een Neon Live-document in #printzone en opent het printvenster (Opslaan als pdf). */
+function pdocHead(lvl,titel){return h("div",{class:"pdoc-head"},h("div",{class:"ssum-eb"},"Content Challenge · Level "+lvl),h("div",{class:"ssum-naam"},titel),h("div",{class:"ssum-sub"},(S.p.bedrijf||"Mijn merk")+" · "+(S.p.naam||"student")+" · "+new Date().toLocaleDateString("nl-NL")));}
+function pdocSec(t,...kids){return h("div",{class:"pdoc-sec"},h("h2",null,t),...kids);}
+function pdocMd(md){return h("div",{class:"pdoc-md",html:mdHtml(md)});}
+function pdocPrint(nodes,landscape){
  const old=document.getElementById("printzone");if(old)old.remove();
- const z=h("div",{id:"printzone"},sumNode(final));document.body.append(z);document.body.classList.add("printing");
+ let ps=document.getElementById("pdoc-page");if(!ps){ps=h("style",{id:"pdoc-page"});document.head.append(ps);}
+ ps.textContent="@media print{@page{size:A4 "+(landscape?"landscape":"portrait")+";margin:0}}";
+ const z=h("div",{id:"printzone"},h("div",{class:"pdoc"},nodes));document.body.append(z);
  const klaar=()=>{document.body.classList.remove("printing");z.remove();window.removeEventListener("afterprint",klaar);};
- window.addEventListener("afterprint",klaar);toast("Kies in het printvenster bij Printer of Bestemming: Opslaan als pdf.");
- setTimeout(()=>{try{window.print();}catch(e){klaar();toast("Printen lukt hier niet. Open de game in Chrome, Edge of Safari.");}},60);
+ const wacht=[...z.querySelectorAll("img")].filter(i=>!i.complete).map(i=>new Promise(r=>{i.addEventListener("load",r);i.addEventListener("error",r);}));
+ Promise.race([Promise.all(wacht),new Promise(r=>setTimeout(r,3000))]).then(()=>{
+  document.body.classList.add("printing");window.addEventListener("afterprint",klaar);toast("Kies in het printvenster bij Printer of Bestemming: Opslaan als pdf.");
+  setTimeout(()=>{try{window.print();}catch(e){klaar();toast("Printen lukt hier niet. Open de game in Chrome, Edge of Safari.");}},60);});
 }
+function pdfBtn(fn,lbl){return h("button",{class:"btn",type:"button",onclick:fn},lbl||"Download als pdf");}
+function l1Extra(){const M=K1().mood;const img=imgGet(M.img);const K=S.keuze;const ch=K.gekozen!=null?K.routes[K.gekozen]:null;const kw=kwArr();const sf=(M.sfeer||[]).filter(x=>len(x));
+ return[h("div",{class:"pdoc-page"},pdocSec("Moodboard",img?h("img",{class:"pdoc-mood",src:img,alt:"Moodboard"}):h("p",null,len(M.link)?M.link:"Nog geen moodboard."),
+   img&&len(M.link)?h("p",null,M.link):null,
+   sf.length?h("div",{class:"ssum-kw",style:"margin-top:12px"},sf.map(x=>h("span",null,x.trim()))):null,
+   h("ul",null,[0,1,2].map(i=>len((M.perKw||[])[i])?h("li",null,h("strong",null,(len(kw[i])?kw[i].trim():"Kernwaarde "+(i+1))+": "),M.perKw[i]):null)))),
+  h("div",{class:"pdoc-page"},pdocSec("Gekozen route",ch?[h("h3",null,ch.t||"Route"),h("p",null,ch.s||"")]:h("p",null,"Nog geen route gekozen."),
+   h("p",null,h("strong",null,"Onderbouwing: "),K.waarom||"-"),h("p",null,h("strong",null,"Wat ik laat vallen: "),K.laat||"-")))];}
+function sumPrint(final){
+ const mis=sumMissing();if(mis.length){toast("Maak eerst alle vakken van het strategiemodel af. Nog niet af: vak "+mis.join(", ")+".");return;}
+ pdocPrint([sumNode(final),...(final?l1Extra():[])],true);
+}
+function l3Pdf(){const wc=weekChart();const st=wc.querySelector("p.status");if(st)st.textContent="Uren per week (aanmaakweek van elke uiting). De lijn is je tijdbudget; rood is te vol.";pdocPrint([pdocHead(3,"Contentkalender"),pdocSec("Planning per week",wc),pdocMd(planDoc())],true);}
+function l4Pdf(){const L=S.l4;const B=beelden4();
+ const pairs=L.echt.filter(e=>fotoByRef(e.foto)||e.img).map((e,i)=>{const own=refImg(e.foto);return h("div",{class:"cmp"},h("figure",null,own?h("img",{src:imgGet(own),alt:"Echt "+(i+1)}):h("div",{class:"ph-empty"},"-"),h("figcaption",null,"Echt")),h("figure",null,e.img?h("img",{src:imgGet(e.img),alt:"AI "+(i+1)}):h("div",{class:"ph-empty"},"-"),h("figcaption",null,"AI")));});
+ pdocPrint([pdocHead(4,"Beeldbank"),pdocSec("Je beelden",B.length?h("div",{class:"gallery"},B.map(b=>h("figure",null,h("img",{src:imgGet(b.img),alt:b.t}),h("figcaption",null,b.t)))):h("p",null,"Nog geen beelden.")),
+  pairs.length?pdocSec("Echt of AI?",h("div",{class:"pairs"},pairs)):null,h("div",{class:"pdoc-page"},pdocMd(beeldDoc()))],false);}
+function l5Pdf(){pdocPrint([pdocHead(5,"Campagne: je 12 uitingen"),pdocSec("Je uitingen",S.l5.sel.length?h("div",{class:"feed big"},S.l5.sel.map(i=>postPreview(i))):h("p",null,"Nog geen uitingen gekozen.")),h("div",{class:"pdoc-page"},pdocMd(campDoc()))],false);}
+function l6Pdf(){pdocPrint([pdocHead(6,"Testrapport"),pdocMd(testDoc())],false);}
+/* Huisstijlhandboek als pdf: het handboek (zonder scripts) in een verborgen frame zetten en dat frame printen. */
+function hbPrint(){const f=h("iframe",{sandbox:"allow-same-origin allow-modals",title:"Huisstijlhandboek printen","aria-hidden":"true",style:"position:fixed;left:-10000px;top:0;width:900px;height:1200px;border:0"});
+ f.addEventListener("load",()=>setTimeout(()=>{try{f.contentWindow.focus();toast("Kies in het printvenster bij Printer of Bestemming: Opslaan als pdf.");f.contentWindow.print();}catch(e){toast("Printen lukt hier niet. Download je handboek, open het en kies daar Print.");}setTimeout(()=>f.remove(),60000);},900),{once:true});
+ f.srcdoc=hbDoc(false);document.body.append(f);}
 function sumBlock(final){
  const box=h("div");
  const draw=()=>{box.innerHTML="";const mis=sumMissing();
   if(mis.length){box.append(h("p",{class:"status"},"Je samenvatting verschijnt hier zodra elk vak je eigen versie heeft (minimaal 20 tekens). Nog niet af: vak "+mis.join(", ")+"."));return;}
   box.append(sumNode(final));};
  draw();
- return h("div",{class:"block",id:final?"ssum-opl":"ssum-model"},h("h3",null,final?"Je definitieve strategie als pdf":"Je strategie in één oogopslag"),
-  h("p",{class:"status"},final?"Dezelfde samenvatting als bij het strategiemodel, nu met het thema en de storyline uit je keuzemoment. Zet de pdf in je portfolio.":"Per vak de kern van jouw versie: de eerste zin als kern, daaronder de belangrijkste punten. Staat de kern niet bovenaan? Zet je belangrijkste zin vooraan in je versie en klik op Vernieuw. Download als pdf opent het printvenster: kies daar Opslaan als pdf."),
-  h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>{draw();sumPrint(final);}},"Download als pdf"),h("button",{class:"btn ghost",type:"button",onclick:()=>{draw();toast("Samenvatting bijgewerkt.");}},"Vernieuw samenvatting")),
+ return h("div",{class:"block",id:final?"ssum-opl":"ssum-model"},h("h3",null,final?"Je oplevering als pdf":"Je strategie in één oogopslag"),
+  h("p",{class:"status"},final?"Je oplevering van level 1 als pdf: je definitieve contentstrategie (met het thema en de storyline uit je keuzemoment), je moodboard en je gekozen route met onderbouwing. Zet de pdf in je portfolio.":"Per vak de kern van jouw versie: de eerste zin als kern, daaronder de belangrijkste punten. Staat de kern niet bovenaan? Zet je belangrijkste zin vooraan in je versie en klik op Vernieuw. Download als pdf opent het printvenster: kies daar Opslaan als pdf."),
+  h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:()=>{draw();sumPrint(final);}},final?"Download je oplevering als pdf":"Download als pdf"),h("button",{class:"btn ghost",type:"button",onclick:()=>{draw();toast("Samenvatting bijgewerkt.");}},"Vernieuw samenvatting")),
   box);
 }
 const APA1="APA 7: auteur of organisatie. (jaar, datum). Titel [soort bron]. Link. Eigen onderzoek, bijv.: Groenbak. (2026, 3 oktober). Interviews met vier klanten over kweken op het balkon [Ongepubliceerde interviews]. Website, bijv.: Google. (2026). Google Trends: zoekterm moestuin balkon. https://trends.google.nl";
@@ -2664,8 +2720,8 @@ function view2Oplevering(){
   head("Einde level 2","Oplevering: je huisstijlhandboek",all?"Level 2 is afgerond. Je huisstijl is de basis voor je contentkalender in level 3.":"Nog niet alle missies zijn afgerond. Je kunt je score al bekijken.",[["t-bonus",sc.total+" van 120 XP"],["t-brief","Totaal: "+(l1+sc.total)+" XP"]]),
   h("div",{class:"profile"},sk.map(([n,v,c])=>h("div",{class:"skill"},h("div",{class:"eyebrow"},n),h("div",{class:"v"},v,h("span",{style:"font-size:14px;color:var(--muted)"}," /25")),h("div",{class:"bar"},h("i",{style:"width:"+(v/25*100)+"%;background:var("+c+")"}))))),
   h("div",{class:"block",id:"hbblock"},h("h3",null,"Je huisstijlhandboek"),
-   h("p",{class:"status"},"Dit handboek maakt de game uit alles wat je in level 1 en 2 hebt ingevuld: kernwaarden, moodboard, logo, kleuren, contrast, letters, beeldstijl, tone of voice, do's en don'ts en je uiting. Klopt er iets niet of is iets leeg? Pas het aan in de missie waar het hoort, dan verandert het handboek mee. Download het, open het bestand en kies Print om er een pdf van te maken."),
-   h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:hbDownload},"Download je huisstijlhandboek"),h("span",{class:"status"},"Een HTML-bestand dat je in elke browser opent.")),
+   h("p",{class:"status"},"Dit handboek maakt de game uit alles wat je in level 1 en 2 hebt ingevuld: kernwaarden, moodboard, logo, kleuren, contrast, letters, beeldstijl, tone of voice, do's en don'ts en je uiting. Klopt er iets niet of is iets leeg? Pas het aan in de missie waar het hoort, dan verandert het handboek mee. Download als pdf opent het printvenster: kies daar Opslaan als pdf."),
+   h("div",{class:"row"},h("button",{class:"btn",type:"button",onclick:hbPrint},"Download als pdf"),h("button",{class:"btn ghost",type:"button",onclick:hbDownload},"Download als HTML-bestand")),
    hbPreview()),
   h("div",{class:"block"},h("h3",null,"Badges"),h("div",{class:"badges"},badges.map(([m,n,d,on])=>h("div",{class:"badge"+(on?" on":"")},h("span",{class:"medal"},m),h("span",null,h("strong",null,n),h("small",null,d)))))),
   h("div",{class:"block"},h("h3",null,"Scorebord level 2"),h("p",{class:"example"},"Voorbeeld: de andere studenten zijn verzonnen. In de echte versie staat hier de hele klas."),
@@ -3226,7 +3282,7 @@ function view3Oplevering(){
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Studio"),h("th",{class:"num"},"Gem. XP"))),h("tbody",null,sRows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,"Studio "+r.s),h("td",{class:"num"},r.avg)))))),
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Student"),h("th",{class:"num"},"XP"))),h("tbody",null,rows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,r.n),h("td",{class:"num"},r.tot)))))))),
   h("div",{class:"block"},h("h3",null,"Voor je portfolio"),h("p",{class:"status"},"Kopieer je contentkalender met funnel, tijdbudget, eventkaart en AI-logboek naar je portfolio. Wil je de kalender in Excel of Google Sheets? Kopieer hem als tabel en plak hem in een leeg blad (",kaartLink(3,8),")."),
-   h("div",{class:"row"},h("button",{class:"btn",onclick:()=>copy(text)},"Kopieer oplevering"),richBtn(text),h("button",{class:"btn ghost",onclick:()=>copy(calTSV())},"Kopieer kalender voor Excel of Sheets")),h("div",{class:"prompt",style:"max-height:260px;overflow:auto"},text)));
+   h("div",{class:"row"},pdfBtn(l3Pdf),h("button",{class:"btn ghost",onclick:()=>copy(text)},"Kopieer oplevering"),richBtn(text),h("button",{class:"btn ghost",onclick:()=>copy(calTSV())},"Kopieer kalender voor Excel of Sheets")),h("div",{class:"prompt",style:"max-height:260px;overflow:auto"},text)));
 }
 function viewDocent3(){
  const rows=EXAMPLE_CLASS3.concat([myRow3()]);
@@ -3800,7 +3856,7 @@ function view4Oplevering(){
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Studio"),h("th",{class:"num"},"Gem. XP"))),h("tbody",null,sRows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,"Studio "+r.s),h("td",{class:"num"},r.avg)))))),
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Student"),h("th",{class:"num"},"XP"))),h("tbody",null,rows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,r.n),h("td",{class:"num"},r.tot)))))))),
   h("div",{class:"block"},h("h3",null,"Voor je portfolio"),h("p",{class:"status"},"Kopieer de tekst van je beeldbank met beeldbriefing en AI-logboek. Zet hem samen met je beelden (zie hierboven) en je video in je portfolio."),
-   h("div",{class:"row"},h("button",{class:"btn",onclick:()=>copy(text)},"Kopieer oplevering"),richBtn(text),h("button",{class:"btn ghost",onclick:()=>copy(bbText())},"Kopieer beeldbriefing")),h("div",{class:"prompt",style:"max-height:260px;overflow:auto"},text)));
+   h("div",{class:"row"},pdfBtn(l4Pdf,"Download beeldbank als pdf"),h("button",{class:"btn ghost",onclick:()=>copy(text)},"Kopieer oplevering"),richBtn(text),h("button",{class:"btn ghost",onclick:()=>copy(bbText())},"Kopieer beeldbriefing")),h("div",{class:"prompt",style:"max-height:260px;overflow:auto"},text)));
 }
 function viewDocent4(){
  const rows=EXAMPLE_CLASS4.concat([myRow4()]);
@@ -4330,7 +4386,7 @@ function view5Oplevering(){
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Studio"),h("th",{class:"num"},"Gem. XP"))),h("tbody",null,sRows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,"Studio "+r.s),h("td",{class:"num"},r.avg)))))),
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Student"),h("th",{class:"num"},"XP"))),h("tbody",null,rows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,r.n),h("td",{class:"num"},r.tot)))))))),
   h("div",{class:"block"},h("h3",null,"Voor je portfolio"),h("p",{class:"status"},"Kopieer je productiekaarten, juryfeedback en AI-logboek naar je portfolio. Zet de uitingen zelf erbij als beeld."),
-   h("div",{class:"row"},h("button",{class:"btn",onclick:()=>copy(text)},"Kopieer oplevering"),richBtn(text)),h("div",{class:"prompt",style:"max-height:260px;overflow:auto"},text)));
+   h("div",{class:"row"},pdfBtn(l5Pdf),h("button",{class:"btn ghost",onclick:()=>copy(text)},"Kopieer oplevering"),richBtn(text)),h("div",{class:"prompt",style:"max-height:260px;overflow:auto"},text)));
 }
 function viewDocent5(){
  const rows=EXAMPLE_CLASS5.concat([myRow5()]);const fl=flags5();
@@ -4731,7 +4787,7 @@ function view6Oplevering(){
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Studio"),h("th",{class:"num"},"Gem. XP"))),h("tbody",null,sRows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,"Studio "+r.s),h("td",{class:"num"},r.avg)))))),
     h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,h("th",null,"#"),h("th",null,"Student"),h("th",{class:"num"},"Totaal-XP"))),h("tbody",null,rows.map((r,i)=>h("tr",{class:r.me?"me":null},h("td",null,i+1),h("td",null,r.n),h("td",{class:"num"},r.sz)))))))),
   h("div",{class:"block"},h("h3",null,"Voor je portfolio"),h("p",{class:"status"},"Kopieer je testrapport naar je portfolio. Het hoort bij je contentstrategie, huisstijlhandboek, contentkalender, beeldbank en campagne."),
-   h("div",{class:"row"},h("button",{class:"btn",onclick:()=>copy(text)},"Kopieer testrapport"),richBtn(text)),h("div",{class:"prompt",style:"max-height:260px;overflow:auto"},text)));
+   h("div",{class:"row"},pdfBtn(l6Pdf,"Download testrapport als pdf"),h("button",{class:"btn ghost",onclick:()=>copy(text)},"Kopieer testrapport"),richBtn(text)),h("div",{class:"prompt",style:"max-height:260px;overflow:auto"},text)));
 }
 /* Docent zet de live-ronde terug: student gaat naar de live-ronde, de analysekeuzes en AI-conclusie worden leeg (ze hoorden bij de oude cijfers),
    ingevulde voorspellingen blijven staan en zijn niet meer aan te passen. */
