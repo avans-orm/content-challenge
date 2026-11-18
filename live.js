@@ -67,7 +67,7 @@
     }
     renderPost();
     show(el("h1", null, "Inloggen"), note ? el("p", { class: "ccnote" }, note) : null,
-      el("p", { class: "ccsmall" }, "Log in met het e-mailadres waarop je docent je heeft uitgenodigd."),
+      el("p", { class: "ccsmall" }, "Log in met het e-mailadres waarop je docent je heeft uitgenodigd. Eerste keer? ", el("a", { href: "quickstart.html", target: "_blank", rel: "noopener" }, "Bekijk de quick start"), "."),
       form,
       el("div", { class: "ccsep" }, el("p", null, el("strong", null, "Eerste keer, of wachtwoord vergeten? "), "Dan krijg je een link per mail. Daarna kies je een (nieuw) wachtwoord."), el("div", { class: "ccrow" }, linkBtn, CC.mode === "demo" ? null : el("button", { class: "btn ghost", type: "button", onclick: () => { codeBox.hidden = false; (email.value ? code : email).focus(); } }, "Ik heb een code uit de mail")), m2, codeBox),
       CC.mode === "demo" ? post : null,

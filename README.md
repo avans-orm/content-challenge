@@ -16,6 +16,7 @@ De game met echte logins. Docenten nodigen studenten uit per e-mail, alles wat s
 | `supabase/studio.sql` | Studio's vullen automatisch per 4 (de database telt mee). Eén keer draaien, na `setup.sql`. Verplaatsen kan in het dashboard. |
 | `supabase/noodplan.sql` | Schakelaar voor het noodplan (tabel `instellingen`). Eén keer draaien; zit ook in `setup.sql`. |
 | `noodplan.html`, `noodplan.pdf` | Noodkaarten L1-L6 voor als de game vastloopt. Werkt zonder inloggen. |
+| `quickstart.html`, `quickstart.pdf` | Quick start voor studenten: aanmelden, wachtwoord, profiel en studio. Werkt zonder inloggen. |
 | `supabase/mail-*.html` | Teksten voor de uitnodigings- en inlogmail. |
 | `tools/bouw-live.py` | Zet een nieuwe versie van het prototype om naar `index.html`. |
 | `tools/prototype.html` | De prototypeversie waar deze live versie op is gebaseerd. |
