@@ -1376,7 +1376,7 @@ function viewInhaal(){const n=INH;const k=inhFirst(n);
  if(!k){INH=0;INHD=null;S.lvl=n;KCOPEN=0;save();return null;}
  const d=inhDraft(k);const set=(x,v)=>{d[x]=v;};
  let body=[];
- if(k===1){const st=h("select",{id:"ih-studio"},h("option",{value:""},"Kies je studio"),[1,2,3,4,5,6,7,8].map(i=>h("option",{value:String(i),selected:d.studio===String(i)},"Studio "+i)));st.addEventListener("change",()=>d.studio=st.value);
+ if(k===1){const st=CCLIVE.studioVeld(d.studio,v=>{d.studio=v;if(S.p)S.p.studio=v;save();},"ih-studio");
   body=[h("div",{class:"grid2"},field("Je naam",null,inhIn("ih-naam",d.naam,v=>set("naam",v))),field("Studio",null,st)),
    field("Je (project)bedrijf of idee",null,inhIn("ih-bedrijf",d.bedrijf,v=>set("bedrijf",v),"Bijv.: Groenbak")),
    field("Korte omschrijving","Wat bied je aan?",inhIn("ih-omschr",d.omschrijving,v=>set("omschrijving",v),"",'ta')),
@@ -1689,13 +1689,12 @@ function nextBtn1(id,toId,extra){const nxt=ML().find(m=>m.id===toId);
 /* ---------- views ---------- */
 function viewProfiel(){
  const P=S.p;
- const studio=h("select",{id:"studio"},h("option",{value:""},"Kies je studio"),[1,2,3,4,5,6,7,8].map(n=>h("option",{value:String(n),selected:P.studio===String(n)},"Studio "+n)));
- studio.addEventListener("change",onInput(v=>P.studio=v));
+ const studio=CCLIVE.studioVeld(P.studio,v=>{P.studio=v;save();renderXP();renderRail();});
  const tool=h("select",{id:"tool"},["","Claude","ChatGPT","Gemini","Anders"].map(t=>h("option",{value:t,selected:P.tool===t},t||"Kies je AI-tool")));
  tool.addEventListener("change",onInput(v=>P.tool=v));
  return h("div",null,
   head("Missie 0 · Character creation · in de les","Je spelersprofiel","Jij bent de content lead van je eigen merk. AI is je junior medewerker: snel, maar je moet hem goed aansturen en controleren. Leg eerst kort vast voor wie je speelt. Je kernwaarden ontdek je in de volgende missie.",[["t-brief","Basis voor alle missies"]]),
-  h("div",{class:"grid2"},field("Je naam",null,inp("naam",P.naam,v=>P.naam=v)),field("Studio","Je docent deelt de studio's in.",studio)),
+  h("div",{class:"grid2"},field("Je naam",null,inp("naam",P.naam,v=>P.naam=v)),field("Studio","Je werkt samen in een studio van maximaal 4 studenten.",studio)),
   h("div",{class:"grid2"},field("Je (project)bedrijf of idee",null,inp("bedrijf",P.bedrijf,v=>P.bedrijf=v,"Bijv.: Groenbak")),field("AI-tool die je gebruikt","Je mag elke tool gebruiken. Wissel je, noteer het dan in je logboek.",tool)),
   field("Korte omschrijving","Wat bied je aan? Minimaal 10 tekens.",grow1(ta("omschr",P.omschrijving,v=>P.omschrijving=v,"Bijv.: Moestuinbakken op abonnement voor balkons, met zaden en een handleiding per seizoen."))),
   field("Doelgroep","Voor wie is je bedrijf? Denk aan leeftijd, situatie en wat ze willen. Minimaal 10 tekens.",grow1(ta("pdoelgroep",P.doelgroep,v=>P.doelgroep=v,"Bijv.: Jonge stadsbewoners (25 tot 35 jaar) met een balkon, die zelf groente willen kweken maar weinig ervaring hebben."))),
@@ -4789,6 +4788,8 @@ function fillDemo6(){
 }
 try{init6();}catch(e){}
 
+/* ---------- live: studio uit de database overnemen (docent kan verplaatsen) ---------- */
+(function(){const ms=CCLIVE.mijnStudio();if(ms===undefined||!S.p)return;const v=ms?String(ms):"";if(String(S.p.studio||"")!==v)S.p.studio=v;})();
 /* ---------- live: samenvatting per level voor scorebord en docentendashboard ---------- */
 CCLIVE.koppel({samenvatting(){
  const out={naam:String(S.p.naam||"").trim(),studio:S.p.studio||"",bedrijf:String(S.p.bedrijf||"").trim(),lvl:S.lvl,lv:{}};

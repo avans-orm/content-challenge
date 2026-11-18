@@ -108,19 +108,20 @@ function confirmBtn(label,yesLabel,fn,msg){const w=h("span",{class:"acts"});cons
   w.append(h("span",{class:"cq"},msg||"Zeker weten?"),y,h("button",{class:"btn small ghost",type:"button",onclick:reset},"Annuleer"));y.focus();});
  reset();return w;}
 
-let NOOD;
+let NOOD,STU;
+const STUDIOMAX=4;
 let ME=null,PROF=null,DATA=[],F={q:"",studio:"",status:"",sort:"naam",dir:1};
 
 /* ---------- gegevens ---------- */
 async function load(){
- const [inv,prof,klas,nood]=await Promise.all([CC.invites(),CC.profielen(),CC.klas(),CC.getSetting("noodplan").catch(()=>undefined)]);NOOD=nood;
+ const [inv,prof,klas,nood,stu]=await Promise.all([CC.invites(),CC.profielen(),CC.klas(),CC.getSetting("noodplan").catch(()=>undefined),CC.studioLijst().catch(()=>undefined)]);NOOD=nood;STU=stu;
  const by={};
  inv.forEach(i=>{by[i.email]={email:i.email,rol:i.rol,inv:i};});
  prof.forEach(p=>{const r=by[p.email]||(by[p.email]={email:p.email,rol:p.rol});r.prof=p;r.rol=r.inv?r.inv.rol:p.rol;});
  klas.forEach(k=>{if(!k.email)return;const r=by[k.email];if(r)r.klas=k;});
  DATA=Object.values(by).map(r=>{const s=(r.klas&&r.klas.samenvatting)||{};const lv=s.lv||{};let xp=0;
   for(let n=1;n<=6;n++){const l=lv[n];if(l&&l.x)xp+=l.x.reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);}
-  return Object.assign(r,{naam:(s.naam||"").trim(),studio:s.studio||"",bedrijf:s.bedrijf||"",lvl:s.lvl||0,lv,xp,actief:r.klas&&r.klas.bijgewerkt,
+  return Object.assign(r,{naam:(s.naam||"").trim(),studio:(STU&&r.prof?(STU[r.prof.id]?String(STU[r.prof.id]):""):(r.klas&&r.klas.studio)||s.studio||""),bedrijf:s.bedrijf||"",lvl:s.lvl||0,lv,xp,actief:r.klas&&r.klas.bijgewerkt,
    status:r.prof?"actief":r.inv&&r.inv.laatst_verstuurd?"uitgenodigd":"niet verstuurd"});});
 }
 
@@ -182,7 +183,7 @@ function viewStudents(){
   if(!L.length){body.append(h("tr",null,h("td",{colspan:"8",class:"empty"},st.length?"Geen studenten gevonden met dit filter.":"Nog geen studenten. Nodig ze hierboven uit.")));return;}
   L.forEach(r=>body.append(h("tr",null,
    h("td",null,h("strong",null,r.naam||"(nog geen naam)"),h("div",{class:"em"},r.email),r.bedrijf?h("div",{class:"em"},r.bedrijf):null),
-   h("td",null,r.studio?"Studio "+r.studio:"-"),h("td",null,statusPill(r)),
+   h("td",null,studioCel(r)),h("td",null,statusPill(r)),
    h("td",null,lvCells(r)),h("td",{class:"num"},r.prof?r.xp:"-"),h("td",null,r.prof?(r.actief?dt(r.actief):"Nog niets ingevuld"):"-"),h("td",null,actions(r)))));};
  q.addEventListener("input",()=>{F.q=q.value;fill();});fs.addEventListener("change",()=>{F.studio=fs.value;fill();});fst.addEventListener("change",()=>{F.status=fst.value;fill();});
  const sortTh=(key,label,cls)=>h("th",{class:cls||null,"aria-sort":F.sort===key?(F.dir>0?"ascending":"descending"):null},h("button",{type:"button",onclick:()=>{if(F.sort===key)F.dir*=-1;else{F.sort=key;F.dir=key==="xp"||key==="actief"?-1:1;}render();}},label+(F.sort===key?(F.dir>0?" ▲":" ▼"):"")));
@@ -204,6 +205,25 @@ function csv(){const L=filtered();const esc=v=>{v=String(v==null?"":v);return/[;
  const a=h("a",{href:URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"})),download:"content-challenge-studenten-"+new Date().toISOString().slice(0,10)+".csv"});document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);}
 
 /* ---------- noodplan ---------- */
+/* ---------- studio's ---------- */
+function studioTel(){const t={};if(STU)Object.values(STU).forEach(n=>{t[n]=(t[n]||0)+1;});return t;}
+function studioCel(r){if(!STU||!r.prof)return r.studio?"Studio "+r.studio:"-";
+ const t=studioTel();const hoog=Math.max(8,...Object.keys(t).map(Number))+1;
+ const sel=h("select",{"aria-label":"Studio van "+(r.naam||r.email),class:"stsel"},h("option",{value:""},"Geen studio"),
+  Array.from({length:Math.min(hoog,30)},(_,i)=>i+1).map(n=>h("option",{value:String(n),selected:String(r.studio)===String(n)},"Studio "+n+" ("+(t[n]||0)+"/"+STUDIOMAX+")")));
+ sel.addEventListener("change",async()=>{sel.disabled=true;const v=sel.value;
+  try{await CC.zetStudio(r.prof.id,v||null);const n=v?(studioTel()[v]||0)+(String(r.studio)===v?0:1):0;
+   toast(v?(r.naam||r.email)+" zit nu in studio "+v+(n>STUDIOMAX?". Let op: die studio heeft nu "+n+" studenten.":"."):(r.naam||r.email)+" heeft geen studio meer en kiest bij de volgende keer inloggen opnieuw.");await refresh(false);}
+  catch(e){toast(e.message);sel.disabled=false;}});
+ return sel;}
+function viewStudios(){
+ if(STU===undefined)return h("section",{class:"panel",id:"studios"},h("h2",null,"Studio's"),h("p",{class:"msg bad"},"Studio's vullen nog niet automatisch per "+STUDIOMAX+": voer eerst eenmalig supabase/studio.sql uit in Supabase (SQL Editor). Tot die tijd kiezen studenten zelf een studio."));
+ const t=studioTel();const ns=Object.keys(t).map(Number).sort((a,b)=>a-b);let open=1;while((t[open]||0)>=STUDIOMAX)open++;
+ const zonder=DATA.filter(r=>r.rol==="student"&&r.prof&&!STU[r.prof.id]).length;
+ return h("section",{class:"panel",id:"studios"},h("h2",null,"Studio's"),
+  h("p",{class:"lead"},"Studenten kiezen hun studio in het spelersprofiel. Ze zien alleen de eerste studio die nog plek heeft: maximaal "+STUDIOMAX+" per studio, daarna gaat de volgende open. Verplaatsen doe je bij Studenten hieronder, in de kolom Studio. Daar mag je ook boven de "+STUDIOMAX+" gaan."),
+  h("div",{class:"stats"},ns.map(n=>h("div",{class:"stat"},h("b",null,t[n]+"/"+STUDIOMAX),h("span",null,"Studio "+n))),
+   h("div",{class:"stat"},h("b",null,"Studio "+open),h("span",null,"staat nu open")),h("div",{class:"stat"},h("b",null,zonder),h("span",null,"ingelogd zonder studio"))));}
 function viewNood(){const aan=NOOD===true;const mist=NOOD===undefined;
  const zet=async v=>{try{await CC.setSetting("noodplan",v);NOOD=v;toast(v?"Noodplan staat aan voor alle studenten":"Noodplan staat uit");render();}catch(e){toast(e.message);}};
  return h("section",{class:"panel",id:"noodplan"},h("h2",null,"Noodplan"),
@@ -214,7 +234,7 @@ function viewNood(){const aan=NOOD===true;const mist=NOOD===undefined;
    aan?h("span",{class:"pill p-wait"},"Aan voor alle studenten"):h("span",{class:"pill p-ok"},"Uit (normale situatie)"),
    aan?h("button",{class:"btn small ghost",type:"button",onclick:()=>zet(false)},"Zet het noodplan uit"):confirmBtn("Zet het noodplan aan","Ja, zet aan voor alle studenten",()=>zet(true),"Alle studenten kunnen dan levels inhalen.")));}
 let INV=null;
-function render(){const app=$("#app");const y=window.scrollY;app.innerHTML="";INV=INV||viewInvite();app.append(INV,viewNood(),viewStudents(),viewDocenten(),
+function render(){const app=$("#app");const y=window.scrollY;app.innerHTML="";INV=INV||viewInvite();app.append(INV,viewNood(),viewStudios(),viewStudents(),viewDocenten(),
  CC.mode==="demo"?h("section",{class:"panel"},h("h2",null,"Demo-postvak"),h("p",{class:"lead"},"Demomodus: er gaan geen echte mails de deur uit. Open een link om in te loggen als die persoon. Je wordt dan in deze browser uitgelogd als docent."),h("ul",null,CC.mails().slice(0,15).map(m=>h("li",null,h("strong",null,m.soort+" voor "+m.to+": "),h("a",{href:m.link,target:"_blank"},"link"))))):null);window.scrollTo(0,y);}
 async function refresh(full){try{await load();render();}catch(e){if(full)throw e;toast(e.message);}}
 

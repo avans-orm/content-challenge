@@ -107,6 +107,16 @@ begin
   return r;
 end $$;
 
+-- Studio-indeling (maximaal 4 per studio). De functies staan in studio.sql; draai dat bestand na dit bestand.
+create table if not exists public.studio_plekken (
+  user_id uuid primary key references public.profielen(id) on delete cascade,
+  studio  int  not null check (studio between 1 and 30),
+  gekozen timestamptz not null default now(),
+  door    uuid references auth.users(id) on delete set null
+);
+alter table public.studio_plekken enable row level security;
+revoke all on public.studio_plekken from anon, authenticated;
+
 -- Scorebord en klasoverzicht: naam, studio en scores van alle studenten.
 -- Studenten zien geen e-mailadressen en geen antwoorden, alleen de samenvatting.
 create or replace function public.klas()
@@ -114,12 +124,13 @@ returns table (id uuid, naam text, studio text, samenvatting jsonb, email text, 
 language sql stable security definer set search_path = public as $$
   select p.id,
          v.samenvatting ->> 'naam',
-         v.samenvatting ->> 'studio',
+         coalesce(sp.studio::text, v.samenvatting ->> 'studio'),
          coalesce(v.samenvatting, '{}'::jsonb),
          case when public.is_docent() then p.email end,
          v.bijgewerkt
   from public.profielen p
   left join public.voortgang v on v.user_id = p.id
+  left join public.studio_plekken sp on sp.user_id = p.id
   where p.rol = 'student' and public.is_lid();
 $$;
 

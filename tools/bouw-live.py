@@ -85,8 +85,17 @@ rep('Je werk kon niet worden opgeslagen in deze browser.', 'Je werk kon niet wor
 rep('h("strong",null,"Speel dit level op hetzelfde apparaat. "),"Je voortgang staat alleen in deze browser op dit apparaat. Speel level 4 dus waar je level 1 tot en met 3 speelde. Staan',
     'h("strong",null,"Je werk staat in je account. "),"Je kunt dus op elk apparaat verder, ook op je telefoon. Staan')
 
+# 4b. Studio-indeling (studio.sql): studenten zien alleen de eerste studio met plek; de database telt mee.
+rep('const studio=h("select",{id:"studio"},h("option",{value:""},"Kies je studio"),[1,2,3,4,5,6,7,8].map(n=>h("option",{value:String(n),selected:P.studio===String(n)},"Studio "+n)));\n studio.addEventListener("change",onInput(v=>P.studio=v));',
+    'const studio=CCLIVE.studioVeld(P.studio,v=>{P.studio=v;save();renderXP();renderRail();});')
+rep('field("Studio","Je docent deelt de studio\'s in.",studio)', 'field("Studio","Je werkt samen in een studio van maximaal 4 studenten.",studio)')
+rep('const st=h("select",{id:"ih-studio"},h("option",{value:""},"Kies je studio"),[1,2,3,4,5,6,7,8].map(i=>h("option",{value:String(i),selected:d.studio===String(i)},"Studio "+i)));st.addEventListener("change",()=>d.studio=st.value);',
+    'const st=CCLIVE.studioVeld(d.studio,v=>{d.studio=v;if(S.p)S.p.studio=v;save();},"ih-studio");')
+
 # 5. Samenvatting voor scorebord en dashboard (draait binnen de game, dus met toegang tot de scorefuncties).
 hook = r'''
+/* ---------- live: studio uit de database overnemen (docent kan verplaatsen) ---------- */
+(function(){const ms=CCLIVE.mijnStudio();if(ms===undefined||!S.p)return;const v=ms?String(ms):"";if(String(S.p.studio||"")!==v)S.p.studio=v;})();
 /* ---------- live: samenvatting per level voor scorebord en docentendashboard ---------- */
 CCLIVE.koppel({samenvatting(){
  const out={naam:String(S.p.naam||"").trim(),studio:S.p.studio||"",bedrijf:String(S.p.bedrijf||"").trim(),lvl:S.lvl,lv:{}};

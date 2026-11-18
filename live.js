@@ -220,6 +220,9 @@
   const KLAS = { 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] }; let KLAST = null;
   /* Noodplan: staat de inhaal-invoer aan? Een docent zet hem aan in het dashboard. */
   let NOOD = false;
+  /* Studio-indeling: { studio, open, vrij, max } voor een student, undefined als studio.sql nog niet gedraaid is (dan vrije keuze). */
+  let STUDIO;
+  async function loadStudio() { if (ROL !== "student" || READONLY) { STUDIO = undefined; return; } try { STUDIO = await CC.mijnStudio(); } catch (e) { STUDIO = undefined; } }
   async function loadNood() { try { NOOD = (await CC.getSetting("noodplan")) === true; } catch (e) { NOOD = false; } }
   async function loadKlas() {
     try {
@@ -228,12 +231,12 @@
         const arr = KLAS[n]; arr.length = 0;
         rows.forEach(r => {
           if (r.id === OWNER) return; const s = r.samenvatting || {}; const lv = s.lv && s.lv[n]; if (!lv) return;
-          arr.push(Object.assign({ x: [0, 0, 0, 0], b: 0, st: "-" }, lv, { n: (s.naam || "").trim() || (r.email ? r.email.split("@")[0] : "Student zonder naam"), s: Number(s.studio) || 1, uid: r.id, email: r.email || "" }));
+          arr.push(Object.assign({ x: [0, 0, 0, 0], b: 0, st: "-" }, lv, { n: (s.naam || "").trim() || (r.email ? r.email.split("@")[0] : "Student zonder naam"), s: Number(r.studio || s.studio) || 1, uid: r.id, email: r.email || "" }));
         });
       }
     } catch (e) { /* scorebord blijft zoals het was */ }
   }
-  setInterval(() => { if (document.visibilityState === "visible" && OWNER) { loadKlas(); loadNood(); } }, 60000);
+  setInterval(() => { if (document.visibilityState === "visible" && OWNER) { loadKlas(); loadNood(); if (STUDIO && !STUDIO.studio) loadStudio(); } }, 60000);
   const tijd = () => KLAST ? KLAST.toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" }) : "-";
 
   window.CCLIVE = {
@@ -251,6 +254,35 @@
       return el("p", { class: "example" }, "De hele klas, stand van " + tijd() + ".");
     },
     schrijfToe() { ALLOW = 2; },
+    /* undefined: geen studio-indeling actief; null: student heeft nog geen studio; anders het studionummer. */
+    mijnStudio: () => STUDIO === undefined ? undefined : (STUDIO && STUDIO.studio) || null,
+    /* Het studioveld in het spelersprofiel. Met studio-indeling ziet een student alleen de eerste studio met plek. */
+    studioVeld(cur, set, id) {
+      id = id || "studio";
+      if (STUDIO === undefined) {
+        const sel = el("select", { id }, el("option", { value: "" }, "Kies je studio"), [1, 2, 3, 4, 5, 6, 7, 8].map(n => el("option", { value: String(n), selected: String(cur) === String(n) }, "Studio " + n)));
+        sel.addEventListener("change", () => set(sel.value)); return sel;
+      }
+      const vast = n => el("div", { id, class: "ccstudio", tabindex: "-1" }, el("strong", null, "Studio " + n), el("span", { class: "ccsmall" }, "Wisselen? Vraag het je docent."));
+      if (STUDIO.studio) return vast(STUDIO.studio);
+      const box = el("div", { class: "ccstudiokies" });
+      const teken = () => {
+        box.innerHTML = "";
+        if (!STUDIO.open) { box.append(el("p", { class: "ccsmall" }, "Alle studio's zijn vol. Vraag je docent om je in te delen.")); return; }
+        const vrij = STUDIO.vrij == null ? STUDIO.max : STUDIO.vrij;
+        const sel = el("select", { id }, el("option", { value: "" }, "Kies je studio"), el("option", { value: String(STUDIO.open) }, "Studio " + STUDIO.open + " (nog " + vrij + (vrij === 1 ? " plek" : " plekken") + ")"));
+        sel.addEventListener("change", async () => {
+          if (!sel.value) return; const wilde = Number(sel.value); sel.disabled = true;
+          try {
+            const n = await CC.kiesStudio(); STUDIO.studio = n; set(String(n));
+            const v = vast(n); box.replaceWith(v); v.focus();
+            toastMsg(n === wilde ? "Je zit in studio " + n + "." : "Studio " + wilde + " was net vol. Je zit in studio " + n + ".");
+          } catch (e) { toastMsg((e && e.message) || "Kiezen lukte niet. Probeer het opnieuw."); await loadStudio(); if (STUDIO && STUDIO.studio) { set(String(STUDIO.studio)); box.replaceWith(vast(STUDIO.studio)); } else teken(); }
+        });
+        box.append(sel, el("p", { class: "ccsmall" }, "Studio's vullen op volgorde: maximaal " + (STUDIO.max || 4) + " per studio. Is deze vol, dan gaat de volgende open."));
+      };
+      teken(); return box;
+    },
     koppel(h) { HOOKS = h || {}; },
     maxOpslag: CC.maxOpslag
   };
@@ -311,6 +343,7 @@
       await loadOwner(OWNER);
       await loadKlas();
       await loadNood();
+      await loadStudio();
       gate().hidden = true; document.body.classList.remove("cc-wait");
       runGame();
       topBar(prof, viewName || "deze student");
