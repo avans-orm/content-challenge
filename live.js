@@ -176,7 +176,16 @@
   }
   /* Vaste volgorde van sleutels, zodat "niets veranderd" herkend wordt (de database sorteert de sleutels anders). */
   function canon(v) { if (Array.isArray(v)) return "[" + v.map(canon).join(",") + "]"; if (v && typeof v === "object") return "{" + Object.keys(v).sort().map(k => JSON.stringify(k) + ":" + canon(v[k])).join(",") + "}"; return JSON.stringify(v); }
-  let LASTC = "";
+  let LASTC = "", SAMV = 0;
+  /* Eenmalig: oude samenvattingen (zonder missietellers) bijwerken voor het docentendashboard.
+     Schrijft alleen de samenvatting, nooit het werk zelf, en alleen als er niets anders wordt opgeslagen. */
+  function samenvattingBijwerken() {
+    if (READONLY || SAMV >= 2 || !VERSIE || !HOOKS.samenvatting) return;
+    if (ST.pending != null || ST.saving || ST.conflict) return;   /* een gewone opslag neemt de nieuwe samenvatting al mee */
+    let sam; try { sam = HOOKS.samenvatting(); } catch (e) { return; }
+    if (!sam || sam.v !== 2) return;
+    SAMV = 2; CC.saveSamenvatting(OWNER, sam, VERSIE).catch(() => { });
+  }
   function unsaved() { return ST.pending != null || ST.saving || ST.imgs.size > 0; }
   window.addEventListener("beforeunload", e => { if (!READONLY && unsaved()) { flush(); e.preventDefault(); e.returnValue = ""; } });
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden" && ST.pending != null) flush(); });
@@ -298,7 +307,7 @@
 
   /* ---------- opstarten ---------- */
   async function loadOwner(uid) {
-    const st = await CC.loadState(uid); VERSIE = st.versie || 0;
+    const st = await CC.loadState(uid); VERSIE = st.versie || 0; SAMV = (st.samenvatting && st.samenvatting.v) || 0;
     let json = st.state && Object.keys(st.state).length ? JSON.stringify(st.state) : null;
     if (!READONLY) {
       let b = null; try { b = JSON.parse(localStorage.getItem("cc-backup-" + uid) || "null"); } catch (e) { }
@@ -348,6 +357,7 @@
       runGame();
       topBar(prof, viewName || "deze student");
       if (ST.pending != null) flush();
+      setTimeout(samenvattingBijwerken, 4000);
     } catch (e) {
       started = false; viewError((e && e.message) || "Onbekende fout");
     }

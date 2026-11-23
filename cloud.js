@@ -88,9 +88,17 @@
         return data && data.id ? data : null;
       },
       async loadState(uid) {
-        const { data, error } = await sb.from("voortgang").select("state,versie,bijgewerkt").eq("user_id", uid).maybeSingle();
+        const { data, error } = await sb.from("voortgang").select("state,samenvatting,versie,bijgewerkt").eq("user_id", uid).maybeSingle();
         if (error) throw nl(error);
-        return data ? { state: data.state, versie: data.versie, bijgewerkt: data.bijgewerkt } : { state: null, versie: 0 };
+        return data ? { state: data.state, samenvatting: data.samenvatting, versie: data.versie, bijgewerkt: data.bijgewerkt } : { state: null, versie: 0 };
+      },
+      /* Alleen de samenvatting bijwerken (voor het dashboard). Het werk zelf (state) en de versie blijven ongemoeid;
+         is de rij intussen gewijzigd, dan gebeurt er niets. */
+      async saveSamenvatting(uid, sam, versie) {
+        if (!versie) return { ok: false };
+        const { data, error } = await sb.from("voortgang").update({ samenvatting: sam }).eq("user_id", uid).eq("versie", versie).select("versie");
+        if (error) throw nl(error);
+        return { ok: !!(data && data.length) };
       },
       /* Opslaan met versiecontrole: is de rij intussen door een ander tabblad of apparaat gewijzigd, dan conflict. */
       async saveState(uid, state, sam, versie, force) {
@@ -234,7 +242,8 @@
         let p = db.prof[u.id]; if (!p) p = db.prof[u.id] = { id: u.id, email: u.email, rol: inv.rol, wachtwoord_gezet: !!u.pw, aangemaakt: new Date().toISOString() };
         p.rol = inv.rol; if (!inv.geaccepteerd_op) inv.geaccepteerd_op = new Date().toISOString(); put(); return Object.assign({}, p);
       },
-      async loadState(id) { await wait(); const v = db.vg[id]; return v ? { state: v.state, versie: v.versie, bijgewerkt: v.bijgewerkt } : { state: null, versie: 0 }; },
+      async loadState(id) { await wait(); const v = db.vg[id]; return v ? { state: v.state, samenvatting: v.samenvatting, versie: v.versie, bijgewerkt: v.bijgewerkt } : { state: null, versie: 0 }; },
+      async saveSamenvatting(id, sam, versie) { await wait(); db = load() || db; const v = db.vg[id]; if (!v || v.versie !== versie) return { ok: false }; v.samenvatting = sam; put(); return { ok: true }; },
       async saveState(id, state, sam, versie, force) {
         await wait(); db = load() || db; const v = db.vg[id];
         if (!force && (v ? v.versie : 0) !== (versie || 0)) return { conflict: true };
