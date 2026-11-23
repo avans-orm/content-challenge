@@ -75,6 +75,41 @@ td .em{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
 .lv span.bezig{border-color:var(--gold);color:var(--gold)}
 .lv span.inh{border-color:#3CE6E0;color:#3CE6E0}
 .acts{display:flex;gap:6px;flex-wrap:wrap}
+select.stsel{min-width:130px}
+.vg{display:flex;flex-direction:column;gap:4px;min-width:260px}
+.vgl{display:flex;justify-content:space-between;gap:10px;font-size:13px}
+.vgl b{font-weight:800}.vgl .pc{font-family:"JetBrains Mono",monospace;color:var(--muted)}
+.bar{display:flex;gap:3px;height:12px}
+.seg{position:relative;background:#2A1E4D;border-radius:4px;overflow:hidden}
+.seg i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--pink),var(--orange))}
+.seg.klaar i{background:linear-gradient(90deg,#1fae76,var(--good))}
+.seg.inh i{background:var(--cyan)}
+.seg.nu{outline:1.5px solid var(--gold);outline-offset:1px}
+.ticks{display:flex;gap:3px;font:10px "JetBrains Mono",monospace;color:var(--muted)}
+.ticks span{text-align:center}
+.xpnow{font-family:"JetBrains Mono",monospace;white-space:nowrap}.xpnow b{font-size:15px;color:var(--orange)}
+.tog{background:none;border:0;cursor:pointer;color:var(--pink);font:700 18px/1 "JetBrains Mono",monospace;padding:4px 6px;border-radius:6px;transition:transform .15s}
+.tog[aria-expanded="true"]{transform:rotate(90deg)}
+@media (prefers-reduced-motion:reduce){.tog{transition:none}}
+tr.det td{background:#160E2E;padding:14px 16px}
+.detgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 22px}
+@media (max-width:900px){.detgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.lvdet{display:flex;flex-direction:column;gap:5px;min-width:0}
+.lvdet h3{font:12px "JetBrains Mono",monospace;letter-spacing:.04em;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.lvdet h3 b{color:var(--ink)}
+.dots{display:flex;flex-wrap:wrap;gap:4px}
+.dot{font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.dot.d{background:#12352A;border-color:#1f6b4d;color:var(--good)}
+.dot.c{border-color:var(--gold);color:var(--gold);font-weight:700}
+.dot.inh{border-color:var(--cyan);color:var(--cyan)}
+.dist{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;align-items:end;margin:0 0 16px;border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.02)}
+.dist h3{grid-column:1/-1;font-size:13px;margin-bottom:4px}
+.dist div{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
+.dist .col{width:100%;background:linear-gradient(180deg,var(--pink),#7a2e8f);border-radius:6px 6px 2px 2px;min-height:3px}
+.dist .col.done{background:linear-gradient(180deg,var(--good),#1a6b4b)}
+.dist b{font-family:"JetBrains Mono",monospace;color:var(--ink);font-size:14px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);margin-top:10px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c)}
 .cq{font-size:13px;color:#FFD0D8}
 .empty{padding:24px;text-align:center;color:var(--muted)}
 .gate{max-width:480px;margin:60px auto;text-align:left}
@@ -121,7 +156,7 @@ async function load(){
  klas.forEach(k=>{if(!k.email)return;const r=by[k.email];if(r)r.klas=k;});
  DATA=Object.values(by).map(r=>{const s=(r.klas&&r.klas.samenvatting)||{};const lv=s.lv||{};let xp=0;
   for(let n=1;n<=6;n++){const l=lv[n];if(l&&l.x)xp+=l.x.reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);}
-  return Object.assign(r,{naam:(s.naam||"").trim(),studio:(STU&&r.prof?(STU[r.prof.id]?String(STU[r.prof.id]):""):(r.klas&&r.klas.studio)||s.studio||""),bedrijf:s.bedrijf||"",lvl:s.lvl||0,lv,xp,actief:r.klas&&r.klas.bijgewerkt,
+  return Object.assign(r,{vg:voortgang(s),naam:(s.naam||"").trim(),studio:(STU&&r.prof?(STU[r.prof.id]?String(STU[r.prof.id]):""):(r.klas&&r.klas.studio)||s.studio||""),bedrijf:s.bedrijf||"",lvl:s.lvl||0,lv,xp,actief:r.klas&&r.klas.bijgewerkt,
    status:r.prof?"actief":r.inv&&r.inv.laatst_verstuurd?"uitgenodigd":"niet verstuurd"});});
 }
 
@@ -159,8 +194,42 @@ function viewInvite(){
 }
 
 /* ---------- overzicht ---------- */
-function lvCells(r){return h("div",{class:"lv"},[1,2,3,4,5,6].map(n=>{const l=r.lv[n];if(!l||l.open===false)return h("span",{title:"Level "+n+": nog niet open"},"·");
- const xp=(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);return h("span",{class:l.klaar?"klaar":l.inh?"inh":"bezig",title:"Level "+n+": "+(l.st||"")+" · "+xp+" XP"},l.klaar?"✓"+xp:l.inh?"↺"+xp:String(xp));}));}
+/* ---------- voortgang per missie ---------- */
+/* Reserve als een student de game nog niet opnieuw heeft geopend: dan staat er nog geen missielijst in de samenvatting
+   en schatten we de stand uit de missie waar de student mee bezig is. Volgorde zoals in het missiemenu van de game. */
+const STAPPEN=[null,
+ ["Spelersprofiel","Kennischeck","Kernwaarden en moodboard","Briefing-duel","Strategiemodel","Bronnenlogboek","Bug hunt","Keuzemoment","Oplevering"],
+ ["Kennischeck","Brand-detective","Startpunt","Pressure cooker","Huisstijlcheck","Bronnenlogboek","Ontwerpfouten-jacht","Tone of voice","Oplevering"],
+ ["Kennischeck","Startpunt","Funnel terugrekenen","AI-kalender","Tijdbudget","KPI-bronnen","Kalender-bug hunt","Eventkaart","Oplevering"],
+ ["Kennischeck","Startpunt","Fotoshoot met je mobiel","Video met je mobiel","Echt of AI?","Bewerken met AI","Recht en ethiek","Keuzemoment","Oplevering"],
+ ["Kennischeck","Echt of AI?","Startpunt","Productie: de eerste 3","Juryronde","Eindbaas-quiz","Alle 12 uitingen","Claimcheck","Keuzemoment","Oplevering"],
+ ["Kennischeck","Testplan","Live-ronde","Analyse","Benchmark","Eindadvies","Challenge voltooid"]];
+const lvXP=l=>l?(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0):0;
+function voortgang(s){const lv=s.lv||{};const out={lv:[null],klaar:0,tot:0,schat:false,nu:0};
+ for(let n=1;n<=6;n++){const l=lv[n];let mi=l&&Array.isArray(l.mi)&&l.mi.length?l.mi.map(m=>[String(m[0]||""),m[1]?1:0]):null;
+  const st=!l||l.open===false?"dicht":l.klaar?"klaar":l.inh?"inh":"bezig";
+  if(!mi){mi=STAPPEN[n].map(t=>[t,0]);
+   if(st==="klaar"||st==="inh")mi.forEach(m=>m[1]=1);
+   else if(st==="bezig"){const cur=String(l.st||"").replace(/^Bezig:\s*/,"");const i=mi.findIndex(m=>m[0]===cur);if(i>0){mi.forEach((m,j)=>{if(j<i)m[1]=1;});}out.schat=true;}}
+  else if(st==="inh")mi.forEach(m=>m[1]=1);
+  const d=mi.filter(m=>m[1]).length;
+  out.lv.push({n,mi,d,t:mi.length,st,xp:lvXP(l),cur:st==="bezig"?String((l&&l.st)||"").replace(/^Bezig:\s*/,""):""});
+  out.klaar+=d;out.tot+=mi.length;}
+ const open=out.lv.filter(x=>x&&x.st!=="dicht");
+ out.nu=Number(s.lvl)||0;if(!out.nu||!out.lv[out.nu]||out.lv[out.nu].st==="dicht")out.nu=open.length?open[open.length-1].n:1;
+ out.voltooid=!!(lv[6]&&lv[6].klaar);out.pct=out.tot?Math.round(out.klaar/out.tot*100):0;return out;}
+function vgBalk(r){const v=r.vg;if(!r.prof)return h("span",{class:"small"},"-");
+ if(!r.actief)return h("span",{class:"small"},"Nog niet begonnen");
+ const L=v.lv[v.nu];
+ const lab=h("div",{class:"vgl"},h("span",null,v.voltooid?h("b",{style:"color:var(--good)"},"Challenge voltooid"):[h("b",null,"Level "+v.nu),h("span",{style:"font-family:'JetBrains Mono',monospace"}," · "+(v.schat?"±":"")+L.d+"/"+L.t),L.cur?h("span",{class:"small"}," · "+L.cur):L.st==="klaar"?h("span",{class:"small"}," · opgeleverd"):L.st==="inh"?h("span",{class:"small"}," · ingehaald"):null]),h("span",{class:"pc"},v.pct+"%"));
+ const bar=h("div",{class:"bar",role:"img","aria-label":(r.naam||r.email)+": "+v.klaar+" van "+v.tot+" missies afgerond"},v.lv.slice(1).map(x=>{const sg=h("div",{class:"seg "+(x.st==="klaar"?"klaar":x.st==="inh"?"inh":x.n===v.nu?"nu":""),style:"flex:"+x.t,title:"Level "+x.n+": "+x.d+"/"+x.t+" missies · "+x.xp+" XP"+(x.st==="inh"?" (ingehaald via noodplan)":"")});sg.append(h("i",{style:"width:"+(x.t?Math.round(x.d/x.t*100):0)+"%"}));return sg;}));
+ return h("div",{class:"vg",title:v.schat?"Schatting: precies zodra de student de game weer opent":null},lab,bar,h("div",{class:"ticks","aria-hidden":"true"},v.lv.slice(1).map(x=>h("span",{style:"flex:"+x.t},"L"+x.n))));}
+function vgDetail(r){const v=r.vg;
+ return h("div",null,h("div",{class:"detgrid"},v.lv.slice(1).map(x=>h("div",{class:"lvdet"},
+  h("h3",null,h("span",null,"LEVEL "+x.n+(x.st==="inh"?" · INGEHAALD":x.st==="dicht"?" · NOG DICHT":"")),h("b",null,x.d+"/"+x.t+(x.st!=="dicht"?" · "+x.xp+" XP":""))),
+  h("div",{class:"dots"},(()=>{let c=x.st==="bezig"?x.mi.findIndex(m=>m[0]===x.cur):-1;if(c<0&&x.st==="bezig")c=x.mi.findIndex(m=>!m[1]);return x.mi.map((m,j)=>h("span",{class:"dot "+(x.st==="inh"?"inh":m[1]?"d":j===c?"c":"")},(m[1]&&x.st!=="inh"?"✓ ":"")+m[0]));})())))),
+  v.schat?h("p",{class:"small",style:"margin:10px 0 0"},"Dit is een schatting op basis van de missie waar de student mee bezig is. Zodra de student de game weer opent, staat hier precies welke missies af zijn."):null);}
+const OPEN=new Set();
 function statusPill(r){return r.status==="actief"?h("span",{class:"pill p-ok"},"Actief"):r.status==="uitgenodigd"?h("span",{class:"pill p-wait",title:"Laatst verstuurd: "+dt(r.inv.laatst_verstuurd)},"Uitgenodigd"):h("span",{class:"pill p-no"},"Mail niet verstuurd");}
 function actions(r){const own=r.email===(ME&&ME.email);
  return h("div",{class:"acts"},
@@ -169,7 +238,7 @@ function actions(r){const own=r.email===(ME&&ME.email);
   own?h("span",{class:"small"},"Jij"):confirmBtn("Verwijder","Ja, verwijder",async()=>{await CC.verwijder(r.email,r.prof&&r.prof.id);toast(r.email+" is verwijderd");await refresh(false);},r.prof&&r.rol==="student"?"Account en al het werk wissen?":"Verwijderen?"));}
 function filtered(){const q=F.q.trim().toLowerCase();
  let L=DATA.filter(r=>r.rol==="student").filter(r=>(!q||(r.naam+" "+r.email+" "+r.bedrijf).toLowerCase().includes(q))&&(!F.studio||String(r.studio)===F.studio)&&(!F.status||r.status===F.status));
- const k={naam:r=>(r.naam||"~"+r.email).toLowerCase(),studio:r=>Number(r.studio)||99,xp:r=>r.xp,actief:r=>r.actief||"",status:r=>r.status}[F.sort];
+ const k={naam:r=>(r.naam||"~"+r.email).toLowerCase(),studio:r=>Number(r.studio)||99,xp:r=>r.xp,vg:r=>r.prof&&r.actief?r.vg.klaar/(r.vg.tot||1):-1,nu:r=>r.prof&&r.actief?r.vg.lv[r.vg.nu].xp:-1,actief:r=>r.actief||"",status:r=>r.status}[F.sort];
  L.sort((a,b)=>{const x=k(a),y=k(b);return(x<y?-1:x>y?1:0)*F.dir;});return L;}
 function viewStudents(){
  const st=DATA.filter(r=>r.rol==="student");const actief=st.filter(r=>r.prof).length;
@@ -180,27 +249,37 @@ function viewStudents(){
  const fst=h("select",{"aria-label":"Status"},h("option",{value:""},"Elke status"),[["actief","Actief"],["uitgenodigd","Uitgenodigd"],["niet verstuurd","Mail niet verstuurd"]].map(([v,t])=>h("option",{value:v,selected:F.status===v},t)));
  const body=h("tbody");const count=h("p",{class:"small"});
  const fill=()=>{const L=filtered();body.innerHTML="";count.textContent=L.length+" van "+st.length+" studenten";
-  if(!L.length){body.append(h("tr",null,h("td",{colspan:"8",class:"empty"},st.length?"Geen studenten gevonden met dit filter.":"Nog geen studenten. Nodig ze hierboven uit.")));return;}
-  L.forEach(r=>body.append(h("tr",null,
+  if(!L.length){body.append(h("tr",null,h("td",{colspan:"9",class:"empty"},st.length?"Geen studenten gevonden met dit filter.":"Nog geen studenten. Nodig ze hierboven uit.")));return;}
+  L.forEach(r=>{const kan=!!(r.prof&&r.actief);const id="det-"+r.email.replace(/[^a-z0-9]/gi,"_");const open=kan&&OPEN.has(r.email);
+   const det=h("tr",{class:"det",id,hidden:!open},h("td",{colspan:"9"},kan?vgDetail(r):null));
+   const tog=kan?h("button",{class:"tog",type:"button","aria-expanded":String(open),"aria-controls":id,"aria-label":"Missies van "+(r.naam||r.email)+" tonen",title:"Toon de missies per level",onclick:()=>{const o=tog.getAttribute("aria-expanded")==="true";tog.setAttribute("aria-expanded",String(!o));det.hidden=o;if(o)OPEN.delete(r.email);else OPEN.add(r.email);}},"›"):null;
+   const L6=kan?r.vg.lv[r.vg.nu]:null;
+   body.append(h("tr",null,h("td",{style:"width:34px;padding-right:0"},tog),
    h("td",null,h("strong",null,r.naam||"(nog geen naam)"),h("div",{class:"em"},r.email),r.bedrijf?h("div",{class:"em"},r.bedrijf):null),
    h("td",null,studioCel(r)),h("td",null,statusPill(r)),
-   h("td",null,lvCells(r)),h("td",{class:"num"},r.prof?r.xp:"-"),h("td",null,r.prof?(r.actief?dt(r.actief):"Nog niets ingevuld"):"-"),h("td",null,actions(r)))));};
+   h("td",null,vgBalk(r)),h("td",{class:"num"},kan?[h("span",{class:"xpnow"},h("b",null,L6.xp)," XP"),h("div",{class:"em"},"level "+L6.n)]:"-"),h("td",{class:"num"},r.prof?r.xp:"-"),h("td",null,r.prof?(r.actief?dt(r.actief):"Nog niets ingevuld"):"-"),h("td",null,actions(r))),det);});};
  q.addEventListener("input",()=>{F.q=q.value;fill();});fs.addEventListener("change",()=>{F.studio=fs.value;fill();});fst.addEventListener("change",()=>{F.status=fst.value;fill();});
  const sortTh=(key,label,cls)=>h("th",{class:cls||null,"aria-sort":F.sort===key?(F.dir>0?"ascending":"descending"):null},h("button",{type:"button",onclick:()=>{if(F.sort===key)F.dir*=-1;else{F.sort=key;F.dir=key==="xp"||key==="actief"?-1:1;}render();}},label+(F.sort===key?(F.dir>0?" ▲":" ▼"):"")));
  fill();
  return h("section",{class:"panel",id:"studenten"},h("h2",null,"Studenten"),
-  h("p",{class:"lead"},"Klik op 'Bekijk werk' om de game van een student te openen, alleen om te lezen. De XP per level staat in de vakjes: groen met een vinkje is opgeleverd, blauw met ↺ is buiten de game gedaan (noodplan) en via de inhaal-invoer ingevuld."),
+  h("p",{class:"lead"},"De balk loopt van links naar rechts vol over alle 6 levels: elk blokje is een level, de lengte hangt af van het aantal missies. Klik op › voor de missies per level. Klik op 'Bekijk werk' om de game van een student te openen, alleen om te lezen."),
   h("div",{class:"stats"},h("div",{class:"stat"},h("b",null,st.length),h("span",null,"uitgenodigd")),h("div",{class:"stat"},h("b",null,actief),h("span",null,"actief (ingelogd)")),h("div",{class:"stat"},h("b",null,gem),h("span",null,"gem. XP (actief)")),h("div",{class:"stat"},h("b",null,klaar),h("span",null,"challenge voltooid"))),
+  viewDist(st),
   h("div",{class:"filters"},q,fs,fst,h("button",{class:"btn small ghost",type:"button",onclick:csv},"Download als CSV")),count,
-  h("div",{class:"tablewrap"},h("table",null,h("thead",null,h("tr",null,sortTh("naam","Student"),sortTh("studio","Studio"),sortTh("status","Status"),h("th",null,"XP per level (1 t/m 6)"),sortTh("xp","Totaal","num"),sortTh("actief","Laatst opgeslagen"),h("th",null,""))),body)));
+  h("div",{class:"tablewrap"},h("table",{style:"min-width:1120px"},h("thead",null,h("tr",null,h("th",null,""),sortTh("naam","Student"),sortTh("studio","Studio"),sortTh("status","Status"),sortTh("vg","Voortgang (level 1 t/m 6)"),sortTh("nu","Score dit level","num"),sortTh("xp","Totaal XP","num"),sortTh("actief","Laatst opgeslagen"),h("th",null,""))),body)),
+  h("div",{class:"legend"},h("span",{style:"--c:linear-gradient(90deg,#1fae76,#3CF0A0)"},"Level opgeleverd"),h("span",{style:"--c:linear-gradient(90deg,#FF5FDC,#FFA14A)"},"Bezig (gouden rand = huidig level)"),h("span",{style:"--c:#3CE6E0"},"Ingehaald via noodplan"),h("span",{style:"--c:#2A1E4D"},"Nog te doen"),h("span",{style:"--c:none"},"± = schatting tot de student de game weer opent")));
 }
+function viewDist(st){const A=st.filter(r=>r.prof&&r.actief);if(!A.length)return null;
+ const c=[0,0,0,0,0,0,0];A.forEach(r=>{if(r.vg.voltooid)c[6]++;else c[r.vg.nu-1]++;});const max=Math.max(1,...c);
+ return h("div",{class:"dist",role:"img","aria-label":"Aantal studenten per level: "+c.slice(0,6).map((n,i)=>"level "+(i+1)+": "+n).join(", ")+", voltooid: "+c[6]},h("h3",null,"Waar zit de klas?"),
+  c.map((n,i)=>h("div",null,h("b",null,n),h("span",{class:"col"+(i===6?" done":""),style:"height:"+Math.round(n/max*60)+"px"}),i===6?"Voltooid":"Level "+(i+1))));}
 function viewDocenten(){const D=DATA.filter(r=>r.rol==="docent").sort((a,b)=>a.email.localeCompare(b.email));
  return h("section",{class:"panel",id:"docenten"},h("h2",null,"Docenten ("+D.length+" van 10)"),h("p",{class:"lead"},"Docenten kunnen studenten uitnodigen, al het werk inzien en accounts verwijderen. Een docent nodig je hierboven uit met de rol Docent."),
   h("div",{class:"tablewrap"},h("table",{style:"min-width:640px"},h("thead",null,h("tr",null,h("th",null,"E-mailadres"),h("th",null,"Status"),h("th",null,"Uitgenodigd"),h("th",null,""))),
    h("tbody",null,D.map(r=>h("tr",null,h("td",null,r.email),h("td",null,r.prof?h("span",{class:"pill p-doc"},"Actief"):statusPill(r)),h("td",null,r.inv?dt(r.inv.uitgenodigd_op):"-"),h("td",null,actions(r))))))));}
 function csv(){const L=filtered();const esc=v=>{v=String(v==null?"":v);return/[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
- const head=["Naam","E-mail","Bedrijf","Studio","Status",...[1,2,3,4,5,6].flatMap(n=>["L"+n+" XP","L"+n+" status"]),"Totaal XP","Laatst opgeslagen"];
- const rows=L.map(r=>[r.naam,r.email,r.bedrijf,r.studio,r.status,...[1,2,3,4,5,6].flatMap(n=>{const l=r.lv[n];return l?[(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0),l.st||""]:["",""];}),r.xp,r.actief?new Date(r.actief).toLocaleString("nl-NL"):""]);
+ const head=["Naam","E-mail","Bedrijf","Studio","Status",...[1,2,3,4,5,6].flatMap(n=>["L"+n+" XP","L"+n+" status","L"+n+" missies"]),"Missies totaal","Totaal XP","Laatst opgeslagen"];
+ const rows=L.map(r=>[r.naam,r.email,r.bedrijf,r.studio,r.status,...[1,2,3,4,5,6].flatMap(n=>{const l=r.lv[n];const x=r.vg.lv[n];return l?[(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0),l.st||"",x.d+" van "+x.t]:["","",""];}),r.prof&&r.actief?r.vg.klaar+" van "+r.vg.tot:"",r.xp,r.actief?new Date(r.actief).toLocaleString("nl-NL"):""]);
  const txt="﻿"+[head,...rows].map(r=>r.map(esc).join(";")).join("\r\n");
  const a=h("a",{href:URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"})),download:"content-challenge-studenten-"+new Date().toISOString().slice(0,10)+".csv"});document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);}
 

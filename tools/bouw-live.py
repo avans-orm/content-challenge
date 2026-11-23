@@ -98,14 +98,18 @@ hook = r'''
 (function(){const ms=CCLIVE.mijnStudio();if(ms===undefined||!S.p)return;const v=ms?String(ms):"";if(String(S.p.studio||"")!==v)S.p.studio=v;})();
 /* ---------- live: samenvatting per level voor scorebord en docentendashboard ---------- */
 CCLIVE.koppel({samenvatting(){
- const out={naam:String(S.p.naam||"").trim(),studio:S.p.studio||"",bedrijf:String(S.p.bedrijf||"").trim(),lvl:S.lvl,lv:{}};
+ const out={v:2,naam:String(S.p.naam||"").trim(),studio:S.p.studio||"",bedrijf:String(S.p.bedrijf||"").trim(),lvl:S.lvl,lv:{}};
  const open=[null,()=>true,l2open,l3open,l4open,l5open,l6open],rows=[null,myRow,myRow2,myRow3,myRow4,myRow5,myRow6],D=[null,done,done2,done3,done4,done5,done6];
  const MS=[null,MISSIONS,MISSIONS2,MISSIONS3,MISSIONS4,MISSIONS5,MISSIONS6],cur=[null,()=>S.cur,()=>S.l2.cur,()=>S.l3.cur,()=>S.l4.cur,()=>S.l5.cur,()=>S.l6.cur];
  for(let n=1;n<=6;n++){try{
-  if(!open[n]()){out.lv[n]={x:[0,0,0,0],b:0,st:"Nog niet open",open:false};if(n===3)out.lv[n].ev="Nog niet getrokken";if(n===6)out.lv[n].sz=0;continue;}
+  /* Stappen in de volgorde van het missiemenu: missies plus de kennischeck (level 1 na het profiel, anders als eerste). Alleen lezen, niets wijzigen. */
+  const stappen=lvOpen=>{const L=MS[n].map(m=>[m.t,lvOpen&&D[n](m.id)?1:0]);
+   if(kcHas(n)){const kc=["Kennischeck",lvOpen&&(!!(S.kc&&S.kc[n]&&S.kc[n].passed)||(lvlProgress(n)&&!inh(n)))?1:0];L.splice(n===1?1:0,0,kc);}return L;};
+  if(!open[n]()){out.lv[n]={x:[0,0,0,0],b:0,st:"Nog niet open",open:false};if(n===3)out.lv[n].ev="Nog niet getrokken";if(n===6)out.lv[n].sz=0;try{out.lv[n].mi=stappen(false);}catch(e){}continue;}
   const r=rows[n]();delete r.me;delete r.n;delete r.s;r.open=true;r.klaar=!!D[n]("oplevering");
   r.st=r.klaar?(n===6?"Challenge klaar":"Oplevering klaar"):"Bezig: "+((MS[n].find(m=>m.id===cur[n]())||{}).t||"-");
   r.inh=n<6&&!r.klaar&&inh(n);if(r.inh)r.st="Ingehaald buiten de game";
+  try{r.mi=stappen(true);}catch(e){}
   out.lv[n]=r;}catch(e){out.lv[n]={x:[0,0,0,0],b:0,st:"-"};}}
  return out;}});
 '''
