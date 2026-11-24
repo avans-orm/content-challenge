@@ -14,6 +14,7 @@ De game met echte logins. Docenten nodigen studenten uit per e-mail, alles wat s
 | `vendor/supabase.js` | Supabase-bibliotheek (versie 2.117.3), lokaal zodat de site niet van een andere server afhangt. |
 | `supabase/setup.sql` | Database-opzet. Eén keer draaien in de SQL Editor van Supabase. |
 | `supabase/studio.sql` | Studio's vullen automatisch per 4 (de database telt mee). Eén keer draaien, na `setup.sql`. Verplaatsen kan in het dashboard. |
+| `supabase/testaccount.sql` | Testaccounts: een docent markeert een studentaccount in het dashboard als testaccount, dan telt het niet mee in scorebord, klasoverzicht en studio's. Het werk blijft bewaard. Eén keer draaien, na `setup.sql` en `studio.sql`. |
 | `supabase/noodplan.sql` | Schakelaar voor het noodplan (tabel `instellingen`). Eén keer draaien; zit ook in `setup.sql`. |
 | `noodplan.html`, `noodplan.pdf` | Noodkaarten L1-L6 voor als de game vastloopt. Werkt zonder inloggen. |
 | `quickstart.html`, `quickstart.pdf` | Quick start voor studenten: aanmelden, wachtwoord, profiel en studio. Werkt zonder inloggen. |

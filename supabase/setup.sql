@@ -107,7 +107,8 @@ begin
   return r;
 end $$;
 
--- Studio-indeling (maximaal 4 per studio). De functies staan in studio.sql; draai dat bestand na dit bestand.
+-- Studio-indeling (maximaal 4 per studio). De functies staan in studio.sql; draai dat bestand na dit bestand,
+-- en daarna testaccount.sql.
 create table if not exists public.studio_plekken (
   user_id uuid primary key references public.profielen(id) on delete cascade,
   studio  int  not null check (studio between 1 and 30),
@@ -117,7 +118,16 @@ create table if not exists public.studio_plekken (
 alter table public.studio_plekken enable row level security;
 revoke all on public.studio_plekken from anon, authenticated;
 
--- Scorebord en klasoverzicht: naam, studio en scores van alle studenten.
+-- Testaccounts (testaccount.sql): tellen niet mee in scorebord, klasoverzicht en studio-telling.
+create table if not exists public.testaccounts (
+  user_id uuid primary key references public.profielen(id) on delete cascade,
+  gezet   timestamptz not null default now(),
+  door    uuid references auth.users(id) on delete set null
+);
+alter table public.testaccounts enable row level security;
+revoke all on public.testaccounts from anon, authenticated;
+
+-- Scorebord en klasoverzicht: naam, studio en scores van alle studenten (zonder testaccounts).
 -- Studenten zien geen e-mailadressen en geen antwoorden, alleen de samenvatting.
 create or replace function public.klas()
 returns table (id uuid, naam text, studio text, samenvatting jsonb, email text, bijgewerkt timestamptz)
@@ -131,7 +141,8 @@ language sql stable security definer set search_path = public as $$
   from public.profielen p
   left join public.voortgang v on v.user_id = p.id
   left join public.studio_plekken sp on sp.user_id = p.id
-  where p.rol = 'student' and public.is_lid();
+  where p.rol = 'student' and public.is_lid()
+    and not exists (select 1 from public.testaccounts t where t.user_id = p.id);
 $$;
 
 -- Docent verwijdert een account of uitnodiging helemaal (ook het inlogaccount).

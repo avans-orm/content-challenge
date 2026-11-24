@@ -68,7 +68,8 @@ tr:last-child td{border-bottom:0}
 td.num,th.num{text-align:right;font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums}
 td .em{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
 .pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
-.p-ok{background:#12352A;color:var(--good)}.p-wait{background:#3A2812;color:var(--gold)}.p-no{background:#3E1724;color:#FF8FA1}.p-doc{background:#252D4F;color:var(--blue)}
+.p-ok{background:#12352A;color:var(--good)}.p-wait{background:#3A2812;color:var(--gold)}.p-no{background:#3E1724;color:#FF8FA1}.p-doc{background:#252D4F;color:var(--blue)}.p-test{background:#2E2A3D;color:#C9C2E0;margin-left:6px}
+tr.istest>td{opacity:.62}tr.istest>td:last-child{opacity:1}
 .lv{display:flex;gap:3px}
 .lv span{font-family:"JetBrains Mono",monospace;font-size:11px;min-width:30px;text-align:center;padding:2px 3px;border-radius:5px;border:1px solid var(--line);color:var(--muted)}
 .lv span.klaar{background:#12352A;border-color:#1f6b4d;color:var(--good)}
@@ -143,20 +144,21 @@ function confirmBtn(label,yesLabel,fn,msg){const w=h("span",{class:"acts"});cons
   w.append(h("span",{class:"cq"},msg||"Zeker weten?"),y,h("button",{class:"btn small ghost",type:"button",onclick:reset},"Annuleer"));y.focus();});
  reset();return w;}
 
-let NOOD,STU;
+let NOOD,STU,TEST;
 const STUDIOMAX=4;
 let ME=null,PROF=null,DATA=[],F={q:"",studio:"",status:"",sort:"naam",dir:1};
 
 /* ---------- gegevens ---------- */
 async function load(){
- const [inv,prof,klas,nood,stu]=await Promise.all([CC.invites(),CC.profielen(),CC.klas(),CC.getSetting("noodplan").catch(()=>undefined),CC.studioLijst().catch(()=>undefined)]);NOOD=nood;STU=stu;
+ const [inv,prof,klas,nood,stu,tst]=await Promise.all([CC.invites(),CC.profielen(),CC.klas(),CC.getSetting("noodplan").catch(()=>undefined),CC.studioLijst().catch(()=>undefined),CC.testKlas?CC.testKlas().catch(()=>undefined):undefined]);NOOD=nood;STU=stu;
  const by={};
  inv.forEach(i=>{by[i.email]={email:i.email,rol:i.rol,inv:i};});
  prof.forEach(p=>{const r=by[p.email]||(by[p.email]={email:p.email,rol:p.rol});r.prof=p;r.rol=r.inv?r.inv.rol:p.rol;});
- klas.forEach(k=>{if(!k.email)return;const r=by[k.email];if(r)r.klas=k;});
+ TEST=tst===undefined?undefined:new Set(tst.map(k=>k.id));
+ klas.concat(tst||[]).forEach(k=>{if(!k.email)return;const r=by[k.email];if(r)r.klas=k;});
  DATA=Object.values(by).map(r=>{const s=(r.klas&&r.klas.samenvatting)||{};const lv=s.lv||{};let xp=0;
   for(let n=1;n<=6;n++){const l=lv[n];if(l&&l.x)xp+=l.x.reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0);}
-  return Object.assign(r,{vg:voortgang(s),naam:(s.naam||"").trim(),studio:(STU&&r.prof?(STU[r.prof.id]?String(STU[r.prof.id]):""):(r.klas&&r.klas.studio)||s.studio||""),bedrijf:s.bedrijf||"",lvl:s.lvl||0,lv,xp,actief:r.klas&&r.klas.bijgewerkt,
+  return Object.assign(r,{vg:voortgang(s),naam:(s.naam||"").trim(),studio:(STU&&r.prof?(STU[r.prof.id]?String(STU[r.prof.id]):""):(r.klas&&r.klas.studio)||s.studio||""),bedrijf:s.bedrijf||"",lvl:s.lvl||0,lv,xp,actief:r.klas&&r.klas.bijgewerkt,test:!!(TEST&&r.prof&&TEST.has(r.prof.id)),
    status:r.prof?"actief":r.inv&&r.inv.laatst_verstuurd?"uitgenodigd":"niet verstuurd"});});
 }
 
@@ -235,34 +237,36 @@ function actions(r){const own=r.email===(ME&&ME.email);
  return h("div",{class:"acts"},
   r.prof&&r.rol==="student"?h("a",{class:"btn small",href:"./?bekijk="+encodeURIComponent(r.prof.id),target:"_blank",rel:"noopener"},"Bekijk werk"):null,
   !own&&r.inv?h("button",{class:"btn small ghost",type:"button",onclick:async e=>{e.target.disabled=true;try{await CC.sendInvite(r.email);toast("Mail opnieuw verstuurd naar "+r.email);await refresh(false);}catch(err){toast(err.message);e.target.disabled=false;}}},r.prof?"Stuur inloglink":"Stuur opnieuw"):null,
+  TEST&&r.prof&&r.rol==="student"?h("button",{class:"btn small ghost",type:"button",title:r.test?"Laat dit account weer meetellen in scorebord, klasoverzicht en studio's":"Haal dit account uit scorebord, klasoverzicht en studio-telling. Het werk blijft bewaard.",onclick:async e=>{e.target.disabled=true;try{await CC.zetTest(r.prof.id,!r.test);toast(r.test?(r.naam||r.email)+" telt weer mee in de ranglijst":(r.naam||r.email)+" is nu een testaccount en telt niet mee in de ranglijst");await refresh(false);}catch(err){toast(err.message);e.target.disabled=false;}}},r.test?"Weer laten meetellen":"Testaccount"):null,
   own?h("span",{class:"small"},"Jij"):confirmBtn("Verwijder","Ja, verwijder",async()=>{await CC.verwijder(r.email,r.prof&&r.prof.id);toast(r.email+" is verwijderd");await refresh(false);},r.prof&&r.rol==="student"?"Account en al het werk wissen?":"Verwijderen?"));}
 function filtered(){const q=F.q.trim().toLowerCase();
  let L=DATA.filter(r=>r.rol==="student").filter(r=>(!q||(r.naam+" "+r.email+" "+r.bedrijf).toLowerCase().includes(q))&&(!F.studio||String(r.studio)===F.studio)&&(!F.status||r.status===F.status));
  const k={naam:r=>(r.naam||"~"+r.email).toLowerCase(),studio:r=>Number(r.studio)||99,xp:r=>r.xp,vg:r=>r.prof&&r.actief?r.vg.klaar/(r.vg.tot||1):-1,nu:r=>r.prof&&r.actief?r.vg.lv[r.vg.nu].xp:-1,actief:r=>r.actief||"",status:r=>r.status}[F.sort];
  L.sort((a,b)=>{const x=k(a),y=k(b);return(x<y?-1:x>y?1:0)*F.dir;});return L;}
 function viewStudents(){
- const st=DATA.filter(r=>r.rol==="student");const actief=st.filter(r=>r.prof).length;
+ const alle=DATA.filter(r=>r.rol==="student");const st=alle.filter(r=>!r.test);const nTest=alle.length-st.length;const actief=st.filter(r=>r.prof).length;
  const klaar=st.filter(r=>r.lv[6]&&r.lv[6].klaar).length;const gem=actief?Math.round(st.filter(r=>r.prof).reduce((a,r)=>a+r.xp,0)/actief):0;
- const studios=[...new Set(st.map(r=>String(r.studio)).filter(Boolean))].sort((a,b)=>a-b);
+ const studios=[...new Set(alle.map(r=>String(r.studio)).filter(Boolean))].sort((a,b)=>a-b);
  const q=h("input",{type:"search",placeholder:"Zoek op naam, e-mail of bedrijf","aria-label":"Zoeken",value:F.q});
  const fs=h("select",{"aria-label":"Studio"},h("option",{value:""},"Alle studio's"),studios.map(s=>h("option",{value:s,selected:F.studio===s},"Studio "+s)));
  const fst=h("select",{"aria-label":"Status"},h("option",{value:""},"Elke status"),[["actief","Actief"],["uitgenodigd","Uitgenodigd"],["niet verstuurd","Mail niet verstuurd"]].map(([v,t])=>h("option",{value:v,selected:F.status===v},t)));
  const body=h("tbody");const count=h("p",{class:"small"});
- const fill=()=>{const L=filtered();body.innerHTML="";count.textContent=L.length+" van "+st.length+" studenten";
-  if(!L.length){body.append(h("tr",null,h("td",{colspan:"9",class:"empty"},st.length?"Geen studenten gevonden met dit filter.":"Nog geen studenten. Nodig ze hierboven uit.")));return;}
+ const fill=()=>{const L=filtered();body.innerHTML="";count.textContent=L.length+" van "+alle.length+" studenten"+(nTest?" (waarvan "+nTest+" testaccount"+(nTest>1?"s":"")+")":"");
+  if(!L.length){body.append(h("tr",null,h("td",{colspan:"9",class:"empty"},alle.length?"Geen studenten gevonden met dit filter.":"Nog geen studenten. Nodig ze hierboven uit.")));return;}
   L.forEach(r=>{const kan=!!(r.prof&&r.actief);const id="det-"+r.email.replace(/[^a-z0-9]/gi,"_");const open=kan&&OPEN.has(r.email);
    const det=h("tr",{class:"det",id,hidden:!open},h("td",{colspan:"9"},kan?vgDetail(r):null));
    const tog=kan?h("button",{class:"tog",type:"button","aria-expanded":String(open),"aria-controls":id,"aria-label":"Missies van "+(r.naam||r.email)+" tonen",title:"Toon de missies per level",onclick:()=>{const o=tog.getAttribute("aria-expanded")==="true";tog.setAttribute("aria-expanded",String(!o));det.hidden=o;if(o)OPEN.delete(r.email);else OPEN.add(r.email);}},"›"):null;
    const L6=kan?r.vg.lv[r.vg.nu]:null;
-   body.append(h("tr",null,h("td",{style:"width:34px;padding-right:0"},tog),
-   h("td",null,h("strong",null,r.naam||"(nog geen naam)"),h("div",{class:"em"},r.email),r.bedrijf?h("div",{class:"em"},r.bedrijf):null),
+   body.append(h("tr",{class:r.test?"istest":null},h("td",{style:"width:34px;padding-right:0"},tog),
+   h("td",null,h("strong",null,r.naam||"(nog geen naam)"),r.test?h("span",{class:"pill p-test",title:"Telt niet mee in scorebord, klasoverzicht en studio's. Het werk blijft bewaard."},"Testaccount"):null,h("div",{class:"em"},r.email),r.bedrijf?h("div",{class:"em"},r.bedrijf):null),
    h("td",null,studioCel(r)),h("td",null,statusPill(r)),
    h("td",null,vgBalk(r)),h("td",{class:"num"},kan?[h("span",{class:"xpnow"},h("b",null,L6.xp)," XP"),h("div",{class:"em"},"level "+L6.n)]:"-"),h("td",{class:"num"},r.prof?r.xp:"-"),h("td",null,r.prof?(r.actief?dt(r.actief):"Nog niets ingevuld"):"-"),h("td",null,actions(r))),det);});};
  q.addEventListener("input",()=>{F.q=q.value;fill();});fs.addEventListener("change",()=>{F.studio=fs.value;fill();});fst.addEventListener("change",()=>{F.status=fst.value;fill();});
  const sortTh=(key,label,cls)=>h("th",{class:cls||null,"aria-sort":F.sort===key?(F.dir>0?"ascending":"descending"):null},h("button",{type:"button",onclick:()=>{if(F.sort===key)F.dir*=-1;else{F.sort=key;F.dir=key==="xp"||key==="actief"?-1:1;}render();}},label+(F.sort===key?(F.dir>0?" ▲":" ▼"):"")));
  fill();
  return h("section",{class:"panel",id:"studenten"},h("h2",null,"Studenten"),
-  h("p",{class:"lead"},"De balk loopt van links naar rechts vol over alle 6 levels: elk blokje is een level, de lengte hangt af van het aantal missies. Klik op › voor de missies per level. Klik op 'Bekijk werk' om de game van een student te openen, alleen om te lezen."),
+  h("p",{class:"lead"},"De balk loopt van links naar rechts vol over alle 6 levels: elk blokje is een level, de lengte hangt af van het aantal missies. Klik op › voor de missies per level. Klik op 'Bekijk werk' om de game van een student te openen, alleen om te lezen. Is een account van jezelf of een collega om te testen? Klik op 'Testaccount': dan telt het niet mee in het scorebord, het klasoverzicht, de tellers hieronder en de studio's. Het werk blijft gewoon bewaard."),
+  TEST===undefined?h("p",{class:"msg bad"},"De knop Testaccount verschijnt zodra je eenmalig supabase/testaccount.sql hebt uitgevoerd in Supabase (SQL Editor)."):null,
   h("div",{class:"stats"},h("div",{class:"stat"},h("b",null,st.length),h("span",null,"uitgenodigd")),h("div",{class:"stat"},h("b",null,actief),h("span",null,"actief (ingelogd)")),h("div",{class:"stat"},h("b",null,gem),h("span",null,"gem. XP (actief)")),h("div",{class:"stat"},h("b",null,klaar),h("span",null,"challenge voltooid"))),
   viewDist(st),
   h("div",{class:"filters"},q,fs,fst,h("button",{class:"btn small ghost",type:"button",onclick:csv},"Download als CSV")),count,
@@ -279,13 +283,13 @@ function viewDocenten(){const D=DATA.filter(r=>r.rol==="docent").sort((a,b)=>a.e
    h("tbody",null,D.map(r=>h("tr",null,h("td",null,r.email),h("td",null,r.prof?h("span",{class:"pill p-doc"},"Actief"):statusPill(r)),h("td",null,r.inv?dt(r.inv.uitgenodigd_op):"-"),h("td",null,actions(r))))))));}
 function csv(){const L=filtered();const esc=v=>{v=String(v==null?"":v);return/[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
  const head=["Naam","E-mail","Bedrijf","Studio","Status",...[1,2,3,4,5,6].flatMap(n=>["L"+n+" XP","L"+n+" status","L"+n+" missies"]),"Missies totaal","Totaal XP","Laatst opgeslagen"];
- const rows=L.map(r=>[r.naam,r.email,r.bedrijf,r.studio,r.status,...[1,2,3,4,5,6].flatMap(n=>{const l=r.lv[n];const x=r.vg.lv[n];return l?[(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0),l.st||"",x.d+" van "+x.t]:["","",""];}),r.prof&&r.actief?r.vg.klaar+" van "+r.vg.tot:"",r.xp,r.actief?new Date(r.actief).toLocaleString("nl-NL"):""]);
+ const rows=L.map(r=>[r.naam,r.email,r.bedrijf,r.studio,r.status+(r.test?" (testaccount)":""),...[1,2,3,4,5,6].flatMap(n=>{const l=r.lv[n];const x=r.vg.lv[n];return l?[(l.x||[]).reduce((a,b)=>a+(Number(b)||0),0)+(Number(l.b)||0),l.st||"",x.d+" van "+x.t]:["","",""];}),r.prof&&r.actief?r.vg.klaar+" van "+r.vg.tot:"",r.xp,r.actief?new Date(r.actief).toLocaleString("nl-NL"):""]);
  const txt="﻿"+[head,...rows].map(r=>r.map(esc).join(";")).join("\r\n");
  const a=h("a",{href:URL.createObjectURL(new Blob([txt],{type:"text/csv;charset=utf-8"})),download:"content-challenge-studenten-"+new Date().toISOString().slice(0,10)+".csv"});document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);}
 
 /* ---------- noodplan ---------- */
 /* ---------- studio's ---------- */
-function studioTel(){const t={};if(STU)Object.values(STU).forEach(n=>{t[n]=(t[n]||0)+1;});return t;}
+function studioTel(){const t={};if(STU)Object.entries(STU).forEach(([id,n])=>{if(TEST&&TEST.has(id))return;t[n]=(t[n]||0)+1;});return t;}
 function studioCel(r){if(!STU||!r.prof)return r.studio?"Studio "+r.studio:"-";
  const t=studioTel();const hoog=Math.max(8,...Object.keys(t).map(Number))+1;
  const sel=h("select",{"aria-label":"Studio van "+(r.naam||r.email),class:"stsel"},h("option",{value:""},"Geen studio"),
@@ -298,7 +302,7 @@ function studioCel(r){if(!STU||!r.prof)return r.studio?"Studio "+r.studio:"-";
 function viewStudios(){
  if(STU===undefined)return h("section",{class:"panel",id:"studios"},h("h2",null,"Studio's"),h("p",{class:"msg bad"},"Studio's vullen nog niet automatisch per "+STUDIOMAX+": voer eerst eenmalig supabase/studio.sql uit in Supabase (SQL Editor). Tot die tijd kiezen studenten zelf een studio."));
  const t=studioTel();const ns=Object.keys(t).map(Number).sort((a,b)=>a-b);let open=1;while((t[open]||0)>=STUDIOMAX)open++;
- const zonder=DATA.filter(r=>r.rol==="student"&&r.prof&&!STU[r.prof.id]).length;
+ const zonder=DATA.filter(r=>r.rol==="student"&&r.prof&&!r.test&&!STU[r.prof.id]).length;
  return h("section",{class:"panel",id:"studios"},h("h2",null,"Studio's"),
   h("p",{class:"lead"},"Studenten kiezen hun studio in het spelersprofiel. Ze zien alleen de eerste studio die nog plek heeft: maximaal "+STUDIOMAX+" per studio, daarna gaat de volgende open. Verplaatsen doe je bij Studenten hieronder, in de kolom Studio. Daar mag je ook boven de "+STUDIOMAX+" gaan."),
   h("div",{class:"stats"},ns.map(n=>h("div",{class:"stat"},h("b",null,t[n]+"/"+STUDIOMAX),h("span",null,"Studio "+n))),

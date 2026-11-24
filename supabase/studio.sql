@@ -21,6 +21,15 @@ create table if not exists public.studio_plekken (
 alter table public.studio_plekken enable row level security;
 revoke all on public.studio_plekken from anon, authenticated;   -- alleen via de functies hieronder
 
+-- Testaccounts (testaccount.sql): tellen niet mee in scorebord, klasoverzicht en studio-telling.
+create table if not exists public.testaccounts (
+  user_id uuid primary key references public.profielen(id) on delete cascade,
+  gezet   timestamptz not null default now(),
+  door    uuid references auth.users(id) on delete set null
+);
+alter table public.testaccounts enable row level security;
+revoke all on public.testaccounts from anon, authenticated;
+
 create or replace function public.studio_max() returns int
 language sql immutable as $$ select 4 $$;
 
@@ -28,7 +37,8 @@ language sql immutable as $$ select 4 $$;
 create or replace function public.eerste_open_studio() returns int
 language sql stable security definer set search_path = public as $$
   select min(n)::int from generate_series(1, 30) n
-  where (select count(*) from public.studio_plekken s where s.studio = n) < public.studio_max();
+  where (select count(*) from public.studio_plekken s where s.studio = n
+           and not exists (select 1 from public.testaccounts t where t.user_id = s.user_id)) < public.studio_max();
 $$;
 
 -- Voor de game: mijn studio (of null) en welke studio nu open staat.
@@ -40,7 +50,8 @@ begin
   select studio into s from public.studio_plekken where user_id = auth.uid();
   o := public.eerste_open_studio();
   return jsonb_build_object('studio', s, 'open', o, 'max', public.studio_max(),
-    'vrij', public.studio_max() - (select count(*) from public.studio_plekken where studio = o));
+    'vrij', public.studio_max() - (select count(*) from public.studio_plekken sp where sp.studio = o
+              and not exists (select 1 from public.testaccounts t where t.user_id = sp.user_id)));
 end $$;
 
 -- Student neemt een plek in de eerste open studio. Heeft de student al een studio, dan blijft die.
@@ -96,7 +107,8 @@ language sql stable security definer set search_path = public as $$
   from public.profielen p
   left join public.voortgang v on v.user_id = p.id
   left join public.studio_plekken sp on sp.user_id = p.id
-  where p.rol = 'student' and public.is_lid();
+  where p.rol = 'student' and public.is_lid()
+    and not exists (select 1 from public.testaccounts t where t.user_id = p.id);
 $$;
 
 revoke execute on function public.studio_max(), public.eerste_open_studio(), public.mijn_studio(), public.studio_kies(),
