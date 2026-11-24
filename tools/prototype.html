@@ -2419,6 +2419,7 @@ function fontPick(id,list,key,label){
 }
 function brandPost(){
  const U=S.l2.uiting;const kf="'"+(S.l2.kop||"Unbounded")+"',sans-serif",tf="'"+(S.l2.tekst||"Manrope")+"',sans-serif";
+ const im=U.img?imgGet(U.img):"";if(im)return h("img",{src:im,alt:"Je uiting",style:"display:block;max-width:340px;width:100%;border-radius:14px"});
  return h("div",{class:"bpost",style:"background:"+col("licht","#FFFFFF")+";color:"+col("donker","#111111")+";border-top:8px solid "+col("prim","#5A4A8A")},
   h("div",{class:"bpost-name",style:"color:"+col("prim","#5A4A8A")+";font-family:"+tf},(S.p.bedrijf||"Jouw merk")+(U.kanaal?" · "+U.kanaal:"")),
   h("div",{class:"bpost-kop",style:"font-family:"+kf},U.kop||"Jouw kop komt hier"),
@@ -2437,7 +2438,26 @@ function brandSpec(){
 }
 function uitingAsk(){const L=S.l2;const U=L.uiting;const st=strat();const tv=tov1();
  const pal=ROLES.map(r=>r.t+" "+(normHex(L.pal[r.id])||"?")).join(", ");
- return"Maak met mijn huisstijl één "+(U.kanaal||"[kies hierboven een kanaal]")+" voor "+st.bedrijf+".\n\nMijn huisstijl:\n- Kleuren: "+pal+"\n- Lettertypen: koppen in "+(L.kop||"?")+", tekst in "+(L.tekst||"?")+"\n- Beeldstijl: "+(len(L.beeld)?L.beeld.trim():"?")+"\n- Compositie: "+(len(L.compositie)?L.compositie.trim():"?")+(tv?"\n- Tone of voice: "+tv:"")+"\n\nGeef een kop van maximaal 6 woorden, een tekst van maximaal 30 woorden in onze tone of voice, een call to action en een beschrijving van het beeld (compositie, welke kleuren uit het palet waar, wat je ziet).";}
+ return"Maak met mijn huisstijl één "+(U.kanaal||"[kies hierboven een kanaal]")+" voor "+st.bedrijf+".\n\nMijn huisstijl:\n- Kleuren: "+pal+"\n- Lettertypen: koppen in "+(L.kop||"?")+", tekst in "+(L.tekst||"?")+"\n- Beeldstijl: "+(len(L.beeld)?L.beeld.trim():"?")+"\n- Compositie: "+(len(L.compositie)?L.compositie.trim():"?")+(tv?"\n- Tone of voice: "+tv:"")+"\n\nGeef een kop van maximaal 6 woorden, een tekst van maximaal 30 woorden in onze tone of voice, een call to action en een beschrijving van het beeld (compositie, welke kleuren uit het palet waar, wat je ziet).\n\nZet je antwoord in precies dit formaat, zonder extra uitleg:\nKop: ...\nTekst: ...\nCall to action: ...\nBeeld: ...";}
+/* Haalt kop, tekst, call to action en beeld uit een geplakt AI-antwoord. Ruim: markdown, nummering, haakjes en kopjes zonder dubbele punt mogen. */
+const UPARSE=[["kop",/^(?:kop(?:tekst)?|headline|titel|header)$/],["cta",/^(?:call[\s-]*to[\s-]*action|cta|actieknop|knop(?:tekst)?)$/],["beeld",/^(?:beeld(?:beschrijving)?|beschrijving\s+(?:van\s+)?(?:het\s+)?beeld|visual|afbeelding|image|foto)$/],["tekst",/^(?:tekst|bodytekst|body(?:\s*copy)?|bodycopy|copy|caption|hoofdtekst|teksten)$/]];
+function uitParse(raw){const out={};let cur=null,gap=false;const buf={};
+ const clean=x=>x.replace(/\*\*|__/g,"").replace(/^[\s"'“”‘’„]+|[\s"'“”‘’„]+$/g,"").replace(/\s*\(\s*\d+\s*woord(?:en)?\s*\)\s*$/i,"").trim();
+ String(raw||"").replace(/\r/g,"").split("\n").forEach(line=>{
+  const m=line.match(/^\s*(?:#{1,6}\s*|>\s*|[-*•]\s+|\d+[.)]\s*)*\**_*\s*([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s-]{0,40}?)\s*(?:\([^)]*\))?\s*\**_*\s*(?:[:：]\s*\**_*\s*(.*)|\**_*\s*$)/);
+  const lab=m&&m[1].trim().toLowerCase();const hit=lab&&UPARSE.find(([k,re])=>re.test(lab));
+  if(hit&&!(m[2]===undefined&&line.trim().split(/\s+/).length>5)){cur=hit[0];gap=false;if(!buf[cur])buf[cur]=[];if(m[2]!==undefined&&m[2].trim())buf[cur].push(m[2]);return;}
+  if(cur&&line.trim()){if(/^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/.test(line)||(gap&&/^(?:wil je|zal ik|laat (?:me|het)|succes|hopelijk|ik hoop|veel plezier|als je wilt|kan ik|let op|tip:)/i.test(line.trim().replace(/^\W+/,"")))){cur=null;return;}gap=false;buf[cur].push(line.trim());}
+  else if(!line.trim())gap=true;
+  if(cur&&!line.trim()&&buf[cur].length&&cur!=="tekst"&&cur!=="beeld")cur=null;});
+ Object.keys(buf).forEach(k=>{const v=clean(buf[k].map(clean).filter(Boolean).join(k==="beeld"?"\n":" "));if(v)out[k]=v;});
+ return out;}
+function uitFill(){const U=S.l2.uiting;const f=uitParse(U.aiOut);const ks=["kop","tekst","cta","beeld"].filter(k=>f[k]);
+ if(!len(U.aiOut)){toast("Plak eerst het antwoord van de AI in het veld hierboven.");goField("uaiout");return;}
+ if(!ks.length){toast("Ik vind geen Kop, Tekst, Call to action of Beeld. Vraag de AI om het formaat uit de prompt te gebruiken, of neem het zelf over.");return;}
+ ks.forEach(k=>U[k]=f[k]);save();render();
+ const mis=["kop","tekst","cta","beeld"].filter(k=>!f[k]).map(k=>({kop:"Kop",tekst:"Tekst",cta:"Call to action",beeld:"Beeld"})[k]);
+ toast(mis.length?"Ingevuld. Niet gevonden: "+mis.join(", ")+". Vul dat zelf aan.":"Kop, tekst, call to action en beeld zijn ingevuld. Pas ze gerust aan.");}
 function wcount(id,v,max){const n=words(v);const el=h("span",{class:"wc"+(n>max?" over":""),id:id+"-wc"},n+" van maximaal "+max+" woorden"+(n>max?": maak hem korter":""));return el;}
 function view2Cooker(){
  const L=m2();const b=L.brief;const st=strat();
@@ -2451,6 +2471,10 @@ function view2Cooker(){
  const ukop=inp("ukop",U.kop,v=>{U.kop=v;refreshLive();const o=document.getElementById("ukop-wc");if(o)o.replaceWith(wcount("ukop",v,6));},"Maximaal 6 woorden");ukop._after=wcount("ukop",U.kop,6);
  const utekst=grow1(ta("utekst",U.tekst,v=>{U.tekst=v;refreshLive();const o=document.getElementById("utekst-wc");if(o)o.replaceWith(wcount("utekst",v,30));},"Maximaal 30 woorden"));utekst._after=wcount("utekst",U.tekst,30);
  const aiout=grow1(ta("aiout",L.aiOut,v=>L.aiOut=v,"Plak hier de hele output van de AI."));aiout.style.minHeight="120px";
+ if(typeof U.aiOut!=="string")U.aiOut="";if(typeof U.img!=="string")U.img="";
+ const uaiout=grow1(ta("uaiout",U.aiOut,v=>U.aiOut=v,"Plak hier het hele antwoord van de AI, bijvoorbeeld:\nKop: ...\nTekst: ...\nCall to action: ...\nBeeld: ..."));uaiout.style.minHeight="100px";
+ const ufill=confirmBtn("Vul kop, tekst, CTA en beeld in","Ja, overschrijf",uitFill,{cls:"btn small",msg:"Dit overschrijft wat je al hebt ingevuld.",ask:()=>{const f=uitParse(U.aiOut);return Object.keys(f).some(k=>len(U[k])&&U[k].trim()!==f[k]);}});
+ uaiout.addEventListener("paste",()=>setTimeout(()=>{if(!["kop","tekst","cta","beeld"].some(k=>len(U[k]))&&Object.keys(uitParse(uaiout.value)).length)uitFill();},0));
  const pull=confirmBtn("Haal kleuren uit AI-output","Ja, overschrijf mijn kleuren",pullColors,{cls:"btn small",msg:"Dit overschrijft de kleuren die je al hebt ingevuld.",ask:()=>len(L.aiOut)>0&&ROLES.some(r=>len(L.pal[r.id]))});
  const aanp=grow1(ta("aanp",L.aanp,v=>L.aanp=v,"Bijvoorbeeld: Ik nam de kleuren over, maar maakte het groen donkerder voor contrast. DM Sans verving ik door Work Sans, omdat die beter leest op een telefoon."));aanp.style.minHeight="70px";
  const acnt=h("span",{class:"status"},sentences(L.aanp)+" van minimaal 2 zinnen");aanp.addEventListener("input",()=>{acnt.textContent=sentences(aanp.value)+" van minimaal 2 zinnen";});
@@ -2471,9 +2495,13 @@ function view2Cooker(){
   h("div",{class:"block"},h("div",{class:"round-h"},h("h3",null,"Ronde 2: maak één uiting"),timer("r2")),
    field("Kanaal","Kies eerst het kanaal: de prompt hieronder past zich aan.",kanaal),
    live(()=>h("div",{class:"prompt",id:"uask"},uitingAsk())),h("div",{class:"row"},h("button",{class:"btn small ghost",type:"button",onclick:()=>copy(uitingAsk())},"Kopieer prompt")),
+   field("Plak hier het antwoord van de AI","Plak alles in één keer. De knop zet de kop, tekst, call to action en het beeld in de velden hieronder. Daarna kun je alles nog aanpassen.",uaiout),
+   h("div",{class:"row"},ufill,h("span",{class:"status"},"Werkt het best als de AI het formaat uit de prompt gebruikt.")),
    h("div",{class:"cooker-grid"},
-    h("div",{style:"display:flex;flex-direction:column;gap:12px"},field("Kop",null,ukop),field("Tekst",null,utekst),field("Call to action",null,inp("ucta",U.cta,v=>{U.cta=v;refreshLive();},"Bijvoorbeeld: Start je balkontuin")),field("Beeld","Beschrijf het beeld of plak een link naar je ontwerp in Canva of Figma.",grow1(ta("ubeeld",U.beeld,v=>U.beeld=v)))),
-    h("div",{class:"field"},h("label",null,"Voorbeeld"),live(brandPost),live(postLegend),h("span",{class:"hint"},"Een schets met jouw kleuren en letters. Je echte uiting maak je in Canva, Figma of met AI-beeld.")))),
+    h("div",{style:"display:flex;flex-direction:column;gap:12px"},field("Kop",null,ukop),field("Tekst",null,utekst),field("Call to action",null,inp("ucta",U.cta,v=>{U.cta=v;refreshLive();},"Bijvoorbeeld: Start je balkontuin")),field("Beeld","Beschrijf het beeld of plak een link naar je ontwerp in Canva of Figma.",grow1(ta("ubeeld",U.beeld,v=>U.beeld=v))),
+     h("div",{class:"field"},h("span",{class:"lbl"},"Je uiting als afbeelding (mag)"),h("span",{class:"hint"},"Heb je met AI, Canva of Figma een beeld of de hele advertentie gemaakt? Plak of upload hem hier. Hij komt in het voorbeeld en in je huisstijlhandboek."),
+      imgPicker("uimg",U.img,v=>{U.img=v;},{label:"Upload je uiting",alt:"Je uiting",empty:"Plak hier je afbeelding (Ctrl+V of Cmd+V), of sleep hem hierheen",short:true,max:1080,boxId:"uimgbox"}))),
+    h("div",{class:"field"},h("label",null,"Voorbeeld"),live(brandPost),live(()=>S.l2.uiting.img?h("span",{class:"hint"},"Dit is je eigen afbeelding. Verwijder hem om de schets met je kleuren en letters weer te zien."):postLegend()),live(()=>S.l2.uiting.img?h("span"):h("span",{class:"hint"},"Een schets met jouw kleuren en letters. Je echte uiting maak je in Canva, Figma of met AI-beeld."))))),
   nextBtn("cooker"));
 }
 function fmtR(r){return r.toFixed(1).replace(".",",")+":1";}
@@ -2644,6 +2672,7 @@ function hbDoc(forDownload){
  const schalen=SCHALEN.map(s=>{const v=T.schaal[s[0]];const i=s[2].indexOf(v);return'<div class="sch"><span class="schl">'+hbEsc(s[2][0])+'</span><span class="dots">'+s[2].map((x,j)=>'<i class="'+(j===i?"on":"")+'" title="'+hbEsc(x)+'"></i>').join("")+'</span><span class="schr">'+hbEsc(s[2][4])+'</span></div>';}).join("");
  const U=L.uiting;
  const post='<div class="post"><div class="pn">'+hbEsc(naam)+(U.kanaal?" · "+hbEsc(U.kanaal):"")+'</div><div class="pk">'+hbEsc(U.kop||"Jouw kop komt hier")+'</div><p>'+hbEsc(U.tekst||"Hier komt de tekst van je uiting.")+'</p><span class="cta">'+hbEsc(U.cta||"Call to action")+'</span></div>';
+ const uImg=U.img?imgGet(U.img):"";const postOf=uImg?'<img src="'+uImg+'" alt="Uiting" style="display:block;max-width:360px;width:100%;border-radius:14px">':post;
  const css=`*{box-sizing:border-box}body{margin:0;background:#E9E7EF;color:${dk};font-family:${tf};line-height:1.55;font-size:15px}
 .wrap{max-width:900px;margin:0 auto;padding:24px 16px 48px}
 .pg{background:${lt};border-radius:14px;padding:44px 48px;margin:0 0 20px;box-shadow:0 2px 14px rgba(0,0,0,.08);overflow:hidden}
@@ -2695,7 +2724,7 @@ footer{text-align:center;color:#6A6478;font-size:13px}
   sec_(6,"Beeldstijl",'<div class="two"><div><p class="lbl">Wat je ziet</p><p>'+hbTxt(L.beeld)+'</p></div><div><p class="lbl">Compositie</p><p>'+hbTxt(L.compositie)+'</p></div></div>'+(len(L.cc.moodAanp)?'<p class="lbl">Aangescherpt na de check met het moodboard</p><p>'+hbTxt(L.cc.moodAanp)+'</p>':""))+
   sec_(7,"Tone of voice",(dirn?'<h3>'+hbEsc(dirn.n||"Onze richting")+'</h3><p>'+hbTxt(dirn.d)+'</p>':'<p class="leeg">Nog geen richting gekozen.</p>')+'<p class="lbl">Op de vier schalen</p>'+schalen+'<p class="lbl">Zo klinken we</p><p>'+hbTxt(T.regels,"Nog geen regels.")+'</p>'+(dirn&&len(dirn.post)?'<div class="quote">'+hbTxt(dirn.post)+'</div>':""))+
   sec_(8,"Do's en don'ts",'<div class="two"><div class="dd do"><h3>Doen</h3><p>'+hbTxt(L.hb.dos)+'</p></div><div class="dd dont"><h3>Niet doen</h3><p>'+hbTxt(L.hb.donts)+'</p></div></div>')+
-  sec_(9,"Toepassing",'<div class="two"><div><p class="lbl">Waar we de huisstijl gebruiken</p><p>'+hbTxt(L.hb.toepassingen)+'</p><p class="lbl">Beeld bij deze uiting</p><p>'+hbTxt(U.beeld)+'</p></div><div>'+post+'</div></div>')+
+  sec_(9,"Toepassing",'<div class="two"><div><p class="lbl">Waar we de huisstijl gebruiken</p><p>'+hbTxt(L.hb.toepassingen)+'</p><p class="lbl">Beeld bij deze uiting</p><p>'+hbTxt(U.beeld)+'</p></div><div>'+postOf+'</div></div>')+
   '<footer>Huisstijlhandboek '+hbEsc(naam)+' · '+new Date().toLocaleDateString("nl-NL")+'</footer></div>';
  return'<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Huisstijlhandboek '+hbEsc(naam)+'</title>'+fontLink+'<style>'+css+'</style></head><body>'+body+'</body></html>';
 }
@@ -3411,7 +3440,7 @@ function imgPicker(id,cur,onset,opt){opt=opt||{};
 function thumb(id,alt){const s=imgGet(id);return s?h("img",{class:"thumb",src:s,alt:alt||""}):h("span",{class:"thumb empty"},"geen beeld");}
 function allImgIds4(L){return[...L.fotos.map(f=>f.img),L.video.still,...L.echt.map(e=>e.img),L.edit.na,L.side.img,L.edit.voor&&!/^f:|^f\d+$/.test(L.edit.voor)?L.edit.voor:""].filter(Boolean);}
 /* Opruimen: beelden in de opslag waar niets meer naar verwijst (bijv. na "Alles wissen") worden verwijderd. */
-function imgGC(){const keep=new Set(allImgIds4(S.l4));[S.kwm&&S.kwm.mood&&S.kwm.mood.img,S.l2&&S.l2.start&&S.l2.start.moodImg,S.l2&&S.l2.hb&&S.l2.hb.logoImg].forEach(x=>{if(x)keep.add(x);});Object.values((S.l5&&S.l5.uit)||{}).forEach(u=>{if(u&&typeof u.beeld==="string"&&u.beeld.startsWith("u:"))keep.add(u.beeld.slice(2));if(u&&u.adImg)keep.add(u.adImg);});
+function imgGC(){const keep=new Set(allImgIds4(S.l4));[S.kwm&&S.kwm.mood&&S.kwm.mood.img,S.l2&&S.l2.start&&S.l2.start.moodImg,S.l2&&S.l2.hb&&S.l2.hb.logoImg,S.l2&&S.l2.uiting&&S.l2.uiting.img].forEach(x=>{if(x)keep.add(x);});Object.values((S.l5&&S.l5.uit)||{}).forEach(u=>{if(u&&typeof u.beeld==="string"&&u.beeld.startsWith("u:"))keep.add(u.beeld.slice(2));if(u&&u.adImg)keep.add(u.adImg);});
  const del=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i)||"";if(k.indexOf(IMGK)===0&&!keep.has(k.slice(IMGK.length)))del.push(k);}}catch(e){}del.forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});return del.length;}
 
 /* ---------- level 4: vaste id's en migratie ---------- */
