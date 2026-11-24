@@ -111,6 +111,7 @@ textarea.tall{min-height:160px}
 .seg button[aria-pressed="true"].y{background:var(--good-soft);color:var(--good);font-weight:600}
 .seg button[aria-pressed="true"].d{background:var(--gold-soft);color:var(--warn);font-weight:600}
 .seg button[aria-pressed="true"].n{background:var(--bad-soft);color:var(--bad);font-weight:600}
+.seg.ffase{display:inline-flex;flex-wrap:wrap;margin:4px 0}.seg.ffase button{padding:8px 14px;font-size:14px}
 .gerretsen{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
 .gerretsen label{display:flex;gap:8px;align-items:flex-start;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px}
 
@@ -977,7 +978,7 @@ const EXAMPLE_CLASS3=CCLIVE.klasArr(3);
 function blank3(){return{
  cur:"start",
  start:{uren:"",datum:"",kanalen:""},
- funnel:{doel:"",aantal:"",crDo:"",crThink:"",bereik:"",plan:{See:"",Think:"",Do:"",Care:""},reflectie:"",bron:"",klein:{}},
+ funnel:{fase:"",doel:"",aantal:"",crDo:"",crThink:"",bereik:"",plan:{See:"",Think:"",Do:"",Care:""},reflectie:"",bron:"",klein:{}},
  chain:[{p:"",w:"",a:""},{p:"",w:"",a:""},{p:"",w:"",a:""}],aiOut:"",plak:"",
  rows:[],
  kosten:{},schrap:"",
@@ -2766,7 +2767,7 @@ function newId3(){return"b"+Date.now().toString(36)+Math.random().toString(36).s
 function m3(){let L=S.l3;if(!L||typeof L!=="object")L=S.l3=blank3();
  if(!L.start||typeof L.start!=="object")L.start={uren:"",datum:"",kanalen:""};
  const F=L.funnel=(L.funnel&&typeof L.funnel==="object")?L.funnel:{};
- ["doel","aantal","crDo","crThink","bereik","reflectie","bron"].forEach(k=>{if(typeof F[k]!=="string")F[k]=F[k]==null?"":String(F[k]);});
+ ["fase","doel","aantal","crDo","crThink","bereik","reflectie","bron"].forEach(k=>{if(typeof F[k]!=="string")F[k]=F[k]==null?"":String(F[k]);});
  if(!F.plan||typeof F.plan!=="object")F.plan={};if(!F.klein||typeof F.klein!=="object")F.klein={};
  if(!Array.isArray(L.chain))L.chain=[];while(L.chain.length<3)L.chain.push({p:"",w:"",a:""});
  L.chain.forEach((c,i)=>{if(!c||typeof c!=="object")c=L.chain[i]={};["p","w","a"].forEach(k=>{if(typeof c[k]!=="string")c[k]="";});});
@@ -2792,10 +2793,17 @@ function m3(){let L=S.l3;if(!L||typeof L!=="object")L=S.l3=blank3();
  return L;}
 /* lk3(id): voor vergrendelen telt een missie die ooit af was als af. */
 function lk3(id){const L=m3();return done3(id)||!!L.ooit[id];}
-function fcalc(){const F=m3().funnel;const doel=num(F.aantal),cd=num(F.crDo)/100,ct=num(F.crThink)/100,br=num(F.bereik);
- if(pctAsk("crDo")||pctAsk("crThink"))return{ok:false,ask:true};
- const ok=doel>0&&cd>0&&cd<=1&&ct>0&&ct<=1&&br>0;if(!ok)return{ok:false};
- const think=Math.ceil(doel/cd),see=Math.ceil(think/ct),uit=Math.ceil(see/br);return{ok:true,doel,think,see,uit,pw:uit/13};}
+/* fase3(): in welke funnelfase zit het doel? see = bereik, think = interesse (bezoekers, kliks), do = actie (kopen, aanmelden).
+   Oude invoer zonder keuze: wie 'Van interesse naar actie' al invulde, rekende vanaf Do. Dat blijft zo. */
+const FFASE3=[["see","Bereik (See)","Weergaven, bereik, mensen die je leren kennen"],["think","Interesse (Think)","Websitebezoekers, kliks, opslagen, volgers"],["do","Actie (Do)","Aankopen, aanmeldingen, abonnees, boekingen"]];
+function fase3(){const F=m3().funnel;if(F.fase==="see"||F.fase==="think"||F.fase==="do")return F.fase;return String(F.crDo||"").trim()?"do":"";}
+/* Welke velden horen bij de gekozen fase. */
+function fvelden3(){const f=fase3();return[["aantal","Hoeveel, in deze 3 maanden?","faant"]].concat(f==="do"?[["crDo","Van interesse naar actie (%)","fcd"]]:[],f==="do"||f==="think"?[["crThink","Van bereik naar interesse (%)","fct"]]:[],f?[["bereik","Gemiddeld bereik per uiting","fbr"]]:[]);}
+function fcalc(){const F=m3().funnel;const f=fase3();if(!f)return{ok:false,nofase:true};
+ const doel=num(F.aantal),cd=num(F.crDo)/100,ct=num(F.crThink)/100,br=num(F.bereik);
+ if((f==="do"&&pctAsk("crDo"))||(f!=="see"&&pctAsk("crThink")))return{ok:false,ask:true};
+ const ok=doel>0&&br>0&&(f!=="do"||(cd>0&&cd<=1))&&(f==="see"||(ct>0&&ct<=1));if(!ok)return{ok:false};
+ const think=f==="do"?Math.ceil(doel/cd):f==="think"?doel:0,see=f==="see"?doel:Math.ceil(think/ct),uit=Math.ceil(see/br);return{ok:true,fase:f,doel,think,see,uit,pw:uit/13};}
 /* Een percentage onder 0,5 is vaak een breuk (0,04 voor 4%). Dan vraagt de game wat je bedoelt, tot je kiest. */
 function pctAsk(k){const F=S.l3.funnel;const r=parseNum(F[k]);return r.ok&&r.v>0&&r.v<0.5&&(F.klein||{})[k]!==F[k];}
 function planSum(){const P=m3().funnel.plan;return FASEN.reduce((a,f)=>a+num(P[f.id]),0);}
@@ -3003,7 +3011,7 @@ function lc1(x){x=String(x||"");return x.charAt(0).toLowerCase()+x.slice(1);}
 function todo3(id){const L=m3();const F=L.funnel;const t=[];
  if(id==="start"){const u=parseNum(L.start.uren);if(!(num(L.start.uren)>0))t.push("veld 'Uren per week voor content': "+(u.empty?"vul een getal in":u.msg?lc1(u.msg):"vul een getal groter dan 0 in")+"@@l3uren");
   if(!/^\d{4}-\d{2}-\d{2}$/.test(L.start.datum||""))t.push("veld 'Startdatum van je kalender': kies een datum@@l3datum");if(len(L.start.kanalen)<3)t.push(tk1("Kanalen",L.start.kanalen,3,"l3kan"));}
- if(id==="funnel"){[["aantal","Hoeveel?","faant"],["crDo","Van interesse naar actie (%)","fcd"],["crThink","Van bereik naar interesse (%)","fct"],["bereik","Gemiddeld bereik per uiting","fbr"]].forEach(([k,lab,fid])=>{const r=parseNum(F[k]);
+ if(id==="funnel"){if(!fase3())t.push("kies in welke fase van de funnel je doel zit: bereik, interesse of actie@@ffase");fvelden3().forEach(([k,lab,fid])=>{const r=parseNum(F[k]);
    if(!r.ok||r.v<=0)t.push("veld '"+lab+"': "+(r.empty?"vul een getal in":r.msg?lc1(r.msg):"vul een getal groter dan 0 in")+"@@"+fid);
    else if((k==="crDo"||k==="crThink")&&r.v>100)t.push("veld '"+lab+"': een percentage is hoogstens 100 (nu "+fmtNum(r.v)+")@@"+fid);
    else if((k==="crDo"||k==="crThink")&&pctAsk(k))t.push("veld '"+lab+"': bedoel je "+fmtNum(r.v)+"% of "+fmtNum(r.v*100)+"%? Kies onder het veld@@"+fid);});
@@ -3057,23 +3065,28 @@ function pctField(id,key,ph){const F=S.l3.funnel;const el=numHint(inp(id,F[key],
 function view3Funnel(){
  const F=m3().funnel;const v=k=>(S.model.vakken[k]||{}).eigen||"";
  const ni=(id,key,ph)=>inp(id,F[key],x=>{F[key]=x;refreshLive();},ph);const nn=(id,key,ph)=>numHint(ni(id,key,ph));
- const res=live(()=>{const c=fcalc();if(!c.ok)return h("p",{class:"status"},c.ask?"Kies eerst bij je percentages wat je bedoelt.":"Vul de vier getallen in, dan rekent de game je funnel uit.");
+ const fz=fase3();
+ const res=live(()=>{const c=fcalc();if(!c.ok)return h("p",{class:"status"},c.nofase?"Kies eerst in welke fase je doel zit, dan zie je welke getallen je nodig hebt.":c.ask?"Kies eerst bij je percentages wat je bedoelt.":"Vul de getallen hierboven in, dan rekent de game je funnel uit.");
   const mx=c.see;const bar=(lab,sub,val,col)=>h("div",{class:"fbar"},h("span",{class:"fl"},h("strong",null,lab),h("small",null,sub)),h("span",{class:"ft"},h("i",{style:"width:"+Math.max(3,val/mx*100)+"%;background:var("+col+")"})),h("b",null,fmtN(val)));
-  return h("div",null,h("div",{class:"funnel"},bar("See","Bereik",c.see,"--s-brief"),bar("Think","Interesse",c.think,"--s-check"),bar("Do",F.doel||"Actie",c.doel,"--s-kies")),
-   h("div",{class:"callout"},"Om "+fmtN(c.doel)+" "+(F.doel||"conversies")+" te halen, moet je ongeveer "+fmtN(c.see)+" mensen bereiken. Met "+fmtN(num(F.bereik))+" bereik per uiting zijn dat ongeveer "+fmtN(c.uit)+" uitingen in 13 weken: "+(c.pw<10?c.pw.toFixed(1).replace(".",","):fmtN(c.pw))+" per week."+(c.uit>39?" Dat is veel. Kun je je bereik per uiting vergroten, of je doel bijstellen?":"")+(c.uit<13?" Je kalender vraagt toch minimaal 13 uitingen: één per week.":"")));});
+  return h("div",null,h("div",{class:"funnel"},bar("See",c.fase==="see"?F.doel||"Bereik":"Bereik",c.see,"--s-brief"),c.fase!=="see"?bar("Think",c.fase==="think"?F.doel||"Interesse":"Interesse",c.think,"--s-check"):null,c.fase==="do"?bar("Do",F.doel||"Actie",c.doel,"--s-kies"):null),
+   h("div",{class:"callout"},(c.fase==="see"?"Je doel is "+fmtN(c.doel)+" "+(F.doel||"bereik")+". ":"Om "+fmtN(c.doel)+" "+(F.doel||(c.fase==="think"?"bezoekers":"conversies"))+" te halen, moet je ongeveer "+fmtN(c.see)+" mensen bereiken. ")+"Met "+fmtN(num(F.bereik))+" bereik per uiting zijn dat ongeveer "+fmtN(c.uit)+" uitingen in 13 weken: "+(c.pw<10?c.pw.toFixed(1).replace(".",","):fmtN(c.pw))+" per week."+(c.uit>39?" Dat is veel. Kun je je bereik per uiting vergroten, of je doel bijstellen?":"")+(c.uit<13?" Je kalender vraagt toch minimaal 13 uitingen: één per week.":"")));});
  const plan=h("div",{class:"plan4"},FASEN.map(f=>field(f.t,f.d,numInp("pl"+f.id,F.plan[f.id],x=>{F.plan[f.id]=x;refreshLive();},"Aantal"))));
  const cnt=h("span",{class:"status"},sentences(F.reflectie)+" van minimaal 2 zinnen");
  const l1=[];if(S.p.doel)l1.push(h("div",null,"Je persoonlijke doel (level 1): ",h("strong",null,S.p.doel)));if(v("doelen"))l1.push(h("div",null,"Contentdoelen (vak 2): "+v("doelen").slice(0,220)+(v("doelen").length>220?"…":"")));
  return h("div",null,
-  head("Missie 1 · Checken · in de les","Funnel terugrekenen",["Hoeveel content heb je eigenlijk nodig? Reken terug van je doel naar het aantal uitingen. Begin bij het doel uit level 1 en werk de funnel van onder naar boven af. Het rekenvoorbeeld staat op ",kaartLink(3,3),"."],[["t-check","Checken · max 8 van 25 XP"]]),
+  head("Missie 1 · Checken · in de les","Funnel terugrekenen",["Hoeveel content heb je eigenlijk nodig? Reken terug van je doel naar het aantal uitingen. Begin bij het doel uit level 1: kies in welke fase van de funnel het zit en reken vanaf daar terug naar bereik. Het rekenvoorbeeld staat op ",kaartLink(3,3),"."],[["t-check","Checken · max 8 van 25 XP"]]),
   h("div",{class:"callout"},"Werk je met een ander funnelmodel? De fasen lopen gelijk op: See is Attention of Top, Think is Interest of Middle, Do is Action of Bottom. Uitleg staat op ",kaartLink(3,2),"."),
   h("div",{class:"block"},h("h3",null,"1. Je doel en je aannames"),
    l1.length?h("div",{class:"callout",id:"fl1doel"},...l1,h("em",null,"Halfjaardoel of jaardoel? Neem voor deze 3 maanden ongeveer de helft of een kwart.")):null,
-   h("div",{class:"grid2"},field("Wat wil je bereiken in 3 maanden?","Kies één meetbaar doel uit level 1.",ni("fdoel","doel","Bijvoorbeeld: nieuwe abonnees")),field("Hoeveel, in deze 3 maanden?",null,nn("faant","aantal","Bijvoorbeeld: 20"))),
-   h("div",{class:"grid3"},
-    field("Van interesse naar actie (%)","Van de mensen die interesse tonen, hoeveel procent koopt of meldt zich aan?",pctField("fcd","crDo","Bijvoorbeeld: 4")),
-    field("Van bereik naar interesse (%)","Van de mensen die je bereikt, hoeveel procent klikt, slaat op of bezoekt je site?",pctField("fct","crThink","Bijvoorbeeld: 5")),
-    field("Gemiddeld bereik per uiting","Hoeveel mensen ziet één uiting? Kijk naar je eigen account of een vergelijkbaar account.",nn("fbr","bereik","Bijvoorbeeld: 1.500"))),
+   h("div",{class:"field"},h("label",{id:"ffaset"},"In welke fase van de funnel zit je doel?"),h("span",{class:"hint"},"Je rekent terug vanaf die fase. Verkoop je nog niks en wil je websitebezoekers? Kies dan Interesse. Uitleg en voorbeelden staan op ",kaartLink(3,3),"."),
+    h("div",{class:"seg ffase",role:"group",id:"ffase","aria-labelledby":"ffaset"},FFASE3.map(([k,l])=>h("button",{type:"button",class:"y","aria-pressed":fz===k?"true":"false",onclick:()=>{F.fase=k;save();render();}},l))),
+    fz?h("span",{class:"hint"},"Bijvoorbeeld: "+lc1(FFASE3.find(x=>x[0]===fz)[2])+"."):null),
+   h("div",{class:"grid2"},field("Wat wil je bereiken in 3 maanden?","Kies één meetbaar doel uit level 1.",ni("fdoel","doel",fz==="see"?"Bijvoorbeeld: weergaven":fz==="think"?"Bijvoorbeeld: websitebezoekers":"Bijvoorbeeld: nieuwe abonnees")),field("Hoeveel, in deze 3 maanden?",null,nn("faant","aantal",fz==="see"?"Bijvoorbeeld: 30.000":fz==="think"?"Bijvoorbeeld: 500":"Bijvoorbeeld: 20"))),
+   fz?h("div",{class:fz==="do"?"grid3":"grid2"},
+    fz==="do"?field("Van interesse naar actie (%)","Van de mensen die interesse tonen, hoeveel procent koopt of meldt zich aan?",pctField("fcd","crDo","Bijvoorbeeld: 4")):null,
+    fz!=="see"?field("Van bereik naar interesse (%)","Van de mensen die je bereikt, hoeveel procent klikt, slaat op of bezoekt je site?",pctField("fct","crThink","Bijvoorbeeld: 5")):null,
+    field("Gemiddeld bereik per uiting","Hoeveel mensen ziet één uiting? Kijk naar je eigen account of een vergelijkbaar account.",nn("fbr","bereik","Bijvoorbeeld: 1.500"))):null,
+   fz&&fz!=="do"?h("p",{class:"status"},fz==="think"?"Je doel zit bij Interesse, dus 'Van interesse naar actie' heb je niet nodig.":"Je doel is bereik, dus je hebt geen percentages nodig: alleen je bereik per uiting."):null,
    h("p",{class:"status"},"Deze getallen zijn aannames. In de missie KPI-bronnen onderbouw je ze met een bron.")),
   h("div",{class:"block"},h("h3",null,"2. De uitkomst"),res),
   h("div",{class:"block"},h("h3",null,"3. Je plan per fase"),h("p",{class:"status"},"Hoeveel uitingen plan je per fase? Minimaal 13 in totaal: elke week één, 13 weken lang (kaart 1). Je hoeft niet alle fasen te vullen: focus je bijvoorbeeld eerst op See en Think, en zet bij de andere fasen 0. Minimaal 1 fase is genoeg."),
@@ -3230,8 +3243,8 @@ function calMarkdown(withBron){const L=S.l3;const cols=["Week",...COLS3,...(with
 function calTSV(){const L=S.l3;return[[...COLS3,"Bron norm"].join("\t"),...L.rows.map(r=>[r.aan,r.pub,r.tijd,r.fase,r.thema,r.soort,r.format,r.kanaal,r.kpi,r.norm,(bron3(r.bron)||{}).apa||""].map(x=>String(x||"").replace(/\t/g," ")).join("\t"))].join("\n");}
 function planDoc(){const L=m3();const F=L.funnel;const c=fcalc();const st=strat();const W=budgetWeeks();const ev=L.event.card!=null?EVENTS[L.event.card]:null;const comp=L.rows.filter(rowComplete);
  return["# Level 3 – Contentkalender "+st.bedrijf,"","Looptijd: 13 weken vanaf "+(L.start.datum||"-")+". Kanalen: "+(L.start.kanalen||"-")+". Tijdbudget: "+(L.start.uren||"-")+" uur per week.","",
-  "## Funnel terugrekenen","Doel deze 3 maanden: "+(F.aantal||"-")+" "+(F.doel||""),"Van interesse naar actie: "+(F.crDo||"-")+"%. Van bereik naar interesse: "+(F.crThink||"-")+"%. Bereik per uiting: "+(F.bereik||"-")+".",
-  c.ok?"Nodig: "+fmtN(c.see)+" bereik, "+fmtN(c.think)+" geïnteresseerden, ongeveer "+fmtN(c.uit)+" uitingen.":"",
+  "## Funnel terugrekenen","Doel deze 3 maanden: "+(F.aantal||"-")+" "+(F.doel||""),"Doel zit in fase: "+({see:"Bereik (See)",think:"Interesse (Think)",do:"Actie (Do)"}[fase3()]||"-")+".",(fase3()==="do"?"Van interesse naar actie: "+(F.crDo||"-")+"%. ":"")+(fase3()!=="see"?"Van bereik naar interesse: "+(F.crThink||"-")+"%. ":"")+"Bereik per uiting: "+(F.bereik||"-")+".",
+  c.ok?"Nodig: "+fmtN(c.see)+" bereik"+(c.fase==="do"?", "+fmtN(c.think)+" geïnteresseerden":"")+", ongeveer "+fmtN(c.uit)+" uitingen.":"",
   "Plan per fase: "+FASEN.map(f=>f.id+" "+(F.plan[f.id]||0)+" (kalender: "+comp.filter(r=>r.fase===f.id).length+")").join(", "),"Bron percentages: "+(bronTxt(F.bron)||"-"),"Reflectie: "+F.reflectie,"",
   "## Contentkalender",calMarkdown(true),"",
   "## Tijdbudget per week",...W.map(w=>"- Week "+(w.i+1)+": "+hrs(w.h)+" van "+hrs(w.b)+" uur"+(w.over?" (te vol)":"")),"Aanpassingen: "+L.schrap,"",
@@ -3284,7 +3297,7 @@ function fillDemo3(){
  if(!done2("oplevering"))fillDemo2();
  const L=blank3();
  L.start={uren:"4",datum:"2026-11-02",kanalen:"Instagram, nieuwsbrief"};
- L.funnel={doel:"nieuwe abonnees",aantal:"20",crDo:"4",crThink:"5",bereik:"1.500",plan:{See:"5",Think:"4",Do:"3",Care:"2"},bron:"b1",klein:{},
+ L.funnel={fase:"do",doel:"nieuwe abonnees",aantal:"20",crDo:"4",crThink:"5",bereik:"1.500",plan:{See:"5",Think:"4",Do:"3",Care:"2"},bron:"b1",klein:{},
   reflectie:"Volgens de funnel heb ik ongeveer 7 uitingen nodig, dus 14 is ruim genoeg. Met 4 uur per week kan ik geen 3 reels per week maken. Ik houd het doel van 20 abonnees, maar zet vooral in op Instagram en de nieuwsbrief."};
  L.chain=[{p:"Hierboven staat de context van Groenbak. Stel me eerst 3 vragen voordat je een contentkalender maakt.",w:"Zo merk ik welke informatie nog ontbreekt.",a:"AI vroeg naar mijn belangrijkste kanaal, of ik al foto's heb en welke weken druk zijn."},
   {p:"Maak nu een contentkalender van 13 weken als tabel met precies deze kolommen: Aanmaakdatum | Publicatiedatum | Tijdstip | Fase | Thema | Soort content | Format | Kanaal | KPI | Norm.",w:"Een vaste tabel kan ik direct in de game plakken.",a:"Een tabel met 26 uitingen, met 2 reels per week. De tabel staat hieronder in de kalender."},
