@@ -199,6 +199,16 @@
         const { error } = await sb.rpc("studio_zet", { p_user: uid, p_studio: n == null ? null : Number(n) });
         if (error) throw nl(error);
       },
+      /* Testaccounts (testaccount.sql): staan niet in scorebord en klasoverzicht. undefined = testaccount.sql is nog niet gedraaid. */
+      async testKlas() {
+        const { data, error } = await sb.rpc("testaccounts_klas");
+        if (error) return undefined;
+        return data || [];
+      },
+      async zetTest(uid, aan) {
+        const { error } = await sb.rpc("testaccount_zet", { p_user: uid, p_aan: !!aan });
+        if (error) throw nl(error);
+      },
       async verwijder(email, uid) {
         if (uid) { try { const ids = await api.listImgs(uid); for (let i = 0; i < ids.length; i += 100) await api.delImgs(uid, ids.slice(i, i + 100)); } catch (e) { /* beelden later opruimen */ } }
         const { error } = await sb.rpc("verwijder_gebruiker", { p_email: email });
@@ -255,8 +265,13 @@
       async delImgs(id, ids) { db = load() || db; ids.forEach(n => { if (db.img[id]) delete db.img[id][n]; }); put(); },
       async klas() {
         await wait(); db = load() || db; const doc = (db.prof[uid()] || {}).rol === "docent";
-        return Object.values(db.prof).filter(p => p.rol === "student").map(p => { const v = db.vg[p.id] || {}; const s = v.samenvatting || {}; return { id: p.id, naam: s.naam || null, studio: (db.studio && db.studio[p.id] ? String(db.studio[p.id]) : null) || s.studio || null, samenvatting: s, email: doc ? p.email : null, bijgewerkt: v.bijgewerkt || null }; });
+        return Object.values(db.prof).filter(p => p.rol === "student" && !(db.test || {})[p.id]).map(p => { const v = db.vg[p.id] || {}; const s = v.samenvatting || {}; return { id: p.id, naam: s.naam || null, studio: (db.studio && db.studio[p.id] ? String(db.studio[p.id]) : null) || s.studio || null, samenvatting: s, email: doc ? p.email : null, bijgewerkt: v.bijgewerkt || null }; });
       },
+      async testKlas() {
+        await wait(); db = load() || db; const T = db.test || {};
+        return Object.values(db.prof).filter(p => p.rol === "student" && T[p.id]).map(p => { const v = db.vg[p.id] || {}; const s = v.samenvatting || {}; return { id: p.id, naam: s.naam || null, studio: (db.studio && db.studio[p.id] ? String(db.studio[p.id]) : null) || s.studio || null, samenvatting: s, email: p.email, bijgewerkt: v.bijgewerkt || null }; });
+      },
+      async zetTest(id, aan) { await wait(); db = load() || db; db.test = db.test || {}; if (aan) db.test[id] = true; else delete db.test[id]; put(); },
       async invites() { await wait(); db = load() || db; return Object.values(db.invites).sort((a, b) => b.uitgenodigd_op.localeCompare(a.uitgenodigd_op)); },
       async profielen() { await wait(); return Object.values(db.prof); },
       async addInvite(email, rol) {
@@ -272,7 +287,7 @@
       async setSetting(k, v) { await wait(); db = load() || db; (db.set = db.set || {})[k] = v; put(); },
       async mijnStudio() {
         db = load() || db; const p = db.prof[uid()]; if (!p) return undefined; const S = db.studio || {}; const MAX = 4;
-        const tel = n => Object.values(S).filter(x => x === n).length; let o = 1; while (tel(o) >= MAX) o++;
+        const T = db.test || {}; const tel = n => Object.keys(S).filter(k => S[k] === n && !T[k]).length; let o = 1; while (tel(o) >= MAX) o++;
         return { studio: S[p.id] || null, open: o, vrij: MAX - tel(o), max: MAX };
       },
       async kiesStudio() {
@@ -283,7 +298,7 @@
       async zetStudio(id, n) { await wait(); db = load() || db; db.studio = db.studio || {}; if (n == null || n === "") delete db.studio[id]; else db.studio[id] = Number(n); put(); },
       async verwijder(email) {
         await wait(); db = load() || db; const u = userBy(email);
-        if (u) { if (u.id === uid()) throw new Error("Je kunt jezelf niet verwijderen."); delete db.prof[u.id]; delete db.vg[u.id]; if (db.studio) delete db.studio[u.id]; delete db.img[u.id]; db.users = db.users.filter(x => x !== u); }
+        if (u) { if (u.id === uid()) throw new Error("Je kunt jezelf niet verwijderen."); delete db.prof[u.id]; delete db.vg[u.id]; if (db.studio) delete db.studio[u.id]; if (db.test) delete db.test[u.id]; delete db.img[u.id]; db.users = db.users.filter(x => x !== u); }
         delete db.invites[email]; put();
       }
     };
